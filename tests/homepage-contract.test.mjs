@@ -15,8 +15,9 @@ test("homepage exposes every approved public section", () => {
 
 test("homepage exposes the approved phone and Naver actions", () => {
   const page = read("app/page.tsx");
+  const content = read("lib/site-content.ts");
 
-  assert.match(page, /tel:050714490004/);
+  assert.match(`${page}\n${content}`, /tel:050714490004/);
   assert.match(page, /네이버 예약/);
   assert.match(page, /네이버 길찾기/);
 });
