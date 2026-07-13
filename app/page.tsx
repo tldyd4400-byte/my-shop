@@ -3,6 +3,7 @@ import {
   ArrowRight,
   Car,
   Clock3,
+  ExternalLink,
   Flame,
   Leaf,
   MapPin,
@@ -20,14 +21,96 @@ import {
   DINING_STEPS,
   FAQ_ITEMS,
   MENU_ITEMS,
+  REVIEW_KEYWORDS,
   SITE,
+  VISITOR_REVIEWS,
 } from "@/lib/site-content";
 
 const stepIcons = [Flame, Leaf, Utensils, Snowflake] as const;
 
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Restaurant",
+      "@id": `${SITE.url}/#restaurant`,
+      name: SITE.fullName,
+      alternateName: SITE.name,
+      description:
+        "청주 봉명동에서 채소와 버섯을 더해 샤브처럼 즐기는 매운 등갈비찜 전문점",
+      url: SITE.url,
+      telephone: SITE.phoneDisplay,
+      image: `${SITE.url}${SITE.image}`,
+      sameAs: [SITE.placeUrl],
+      servesCuisine: ["한식", "등갈비찜", "샤브형 등갈비찜"],
+      acceptsReservations: true,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "백봉로 213-1 1층",
+        addressLocality: "청주시",
+        addressRegion: "충청북도",
+        addressCountry: "KR",
+      },
+      openingHoursSpecification: Object.values(SITE.openingHours).map(
+        (period) => ({
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: period.days,
+          opens: period.opens,
+          closes: period.closes,
+        }),
+      ),
+      hasMenu: {
+        "@type": "Menu",
+        hasMenuSection: {
+          "@type": "MenuSection",
+          name: "대표 메뉴",
+          hasMenuItem: MENU_ITEMS.map((item) => ({
+            "@type": "MenuItem",
+            name: item.name,
+            description: item.description,
+            offers: {
+              "@type": "Offer",
+              price: item.price.replace(/[^0-9]/g, ""),
+              priceCurrency: "KRW",
+            },
+          })),
+        },
+      },
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${SITE.url}/#faq`,
+      mainEntity: FAQ_ITEMS.map(([question, answer]) => ({
+        "@type": "Question",
+        name: question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: answer,
+        },
+      })),
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${SITE.url}/#website`,
+      url: SITE.url,
+      name: SITE.fullName,
+      inLanguage: "ko-KR",
+      publisher: {
+        "@id": `${SITE.url}/#restaurant`,
+      },
+    },
+  ],
+};
+
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+        }}
+      />
       <SiteHeader />
 
       <main id="top">
@@ -65,13 +148,12 @@ export default function Home() {
 
             <figure className="image-frame hero-image">
               <Image
-                src="/images/eomeuittul-ribs-spicy.png"
-                alt="테스트용으로 제작된 김이 오르는 매운 등갈비찜 이미지"
+                src="/images/eomeuittul/spicy-ribs.jpg"
+                alt="붉은 육수와 신선한 채소를 넉넉히 담은 어믜뜰 매운 등갈비찜"
                 fill
                 priority
                 sizes="(max-width: 1023px) 100vw, 48vw"
               />
-              <figcaption>테스트용 이미지 · 실제 메뉴 사진으로 교체 예정</figcaption>
             </figure>
           </div>
         </section>
@@ -80,7 +162,7 @@ export default function Home() {
           <div className="shell proof-grid">
             <div>
               <Star aria-hidden="true" />
-              <span>네이버 별점 4.91 · 리뷰 364</span>
+              <span>샤브형 등갈비찜 · 맵기 조절</span>
             </div>
             <div>
               <Users aria-hidden="true" />
@@ -97,12 +179,11 @@ export default function Home() {
           <div className="shell story-grid">
             <figure className="image-frame story-image">
               <Image
-                src="/images/eomeuittul-interior.png"
-                alt="테스트용으로 제작된 따뜻한 한식당 내부 이미지"
+                src="/images/eomeuittul/hero-table.jpg"
+                alt="매운 등갈비찜과 간장 등갈비찜, 임궁밥과 메밀전을 차린 어믜뜰 한 상"
                 fill
                 sizes="(max-width: 1023px) 100vw, 42vw"
               />
-              <figcaption>테스트용 공간 이미지</figcaption>
             </figure>
             <div className="story-copy">
               <p className="kicker">BRAND STORY</p>
@@ -167,7 +248,6 @@ export default function Home() {
                       fill
                       sizes="(max-width: 767px) 100vw, 50vw"
                     />
-                    <span className="image-badge">테스트용 이미지</span>
                   </div>
                   <div className="menu-card-body">
                     <div className="menu-title-row">
@@ -206,13 +286,56 @@ export default function Home() {
             </div>
             <figure className="image-frame group-image">
               <Image
-                src="/images/eomeuittul-group-seating.png"
-                alt="테스트용으로 제작된 가족과 단체 식사를 위한 좌석 이미지"
+                src="/images/eomeuittul/interior.jpg"
+                alt="황토색 벽과 볏짚 장식, 넉넉한 테이블을 갖춘 어믜뜰 매장 내부"
                 fill
                 sizes="(max-width: 1023px) 100vw, 55vw"
               />
-              <figcaption>테스트용 단체석 이미지</figcaption>
             </figure>
+          </div>
+        </section>
+
+        <section
+          id="reviews"
+          className="reviews section-pad surface-hanji"
+          aria-labelledby="reviews-title"
+        >
+          <div className="shell">
+            <div className="reviews-heading">
+              <div>
+                <p className="kicker">NAVER VISITOR REVIEWS</p>
+                <h2 id="reviews-title">손님이 먼저 알아본 어믜뜰</h2>
+                <p>
+                  네이버 방문자 리뷰에서 반복해 언급된 어믜뜰의
+                  특별함입니다.
+                </p>
+              </div>
+              <ul className="review-keywords" aria-label="방문자 리뷰 주요 반응">
+                {REVIEW_KEYWORDS.map(([label, count]) => (
+                  <li key={label}>
+                    {label} <strong>{count}</strong>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="review-grid">
+              {VISITOR_REVIEWS.map((review) => (
+                <article key={review.title} className="review-card">
+                  <p className="review-source">{review.sourceLabel}</p>
+                  <p className="review-summary">{review.summary}</p>
+                  <a
+                    href={SITE.placeUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    aria-label={`${review.title} 관련 네이버 방문자 리뷰 보기`}
+                  >
+                    리뷰 통계와 원문 보기
+                    <ExternalLink aria-hidden="true" />
+                  </a>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -305,7 +428,7 @@ export default function Home() {
             <strong>{SITE.fullName}</strong>
             <p>늘 자식 쪽으로 기울던 접시, 그날의 식탁</p>
           </div>
-          <p>테스트용 홈페이지 · 실제 운영 전 정보와 사진을 확인해 주세요.</p>
+          <p>청주 봉명동에서 만나는 샤브형 등갈비찜 전문점</p>
         </div>
       </footer>
 

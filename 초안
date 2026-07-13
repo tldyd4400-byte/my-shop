@@ -1,67 +1,77 @@
 {
   "version": "2.14",
-  "variables": {
-    "color.gochujang": { "type": "color", "value": "#9F2F1F" },
-    "color.deep": { "type": "color", "value": "#2A2520" },
-    "color.body": { "type": "color", "value": "#3A3028" },
-    "color.muted": { "type": "color", "value": "#6F6258" },
-    "color.ocher": { "type": "color", "value": "#F4E4C8" },
-    "color.rice": { "type": "color", "value": "#FFF8EA" },
-    "color.hanji": { "type": "color", "value": "#F7EEDC" },
-    "color.straw": { "type": "color", "value": "#D8B86A" },
-    "color.green": { "type": "color", "value": "#496B3A" },
-    "color.hairline": { "type": "color", "value": "#D9C3A3" }
-  },
   "children": [
     {
       "type": "frame",
-      "id": "desktop-home",
-      "x": 0,
-      "y": 0,
-      "name": "고객용 홈페이지 - Desktop 1440",
+      "id": "AdVxX",
+      "x": -19862,
+      "y": -3433,
+      "name": "고객용 홈페이지 데스크톱 최종 초안",
       "clip": true,
       "width": 1440,
-      "height": 4840,
-      "fill": "$color.ocher",
+      "height": 4738,
+      "fill": "#F7F1E6",
       "layout": "vertical",
       "children": [
         {
           "type": "frame",
-          "id": "d-nav",
-          "name": "상단 내비게이션",
-          "width": "fill_container",
+          "id": "rc7nI",
+          "name": "데스크톱 상단 내비게이션",
+          "width": 1440,
           "height": 88,
-          "fill": "$color.rice",
-          "layout": "horizontal",
-          "padding": [18, 120],
+          "fill": "#FFFDF8",
+          "stroke": "#D8CBB8",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "padding": [
+            0,
+            72
+          ],
           "justifyContent": "space_between",
           "alignItems": "center",
           "children": [
-            { "type": "text", "id": "d-logo", "content": "어믜뜰", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 28, "fontWeight": "700" },
+            {
+              "type": "text",
+              "id": "w3jVgJ",
+              "name": "데스크톱 브랜드",
+              "fill": "#2B2118",
+              "content": "어믜뜰",
+              "fontFamily": "Inter",
+              "fontSize": 30,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "tCfRY",
+              "name": "데스크톱 메뉴 링크",
+              "fill": "#2B2118",
+              "content": "이야기    메뉴    이용안내    오시는 길",
+              "fontFamily": "Inter",
+              "fontSize": 17,
+              "fontWeight": "600"
+            },
             {
               "type": "frame",
-              "id": "d-nav-links",
-              "layout": "horizontal",
-              "gap": 30,
+              "id": "iNUGo",
+              "name": "데스크톱 예약 버튼",
+              "width": 150,
+              "height": 54,
+              "fill": "#A52A24",
+              "cornerRadius": 6,
+              "layout": "vertical",
+              "justifyContent": "center",
               "alignItems": "center",
               "children": [
-                { "type": "text", "id": "d-nav-story", "content": "어믜뜰 이야기", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
-                { "type": "text", "id": "d-nav-menu", "content": "메뉴", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
-                { "type": "text", "id": "d-nav-guide", "content": "맛있게 즐기는 법", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
-                { "type": "text", "id": "d-nav-visit", "content": "오시는 길", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
                 {
-                  "type": "frame",
-                  "id": "d-nav-booking",
-                  "width": 148,
-                  "height": 52,
-                  "fill": "$color.gochujang",
-                  "cornerRadius": 8,
-                  "layout": "horizontal",
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    { "type": "text", "id": "d-nav-booking-label", "content": "네이버 예약", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }
-                  ]
+                  "type": "text",
+                  "id": "T9D4Q",
+                  "name": "데스크톱 예약 버튼 글자",
+                  "fill": "#FFFFFF",
+                  "content": "네이버 예약",
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "700"
                 }
               ]
             }
@@ -69,522 +79,4096 @@
         },
         {
           "type": "frame",
-          "id": "d-hero",
-          "name": "히어로",
-          "width": "fill_container",
-          "height": 720,
-          "fill": "$color.ocher",
-          "layout": "horizontal",
-          "padding": [80, 120],
-          "gap": 40,
+          "id": "PhgTB",
+          "name": "데스크톱 히어로",
+          "width": 1440,
+          "height": 620,
+          "fill": "#4B392E",
+          "gap": 56,
+          "padding": 72,
           "alignItems": "center",
           "children": [
             {
               "type": "frame",
-              "id": "d-hero-copy",
-              "width": 620,
-              "height": 560,
+              "id": "ynoQx",
+              "name": "히어로 문구 영역",
+              "width": 700,
+              "height": 450,
               "layout": "vertical",
               "gap": 22,
               "justifyContent": "center",
               "children": [
-                { "type": "text", "id": "d-hero-eyebrow", "content": "청주 봉명동 · 샤브형 등갈비찜 전문점", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" },
-                { "type": "text", "id": "d-hero-title", "content": "늘 자식 쪽으로 기울던 접시,\n그날의 식탁", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 52, "fontWeight": "700", "lineHeight": 1.25, "textGrowth": "fixed-width", "width": 620 },
-                { "type": "text", "id": "d-hero-lead", "content": "엄마의 마음으로 푸짐하게 차려내는\n어믜뜰만의 등갈비찜 한 상", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 21, "fontWeight": "500", "lineHeight": 1.6, "textGrowth": "fixed-width", "width": 570 },
+                {
+                  "type": "text",
+                  "id": "YO688",
+                  "name": "히어로 지역 설명",
+                  "fill": "#E8C98E",
+                  "content": "청주 봉명동 · 샤브형 등갈비찜 전문점",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "nKGyF",
+                  "name": "히어로 큰 제목",
+                  "fill": "#FFFFFF",
+                  "textGrowth": "fixed-width",
+                  "width": 700,
+                  "content": "처음 보는 등갈비찜,\n함께 끓여 더 맛있는 한 상",
+                  "lineHeight": 1.25,
+                  "fontFamily": "Inter",
+                  "fontSize": 52,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "UIeGH",
+                  "name": "히어로 본문",
+                  "fill": "#F8EEE2",
+                  "textGrowth": "fixed-width",
+                  "width": 650,
+                  "content": "30여 종의 채소와 버섯, 떡, 당면을 취향대로 더해 샤브처럼 즐겨보세요.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "Inter",
+                  "fontSize": 20,
+                  "fontWeight": "500"
+                },
                 {
                   "type": "frame",
-                  "id": "d-hero-actions",
-                  "layout": "horizontal",
+                  "id": "U0HaWk",
+                  "name": "히어로 행동 영역",
+                  "width": 440,
+                  "height": 60,
                   "gap": 12,
                   "children": [
                     {
                       "type": "frame",
-                      "id": "d-hero-primary",
-                      "width": 180,
-                      "height": 56,
-                      "fill": "$color.gochujang",
-                      "cornerRadius": 8,
-                      "layout": "horizontal",
+                      "id": "fBfAK",
+                      "name": "예약 혜택 확인 버튼",
+                      "width": 210,
+                      "height": 58,
+                      "fill": "#A52A24",
+                      "cornerRadius": 6,
+                      "layout": "vertical",
                       "justifyContent": "center",
                       "alignItems": "center",
                       "children": [
-                        { "type": "text", "id": "d-hero-primary-label", "content": "네이버 예약하기", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }
+                        {
+                          "type": "text",
+                          "id": "q1wc0k",
+                          "name": "예약 혜택 확인 글자",
+                          "fill": "#FFFFFF",
+                          "content": "예약 혜택 확인",
+                          "fontFamily": "Inter",
+                          "fontSize": 18,
+                          "fontWeight": "700"
+                        }
                       ]
                     },
                     {
                       "type": "frame",
-                      "id": "d-hero-secondary",
-                      "width": 150,
-                      "height": 56,
-                      "fill": "$color.rice",
-                      "stroke": "$color.body",
-                      "strokeWidth": 1,
-                      "cornerRadius": 8,
-                      "layout": "horizontal",
+                      "id": "uxNSP",
+                      "name": "0507-1449-0004 버튼",
+                      "width": 210,
+                      "height": 58,
+                      "fill": "#355843",
+                      "cornerRadius": 6,
+                      "layout": "vertical",
                       "justifyContent": "center",
                       "alignItems": "center",
                       "children": [
-                        { "type": "text", "id": "d-hero-secondary-label", "content": "전화 문의", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }
+                        {
+                          "type": "text",
+                          "id": "E0y5WV",
+                          "name": "0507-1449-0004 글자",
+                          "fill": "#FFFFFF",
+                          "content": "0507-1449-0004",
+                          "fontFamily": "Inter",
+                          "fontSize": 18,
+                          "fontWeight": "700"
+                        }
                       ]
                     }
-                  ]
-                },
-                { "type": "text", "id": "d-hero-benefit", "content": "네이버 예약 시 낙지파전 또는 추가 등갈비 1인분 서비스", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "d-hero-photo",
-              "name": "대표 음식 사진 슬롯",
-              "width": 540,
-              "height": 560,
-              "fill": "$color.deep",
-              "cornerRadius": 8,
-              "layout": "vertical",
-              "justifyContent": "center",
-              "alignItems": "center",
-              "gap": 12,
-              "children": [
-                { "type": "text", "id": "d-hero-photo-label", "content": "대표 음식 사진", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 26, "fontWeight": "700" },
-                { "type": "text", "id": "d-hero-photo-note", "content": "김 오르는 매운 등갈비찜과\n손님이 재료를 넣는 순간", "fill": "$color.straw", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "500", "lineHeight": 1.5, "textAlign": "center" }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "d-proof",
-          "name": "신뢰 지표",
-          "width": "fill_container",
-          "height": 112,
-          "fill": "$color.deep",
-          "layout": "horizontal",
-          "padding": [24, 120],
-          "justifyContent": "space_between",
-          "alignItems": "center",
-          "children": [
-            { "type": "text", "id": "d-proof-rating", "content": "네이버 별점 4.91 · 리뷰 364", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" },
-            { "type": "text", "id": "d-proof-space", "content": "12테이블 · 52석 · 단체석", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "600" },
-            { "type": "text", "id": "d-proof-service", "content": "포장 · 예약 · 주차 가능", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "600" }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "d-story",
-          "name": "브랜드 이야기",
-          "width": "fill_container",
-          "height": 600,
-          "fill": "$color.rice",
-          "layout": "horizontal",
-          "padding": [72, 120],
-          "gap": 56,
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "frame",
-              "id": "d-story-photo",
-              "width": 500,
-              "height": 440,
-              "fill": "$color.hairline",
-              "cornerRadius": 8,
-              "layout": "vertical",
-              "justifyContent": "center",
-              "alignItems": "center",
-              "children": [
-                { "type": "text", "id": "d-story-photo-label", "content": "공간 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" },
-                { "type": "text", "id": "d-story-photo-note", "content": "황토·볏짚 질감과 정갈한 한식당 분위기", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "d-story-copy",
-              "width": 644,
-              "height": 440,
-              "layout": "vertical",
-              "gap": 18,
-              "justifyContent": "center",
-              "children": [
-                { "type": "text", "id": "d-story-kicker", "content": "BRAND STORY", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" },
-                { "type": "text", "id": "d-story-title", "content": "좋은 것은 늘\n자식 앞으로 밀어주시던 마음", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 38, "fontWeight": "700", "lineHeight": 1.3, "textGrowth": "fixed-width", "width": 620 },
-                { "type": "text", "id": "d-story-body", "content": "어믜뜰은 단순히 등갈비찜 한 끼를 내어드리는 식당이 아닙니다. 함께 둘러앉아 취향대로 푸짐하게 즐기고, 돌아가는 길에 ‘오늘 참 잘 먹었다’는 말이 자연스럽게 나오는 곳을 만듭니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "400", "lineHeight": 1.7, "textGrowth": "fixed-width", "width": 620 }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "d-experience",
-          "name": "샤브형 식사 경험",
-          "width": "fill_container",
-          "height": 560,
-          "fill": "$color.hanji",
-          "layout": "vertical",
-          "padding": [64, 120],
-          "gap": 28,
-          "alignItems": "center",
-          "children": [
-            { "type": "text", "id": "d-exp-title", "content": "같은 등갈비찜도, 먹는 사람에 따라 다른 한 상", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 36, "fontWeight": "700" },
-            { "type": "text", "id": "d-exp-lead", "content": "30여 종의 채소·버섯·떡·당면을 자유롭게 더해 나만의 방식으로 즐깁니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "500" },
-            {
-              "type": "frame",
-              "id": "d-exp-steps",
-              "width": 1200,
-              "height": 280,
-              "layout": "horizontal",
-              "gap": 16,
-              "children": [
-                { "type": "frame", "id": "d-step-1", "width": 288, "height": 280, "fill": "$color.rice", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 24, "gap": 16, "children": [ { "type": "text", "id": "d-step-1-num", "content": "01", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "d-step-1-title", "content": "보글보글 끓인다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 23, "fontWeight": "700" }, { "type": "text", "id": "d-step-1-body", "content": "등갈비와 매콤한 육수가 충분히 어우러질 때까지 끓입니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.6, "textGrowth": "fixed-width", "width": 240 } ] },
-                { "type": "frame", "id": "d-step-2", "width": 288, "height": 280, "fill": "$color.rice", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 24, "gap": 16, "children": [ { "type": "text", "id": "d-step-2-num", "content": "02", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "d-step-2-title", "content": "취향대로 고른다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 23, "fontWeight": "700" }, { "type": "text", "id": "d-step-2-body", "content": "30여 종 셀프바에서 채소, 버섯, 떡과 당면을 고릅니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.6, "textGrowth": "fixed-width", "width": 240 } ] },
-                { "type": "frame", "id": "d-step-3", "width": 288, "height": 280, "fill": "$color.rice", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 24, "gap": 16, "children": [ { "type": "text", "id": "d-step-3-num", "content": "03", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "d-step-3-title", "content": "한 냄비에 더한다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 23, "fontWeight": "700" }, { "type": "text", "id": "d-step-3-body", "content": "함께 고른 재료를 넣고 샤브처럼 익혀 나누어 먹습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.6, "textGrowth": "fixed-width", "width": 240 } ] },
-                { "type": "frame", "id": "d-step-4", "width": 288, "height": 280, "fill": "$color.rice", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 24, "gap": 16, "children": [ { "type": "text", "id": "d-step-4-num", "content": "04", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "d-step-4-title", "content": "빙수로 마무리한다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 23, "fontWeight": "700" }, { "type": "text", "id": "d-step-4-body", "content": "매콤한 한 상 끝에 수제 우유빙수로 입안을 달랩니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.6, "textGrowth": "fixed-width", "width": 240 } ] }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "d-menu",
-          "name": "대표 메뉴",
-          "width": "fill_container",
-          "height": 680,
-          "fill": "$color.rice",
-          "layout": "vertical",
-          "padding": [64, 120],
-          "gap": 28,
-          "children": [
-            { "type": "text", "id": "d-menu-kicker", "content": "SIGNATURE MENU", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" },
-            { "type": "text", "id": "d-menu-title", "content": "부족함 없이 대접하는 한 상", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 36, "fontWeight": "700" },
-            {
-              "type": "frame",
-              "id": "d-menu-cards",
-              "width": 1200,
-              "height": 430,
-              "layout": "horizontal",
-              "gap": 24,
-              "children": [
-                { "type": "frame", "id": "d-menu-spicy", "width": 588, "height": 430, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 28, "gap": 16, "children": [ { "type": "frame", "id": "d-menu-spicy-photo", "width": 532, "height": 190, "fill": "$color.gochujang", "cornerRadius": 6, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "d-menu-spicy-photo-label", "content": "매운 등갈비찜 세트 사진", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" } ] }, { "type": "text", "id": "d-menu-spicy-title", "content": "매운 등갈비찜 세트", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 26, "fontWeight": "700" }, { "type": "text", "id": "d-menu-spicy-price", "content": "19,900원", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 22, "fontWeight": "700" }, { "type": "text", "id": "d-menu-spicy-body", "content": "매콤한 육수와 등갈비를 샤브처럼. 임궁밥과 메밀전이 함께 제공됩니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.55, "textGrowth": "fixed-width", "width": 520 } ] },
-                { "type": "frame", "id": "d-menu-soy", "width": 588, "height": 430, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 28, "gap": 16, "children": [ { "type": "frame", "id": "d-menu-soy-photo", "width": 532, "height": 190, "fill": "$color.straw", "cornerRadius": 6, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "d-menu-soy-photo-label", "content": "간장 등갈비찜 세트 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" } ] }, { "type": "text", "id": "d-menu-soy-title", "content": "간장 등갈비찜 세트", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 26, "fontWeight": "700" }, { "type": "text", "id": "d-menu-soy-price", "content": "19,900원", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 22, "fontWeight": "700" }, { "type": "text", "id": "d-menu-soy-body", "content": "달콤짭짤한 간장 양념과 부드러운 등갈비. 남녀노소 편하게 즐기는 한 상입니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.55, "textGrowth": "fixed-width", "width": 520 } ] }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "d-space",
-          "name": "공간과 모임",
-          "width": "fill_container",
-          "height": 520,
-          "fill": "$color.ocher",
-          "layout": "horizontal",
-          "padding": [64, 120],
-          "gap": 48,
-          "alignItems": "center",
-          "children": [
-            { "type": "frame", "id": "d-space-copy", "width": 470, "height": 380, "layout": "vertical", "gap": 18, "justifyContent": "center", "children": [ { "type": "text", "id": "d-space-title", "content": "함께 둘러앉기 좋은\n따뜻하고 넉넉한 자리", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 36, "fontWeight": "700", "lineHeight": 1.3 }, { "type": "text", "id": "d-space-body", "content": "12테이블 52석과 6인 단체석 2테이블. 가족 외식부터 회식까지 편안하게 머물 수 있습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "400", "lineHeight": 1.65, "textGrowth": "fixed-width", "width": 450 } ] },
-            { "type": "frame", "id": "d-space-photo-1", "width": 330, "height": 360, "fill": "$color.hairline", "cornerRadius": 8, "layout": "vertical", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "d-space-photo-1-label", "content": "전체 좌석 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" } ] },
-            { "type": "frame", "id": "d-space-photo-2", "width": 330, "height": 360, "fill": "$color.deep", "cornerRadius": 8, "layout": "vertical", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "d-space-photo-2-label", "content": "단체석 사진", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" } ] }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "d-faq",
-          "name": "자주 묻는 질문",
-          "width": "fill_container",
-          "height": 640,
-          "fill": "$color.rice",
-          "layout": "vertical",
-          "padding": [64, 220],
-          "gap": 22,
-          "children": [
-            { "type": "text", "id": "d-faq-title", "content": "자주 묻는 질문", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 36, "fontWeight": "700" },
-            { "type": "frame", "id": "d-faq-1", "width": 1000, "height": 104, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": [18, 24], "gap": 8, "children": [ { "type": "text", "id": "d-faq-1-q", "content": "Q. 매운 음식을 못 먹어도 방문할 수 있나요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "700" }, { "type": "text", "id": "d-faq-1-a", "content": "A. 달콤짭짤한 간장 등갈비찜 세트를 준비하고 있습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400" } ] },
-            { "type": "frame", "id": "d-faq-2", "width": 1000, "height": 104, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": [18, 24], "gap": 8, "children": [ { "type": "text", "id": "d-faq-2-q", "content": "Q. 단체 예약이 가능한가요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "700" }, { "type": "text", "id": "d-faq-2-a", "content": "A. 52석 규모이며 네이버 예약과 전화 예약 모두 가능합니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400" } ] },
-            { "type": "frame", "id": "d-faq-3", "width": 1000, "height": 104, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": [18, 24], "gap": 8, "children": [ { "type": "text", "id": "d-faq-3-q", "content": "Q. 주차는 어디에 하나요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "700" }, { "type": "text", "id": "d-faq-3-a", "content": "A. 건물 뒤편 지상주차장을 무료로 이용할 수 있습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400" } ] },
-            { "type": "frame", "id": "d-faq-4", "width": 1000, "height": 104, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": [18, 24], "gap": 8, "children": [ { "type": "text", "id": "d-faq-4-q", "content": "Q. 포장이나 배달이 가능한가요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "700" }, { "type": "text", "id": "d-faq-4-a", "content": "A. 포장은 가능하며 배달은 운영하지 않습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400" } ] }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "d-visit",
-          "name": "방문 정보",
-          "width": "fill_container",
-          "height": 720,
-          "fill": "$color.deep",
-          "layout": "horizontal",
-          "padding": [72, 120],
-          "gap": 56,
-          "children": [
-            {
-              "type": "frame",
-              "id": "d-visit-info",
-              "width": 590,
-              "height": 560,
-              "layout": "vertical",
-              "gap": 18,
-              "children": [
-                { "type": "text", "id": "d-visit-title", "content": "어믜뜰에서 만나요", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 38, "fontWeight": "700" },
-                { "type": "text", "id": "d-visit-address", "content": "충북 청주시 흥덕구 백봉로 213-1 1층", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "600" },
-                { "type": "text", "id": "d-visit-hours", "content": "매일 11:00 - 22:00\n브레이크타임 15:30 - 16:30\n주말·공휴일 브레이크타임 없음\n매주 월요일 정기휴무", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "400", "lineHeight": 1.65 },
-                { "type": "text", "id": "d-visit-phone", "content": "0507-1449-0004", "fill": "$color.straw", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" },
-                { "type": "text", "id": "d-visit-parking", "content": "주차: 건물 뒤편 무료 지상주차장\n대중교통: 백봉아파트 정류장 하차 후 도보 약 1분", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.6 },
-                {
-                  "type": "frame",
-                  "id": "d-visit-actions",
-                  "layout": "horizontal",
-                  "gap": 12,
-                  "children": [
-                    { "type": "frame", "id": "d-visit-booking", "width": 180, "height": 56, "fill": "$color.gochujang", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "d-visit-booking-label", "content": "네이버 예약", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] },
-                    { "type": "frame", "id": "d-visit-map", "width": 180, "height": 56, "fill": "$color.rice", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "d-visit-map-label", "content": "네이버 길찾기", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] }
                   ]
                 }
               ]
             },
-            { "type": "frame", "id": "d-map-slot", "width": 554, "height": 560, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "justifyContent": "center", "alignItems": "center", "gap": 10, "children": [ { "type": "text", "id": "d-map-slot-label", "content": "지도 / 외관 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" }, { "type": "text", "id": "d-map-slot-note", "content": "백봉어린이공원 건너편\n건물 뒤편 주차장 진입 안내", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "500", "lineHeight": 1.5, "textAlign": "center" } ] }
+            {
+              "type": "frame",
+              "id": "S1A5gJ",
+              "name": "실제 대표 메뉴 사진 자리",
+              "width": 520,
+              "height": 450,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "초안-assets/spicy-ribs.jpg",
+                "mode": "fill"
+              },
+              "cornerRadius": 4,
+              "stroke": "#C9A96E",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center"
+            }
           ]
         },
         {
           "type": "frame",
-          "id": "d-footer",
-          "name": "푸터",
-          "width": "fill_container",
+          "id": "o8u7iD",
+          "name": "데스크톱 핵심 증거",
+          "width": 1440,
+          "height": 110,
+          "fill": "#7F1D1D",
+          "gap": 68,
+          "padding": [
+            0,
+            72
+          ],
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "J0B1YR",
+              "name": "세트 19,900원 표시",
+              "fill": "#FFFFFF",
+              "content": "세트 19,900원",
+              "fontFamily": "Inter",
+              "fontSize": 18,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "mClHf",
+              "name": "30여 종 셀프바 표시",
+              "fill": "#FFFFFF",
+              "content": "30여 종 셀프바",
+              "fontFamily": "Inter",
+              "fontSize": 18,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "wgt82",
+              "name": "임궁밥·메밀전 포함 표시",
+              "fill": "#FFFFFF",
+              "content": "임궁밥·메밀전 포함",
+              "fontFamily": "Inter",
+              "fontSize": 18,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "q8iUOI",
+              "name": "수제우유빙수 후식 표시",
+              "fill": "#FFFFFF",
+              "content": "수제우유빙수 후식",
+              "fontFamily": "Inter",
+              "fontSize": 18,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "z01Zwq",
+          "name": "데스크톱 브랜드 이야기",
+          "width": 1440,
+          "height": 520,
+          "fill": "#FFFDF8",
+          "gap": 64,
+          "padding": [
+            56,
+            72
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "s5ZZC",
+              "name": "실제 매장 한상 사진 자리",
+              "width": 560,
+              "height": 408,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "초안-assets/hero-table.jpg",
+                "mode": "fill"
+              },
+              "cornerRadius": 4,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center"
+            },
+            {
+              "type": "frame",
+              "id": "O7hzdj",
+              "name": "브랜드 이야기 본문 영역",
+              "width": 670,
+              "height": 360,
+              "layout": "vertical",
+              "gap": 18,
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "m3MPD",
+                  "name": "브랜드 이야기 한줄",
+                  "fill": "#A52A24",
+                  "content": "늘 자식 쪽으로 기울던 접시, 그날의 식탁",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "JjTqY",
+                  "name": "브랜드 이야기 제목",
+                  "fill": "#2B2118",
+                  "textGrowth": "fixed-width",
+                  "width": 650,
+                  "content": "엄마의 마음으로\n푸짐하게 차려내는 한 상",
+                  "lineHeight": 1.3,
+                  "fontFamily": "Inter",
+                  "fontSize": 40,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "yd8og",
+                  "name": "브랜드 이야기 설명",
+                  "fill": "#6E6258",
+                  "textGrowth": "fixed-width",
+                  "width": 650,
+                  "content": "좋은 것은 자식 앞으로 밀어주시고 하나라도 더 챙겨주시던 마음. 어믜뜰은 누군가를 배부르게 먹이고 싶은 그 마음을 닮은 식당입니다.",
+                  "lineHeight": 1.7,
+                  "fontFamily": "Inter",
+                  "fontSize": 19,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "NPfxr",
+          "name": "데스크톱 식사 경험",
+          "width": 1440,
+          "height": 600,
+          "fill": "#F7F1E6",
+          "layout": "vertical",
+          "gap": 26,
+          "padding": [
+            52,
+            72
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "iBctY",
+              "name": "식사 경험 제목",
+              "fill": "#2B2118",
+              "content": "익숙한 등갈비찜에 새로운 식사 경험",
+              "fontFamily": "Inter",
+              "fontSize": 38,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "vN6CQ",
+              "name": "식사 경험 설명",
+              "fill": "#6E6258",
+              "content": "고르고, 넣고, 함께 끓여 먹는 과정까지 즐거운 어믜뜰만의 네 단계",
+              "fontFamily": "Inter",
+              "fontSize": 19,
+              "fontWeight": "500"
+            },
+            {
+              "type": "frame",
+              "id": "A9yEt",
+              "name": "네 단계 카드 행",
+              "width": 1296,
+              "height": 390,
+              "gap": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "XR0Kk",
+                  "name": "등갈비찜 선택 카드",
+                  "width": 310,
+                  "height": 380,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "U8fc0",
+                      "name": "등갈비찜 선택 실제 사진 자리",
+                      "width": 262,
+                      "height": 170,
+                      "fill": "#D7C3A4",
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "j5hdO",
+                          "name": "등갈비찜 선택 사진 글자",
+                          "fill": "#2B2118",
+                          "content": "실제 사진",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "yg3RK",
+                      "name": "등갈비찜 선택 번호",
+                      "fill": "#A52A24",
+                      "content": "01",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "FRnXH",
+                      "name": "등갈비찜 선택 제목",
+                      "fill": "#2B2118",
+                      "content": "등갈비찜 선택",
+                      "fontFamily": "Inter",
+                      "fontSize": 24,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Pl8OZ",
+                      "name": "등갈비찜 선택 설명",
+                      "fill": "#6E6258",
+                      "content": "매운맛 또는 간장맛",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "naoIX",
+                  "name": "재료 담기 카드",
+                  "width": 310,
+                  "height": 380,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "DP1ke",
+                      "name": "재료 담기 실제 사진 자리",
+                      "width": 262,
+                      "height": 170,
+                      "fill": "#D7C3A4",
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "M882t",
+                          "name": "재료 담기 사진 글자",
+                          "fill": "#2B2118",
+                          "content": "실제 사진",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Qm2GD",
+                      "name": "재료 담기 번호",
+                      "fill": "#A52A24",
+                      "content": "02",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "HM6M2",
+                      "name": "재료 담기 제목",
+                      "fill": "#2B2118",
+                      "content": "재료 담기",
+                      "fontFamily": "Inter",
+                      "fontSize": 24,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "D6JyTf",
+                      "name": "재료 담기 설명",
+                      "fill": "#6E6258",
+                      "content": "채소·버섯·떡·당면",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "jryPD",
+                  "name": "샤브처럼 끓이기 카드",
+                  "width": 310,
+                  "height": 380,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "xsnfh",
+                      "name": "샤브처럼 끓이기 실제 사진 자리",
+                      "width": 262,
+                      "height": 170,
+                      "fill": "#D7C3A4",
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Gc8O4",
+                          "name": "샤브처럼 끓이기 사진 글자",
+                          "fill": "#2B2118",
+                          "content": "실제 사진",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "lIpNY",
+                      "name": "샤브처럼 끓이기 번호",
+                      "fill": "#A52A24",
+                      "content": "03",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "IQrLi",
+                      "name": "샤브처럼 끓이기 제목",
+                      "fill": "#2B2118",
+                      "content": "샤브처럼 끓이기",
+                      "fontFamily": "Inter",
+                      "fontSize": 24,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "s5kB1E",
+                      "name": "샤브처럼 끓이기 설명",
+                      "fill": "#6E6258",
+                      "content": "취향대로 넣어 함께",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "c4fKQ",
+                  "name": "빙수로 마무리 카드",
+                  "width": 310,
+                  "height": 380,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "p2qu9",
+                      "name": "빙수로 마무리 실제 사진 자리",
+                      "width": 262,
+                      "height": 170,
+                      "fill": "#D7C3A4",
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "C4tx8",
+                          "name": "빙수로 마무리 사진 글자",
+                          "fill": "#2B2118",
+                          "content": "실제 사진",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "bZYDq",
+                      "name": "빙수로 마무리 번호",
+                      "fill": "#A52A24",
+                      "content": "04",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "hIFUc",
+                      "name": "빙수로 마무리 제목",
+                      "fill": "#2B2118",
+                      "content": "빙수로 마무리",
+                      "fontFamily": "Inter",
+                      "fontSize": 24,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "fLSoS",
+                      "name": "빙수로 마무리 설명",
+                      "fill": "#6E6258",
+                      "content": "수제우유빙수 후식",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "szYkt",
+          "name": "데스크톱 대표 메뉴",
+          "width": 1440,
+          "height": 620,
+          "fill": "#2F3F32",
+          "layout": "vertical",
+          "gap": 26,
+          "padding": [
+            48,
+            72
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "DE6DN",
+              "name": "대표 메뉴 제목",
+              "fill": "#FFFFFF",
+              "content": "한 상에 빠짐없이 담았습니다",
+              "fontFamily": "Inter",
+              "fontSize": 38,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "J8QQoe",
+              "name": "대표 메뉴 설명",
+              "fill": "#DDE8DF",
+              "content": "두 세트 모두 임궁밥과 메밀전이 함께 제공됩니다.",
+              "fontFamily": "Inter",
+              "fontSize": 19,
+              "fontWeight": "500"
+            },
+            {
+              "type": "frame",
+              "id": "v8jktT",
+              "name": "대표 메뉴 카드 행",
+              "width": 1296,
+              "height": 430,
+              "gap": 22,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Nzv7b",
+                  "name": "매운 등갈비찜 세트 카드",
+                  "width": 637,
+                  "height": 420,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": 26,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "a7MFdT",
+                      "name": "매운 등갈비찜 세트 실제 사진 자리",
+                      "width": 585,
+                      "height": 190,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "초안-assets/spicy-ribs.jpg",
+                        "mode": "fill"
+                      },
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center"
+                    },
+                    {
+                      "type": "text",
+                      "id": "g5WnR",
+                      "name": "매운 등갈비찜 세트 이름",
+                      "fill": "#2B2118",
+                      "content": "매운 등갈비찜 세트",
+                      "fontFamily": "Inter",
+                      "fontSize": 27,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "VSyyg",
+                      "name": "매운 등갈비찜 세트 가격",
+                      "fill": "#A52A24",
+                      "content": "19,900원",
+                      "fontFamily": "Inter",
+                      "fontSize": 25,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "GkaGp",
+                      "name": "매운 등갈비찜 세트 설명",
+                      "fill": "#6E6258",
+                      "textGrowth": "fixed-width",
+                      "width": 570,
+                      "content": "매콤한 육수에 재료를 더해 샤브처럼 끓여 먹는 대표 메뉴",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "p83CMD",
+                  "name": "간장 등갈비찜 세트 카드",
+                  "width": 637,
+                  "height": 420,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "layout": "vertical",
+                  "gap": 14,
+                  "padding": 26,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "sxB5n",
+                      "name": "간장 등갈비찜 세트 실제 사진 자리",
+                      "width": 585,
+                      "height": 190,
+                      "fill": {
+                        "type": "image",
+                        "enabled": true,
+                        "url": "초안-assets/soy-ribs.jpg",
+                        "mode": "fill"
+                      },
+                      "layout": "vertical",
+                      "justifyContent": "center",
+                      "alignItems": "center"
+                    },
+                    {
+                      "type": "text",
+                      "id": "MkWK6",
+                      "name": "간장 등갈비찜 세트 이름",
+                      "fill": "#2B2118",
+                      "content": "간장 등갈비찜 세트",
+                      "fontFamily": "Inter",
+                      "fontSize": 27,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "tiizu",
+                      "name": "간장 등갈비찜 세트 가격",
+                      "fill": "#A52A24",
+                      "content": "19,900원",
+                      "fontFamily": "Inter",
+                      "fontSize": 25,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "HhLKJ",
+                      "name": "간장 등갈비찜 세트 설명",
+                      "fill": "#6E6258",
+                      "textGrowth": "fixed-width",
+                      "width": 570,
+                      "content": "달콤짭짤한 간장 양념으로 남녀노소 편안하게 즐기는 메뉴",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "HnFIf",
+          "name": "데스크톱 예약 혜택",
+          "width": 1440,
+          "height": 420,
+          "fill": "#FFFDF8",
+          "gap": 50,
+          "padding": [
+            48,
+            72
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "QXtQ4",
+              "name": "예약 혜택 본문",
+              "width": 620,
+              "height": 320,
+              "layout": "vertical",
+              "gap": 16,
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "wL7GN",
+                  "name": "예약 혜택 표지",
+                  "fill": "#A52A24",
+                  "content": "네이버 예약 고객 혜택",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "kl3aV",
+                  "name": "예약 혜택 제목",
+                  "fill": "#2B2118",
+                  "textGrowth": "fixed-width",
+                  "width": 600,
+                  "content": "낙지파전 또는\n등갈비 1인분 추가",
+                  "lineHeight": 1.3,
+                  "fontFamily": "Inter",
+                  "fontSize": 36,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "tymCe",
+                  "name": "공간 정보",
+                  "fill": "#6E6258",
+                  "textGrowth": "fixed-width",
+                  "width": 600,
+                  "content": "12테이블 · 52석 · 6인 단체석 2테이블\n전화 예약도 가능합니다.",
+                  "lineHeight": 1.6,
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "L9hc6",
+              "name": "실제 매장 공간 사진 자리",
+              "width": 620,
+              "height": 320,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "초안-assets/interior.jpg",
+                "mode": "fill"
+              },
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "WazRy",
+          "name": "데스크톱 방문자 리뷰",
+          "width": 1440,
+          "height": 560,
+          "fill": "#F7F1E6",
+          "layout": "none",
+          "children": [
+            {
+              "type": "frame",
+              "id": "HyC8R",
+              "layoutPosition": "absolute",
+              "x": 72,
+              "y": 46,
+              "name": "방문자 리뷰 제목 영역",
+              "width": 1296,
+              "height": 94,
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "eK80Y",
+                  "name": "FAQ 표시",
+                  "fill": "#A52A24",
+                  "content": "NAVER VISITOR REVIEWS",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "ogRmG",
+                  "name": "FAQ 제목",
+                  "fill": "#2B2118",
+                  "textGrowth": "fixed-width",
+                  "width": 1296,
+                  "content": "손님이 먼저 알아본 어믜뜰",
+                  "lineHeight": 1.3,
+                  "fontFamily": "Inter",
+                  "fontSize": 38,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "eDYV5",
+              "layoutPosition": "absolute",
+              "x": 72,
+              "y": 148,
+              "name": "방문자 리뷰 증거 요약",
+              "width": 1296,
+              "height": 58,
+              "fill": "#F7F1E6",
+              "cornerRadius": 4,
+              "stroke": "#00000000",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "mZcbe",
+                  "name": "월요일에도 영업하나요? 질문 글자",
+                  "fill": "#6E6258",
+                  "content": "네이버 방문자 리뷰에서 반복해 언급된 어믜뜰의 특별함",
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "DNjhM",
+                  "name": "월요일에도 영업하나요? 답변 글자",
+                  "fill": "#A52A24",
+                  "content": "맛있어요 30 · 고기 질 20 · 특별한 메뉴 12 · 넓은 매장 12",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "omut2",
+              "layoutPosition": "absolute",
+              "x": 72,
+              "y": 222,
+              "name": "방문자 리뷰 카드 행",
+              "width": 1296,
+              "height": 292,
+              "layout": "none",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "f6PO3",
+                  "layoutPosition": "absolute",
+                  "x": 0,
+                  "y": 0,
+                  "name": "색다른 한 상 리뷰 카드",
+                  "width": 420,
+                  "height": 292,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "GJvXH",
+                      "name": "모바일 FAQ 월요일 영업 질문",
+                      "fill": "#A52A24",
+                      "content": "평점 5.0 · 네이버 방문자 리뷰",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "lpk5F",
+                      "name": "모바일 FAQ 월요일 영업 답변",
+                      "fill": "#2B2118",
+                      "textGrowth": "fixed-width",
+                      "width": 372,
+                      "content": "“등갈비찜+샤브샤브라니 너무 색다른 메뉴예요. 부모님도 취향저격이라며 맛있게 드셨어요.”\n\n리뷰 일부 발췌 · 네이버 플레이스 원문 보기 ↗",
+                      "lineHeight": 1.55,
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "b09Kh",
+                  "layoutPosition": "absolute",
+                  "x": 438,
+                  "y": 0,
+                  "name": "부드러운 등갈비 리뷰 카드",
+                  "width": 420,
+                  "height": 292,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "sCkOX",
+                      "name": "모바일 FAQ 월요일 영업 질문",
+                      "fill": "#A52A24",
+                      "content": "평점 5.0 · 네이버 방문자 리뷰",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qRiz3",
+                      "name": "모바일 FAQ 월요일 영업 답변",
+                      "fill": "#2B2118",
+                      "textGrowth": "fixed-width",
+                      "width": 372,
+                      "content": "“고기가 아주 부드러워 어르신들도 편하게 드실 것 같아요. 야채도 가득해 정말 배불렀어요.”\n\n리뷰 일부 발췌 · 네이버 플레이스 원문 보기 ↗",
+                      "lineHeight": 1.55,
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "LQtzT",
+                  "layoutPosition": "absolute",
+                  "x": 876,
+                  "y": 0,
+                  "name": "골라 먹는 재미 리뷰 카드",
+                  "width": 420,
+                  "height": 292,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "U5PQ9R",
+                      "name": "모바일 FAQ 월요일 영업 질문",
+                      "fill": "#A52A24",
+                      "content": "평점 5.0 · 네이버 방문자 리뷰",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "FkSUf",
+                      "name": "모바일 FAQ 월요일 영업 답변",
+                      "fill": "#2B2118",
+                      "textGrowth": "fixed-width",
+                      "width": 372,
+                      "content": "“샤브샤브 느낌이라 야채를 많이 먹을 수 있고, 메밀전에 싸 먹는 조합도 좋았어요.”\n\n리뷰 일부 발췌 · 네이버 플레이스 원문 보기 ↗",
+                      "lineHeight": 1.55,
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ZbTjR",
+          "name": "데스크톱 FAQ",
+          "width": 1440,
+          "height": 480,
+          "fill": "#F7F1E6",
+          "gap": 60,
+          "padding": [
+            48,
+            72
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "O71Fw3",
+              "name": "FAQ 제목 영역",
+              "width": 360,
+              "height": 350,
+              "layout": "vertical",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "J2TzYq",
+                  "name": "FAQ 표시",
+                  "fill": "#A52A24",
+                  "content": "FAQ",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "ZHurp",
+                  "name": "FAQ 제목",
+                  "fill": "#2B2118",
+                  "textGrowth": "fixed-width",
+                  "width": 340,
+                  "content": "방문 전\n궁금한 점",
+                  "lineHeight": 1.3,
+                  "fontFamily": "Inter",
+                  "fontSize": 38,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "LGK6z",
+              "name": "FAQ 질문 목록",
+              "width": 876,
+              "height": 370,
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "wPMlP",
+                  "name": "월요일에도 영업하나요?",
+                  "width": 876,
+                  "height": 82,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 4,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "padding": [
+                    0,
+                    22
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Spe4e",
+                      "name": "월요일에도 영업하나요? 질문 글자",
+                      "fill": "#2B2118",
+                      "content": "월요일에도 영업하나요?",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "a5Dt2",
+                      "name": "월요일에도 영업하나요? 답변 글자",
+                      "fill": "#6E6258",
+                      "content": "매주 월요일은 정기휴무입니다.",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "hGlHh",
+                  "name": "브레이크 타임이 있나요?",
+                  "width": 876,
+                  "height": 82,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 4,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "padding": [
+                    0,
+                    22
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "czpVw",
+                      "name": "브레이크 타임이 있나요? 질문 글자",
+                      "fill": "#2B2118",
+                      "content": "브레이크 타임이 있나요?",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "TtSYJ",
+                      "name": "브레이크 타임이 있나요? 답변 글자",
+                      "fill": "#6E6258",
+                      "content": "평일 15:30~16:30이며 주말·공휴일은 제외됩니다.",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "SI2wW",
+                  "name": "주차할 수 있나요?",
+                  "width": 876,
+                  "height": 82,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 4,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "padding": [
+                    0,
+                    22
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "m0e9g",
+                      "name": "주차할 수 있나요? 질문 글자",
+                      "fill": "#2B2118",
+                      "content": "주차할 수 있나요?",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "OVDXS",
+                      "name": "주차할 수 있나요? 답변 글자",
+                      "fill": "#6E6258",
+                      "content": "건물 뒤 무료 지상주차장을 이용할 수 있습니다.",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "BoP61",
+                  "name": "포장이나 배달이 되나요?",
+                  "width": 876,
+                  "height": 82,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 4,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "padding": [
+                    0,
+                    22
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "zCut1",
+                      "name": "포장이나 배달이 되나요? 질문 글자",
+                      "fill": "#2B2118",
+                      "content": "포장이나 배달이 되나요?",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "R0374w",
+                      "name": "포장이나 배달이 되나요? 답변 글자",
+                      "fill": "#6E6258",
+                      "content": "포장은 가능하며 배달은 운영하지 않습니다.",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "D1KMf",
+          "name": "데스크톱 오시는 길",
+          "width": 1440,
+          "height": 520,
+          "fill": "#FFFDF8",
+          "gap": 48,
+          "padding": [
+            48,
+            72
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "tqhi8",
+              "name": "네이버 지도 자리",
+              "width": 650,
+              "height": 424,
+              "fill": "#D8D0BE",
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "o9n8C",
+                  "name": "지도 자리 글자",
+                  "fill": "#2B2118",
+                  "content": "네이버 지도 삽입",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "VAJb0",
+              "name": "방문 정보 영역",
+              "width": 598,
+              "height": 410,
+              "layout": "vertical",
+              "gap": 16,
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "H0C1yl",
+                  "name": "방문 정보 제목",
+                  "fill": "#2B2118",
+                  "textGrowth": "fixed-width",
+                  "width": 580,
+                  "content": "어믜뜰 등갈비찜\n청주봉명동본점",
+                  "lineHeight": 1.3,
+                  "fontFamily": "Inter",
+                  "fontSize": 32,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "UmEL0",
+                  "name": "방문 주소",
+                  "fill": "#2B2118",
+                  "content": "충북 청주시 흥덕구 백봉로 213-1 1층",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "cqnO3",
+                  "name": "방문 영업시간",
+                  "fill": "#6E6258",
+                  "textGrowth": "fixed-width",
+                  "width": 580,
+                  "content": "화~일 11:00~22:00 · 월요일 정기휴무\n브레이크 15:30~16:30 (주말·공휴일 제외)",
+                  "lineHeight": 1.6,
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "u7M3z6",
+                  "name": "방문 주차",
+                  "fill": "#6E6258",
+                  "textGrowth": "fixed-width",
+                  "width": 580,
+                  "content": "건물 뒤 무료 지상주차장 · 점심 및 17시 이후 도로 주차 가능",
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "frame",
+                  "id": "RiIdz",
+                  "name": "길찾기 버튼",
+                  "width": 180,
+                  "height": 54,
+                  "fill": "#355843",
+                  "cornerRadius": 6,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "CMpwb",
+                      "name": "길찾기 버튼 글자",
+                      "fill": "#FFFFFF",
+                      "content": "길찾기",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "YtQzb",
+          "name": "데스크톱 푸터",
+          "width": 1440,
           "height": 200,
-          "fill": "$color.rice",
-          "layout": "horizontal",
-          "padding": [44, 120],
+          "fill": "#261D17",
+          "padding": [
+            0,
+            72
+          ],
           "justifyContent": "space_between",
           "alignItems": "center",
           "children": [
-            { "type": "text", "id": "d-footer-brand", "content": "어믜뜰 등갈비찜 청주봉명동본점\n늘 자식 쪽으로 기울던 접시, 그날의 식탁", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "600", "lineHeight": 1.55 },
-            { "type": "text", "id": "d-footer-links", "content": "네이버 플레이스 · 인스타그램 · 전화 0507-1449-0004", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "500" }
+            {
+              "type": "text",
+              "id": "PsI8G",
+              "name": "푸터 브랜드",
+              "fill": "#FFFFFF",
+              "content": "어믜뜰",
+              "fontFamily": "Inter",
+              "fontSize": 28,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "cDZnv",
+              "name": "푸터 정보",
+              "fill": "#D8CBB8",
+              "content": "0507-1449-0004   네이버 플레이스   인스타그램   관리자",
+              "fontFamily": "Inter",
+              "fontSize": 16,
+              "fontWeight": "600"
+            }
           ]
         }
       ]
     },
     {
       "type": "frame",
-      "id": "mobile-home",
-      "x": 1520,
-      "y": 0,
-      "name": "고객용 홈페이지 - Mobile 390",
+      "id": "R0F3Av",
+      "x": -18302,
+      "y": -3433,
+      "name": "고객용 홈페이지 모바일 최종 초안",
       "clip": true,
       "width": 390,
-      "height": 5668,
-      "fill": "$color.ocher",
+      "height": 5620,
+      "fill": "#F7F1E6",
       "layout": "vertical",
       "children": [
-        { "type": "frame", "id": "m-nav", "width": "fill_container", "height": 68, "fill": "$color.rice", "layout": "horizontal", "padding": [14, 20], "justifyContent": "space_between", "alignItems": "center", "children": [ { "type": "text", "id": "m-logo", "content": "어믜뜰", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" }, { "type": "text", "id": "m-menu-icon", "content": "메뉴", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" } ] },
         {
           "type": "frame",
-          "id": "m-hero",
-          "width": "fill_container",
-          "height": 840,
-          "fill": "$color.ocher",
+          "id": "VJ1fC",
+          "name": "모바일 상단바",
+          "width": 390,
+          "height": 68,
+          "fill": "#FFFDF8",
+          "stroke": "#D8CBB8",
+          "strokeWidth": {
+            "bottom": 1
+          },
+          "padding": [
+            0,
+            20
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "FuUCZ",
+              "name": "모바일 브랜드",
+              "fill": "#2B2118",
+              "content": "어믜뜰",
+              "fontFamily": "Inter",
+              "fontSize": 26,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "NQQOF",
+              "name": "모바일 메뉴 아이콘",
+              "fill": "#2B2118",
+              "content": "메뉴",
+              "fontFamily": "Inter",
+              "fontSize": 16,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "qPLaK",
+          "name": "모바일 히어로",
+          "width": 390,
+          "height": 620,
+          "fill": "#4B392E",
           "layout": "vertical",
-          "padding": [42, 24],
           "gap": 20,
+          "padding": [
+            54,
+            24
+          ],
+          "justifyContent": "center",
           "children": [
-            { "type": "text", "id": "m-hero-eyebrow", "content": "청주 봉명동 · 샤브형 등갈비찜", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" },
-            { "type": "text", "id": "m-hero-title", "content": "늘 자식 쪽으로\n기울던 접시,\n그날의 식탁", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 40, "fontWeight": "700", "lineHeight": 1.25, "textGrowth": "fixed-width", "width": 342 },
-            { "type": "text", "id": "m-hero-lead", "content": "엄마의 마음으로 푸짐하게 차려내는\n어믜뜰만의 등갈비찜 한 상", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "500", "lineHeight": 1.6 },
-            { "type": "frame", "id": "m-hero-photo", "width": 342, "height": 310, "fill": "$color.deep", "cornerRadius": 8, "layout": "vertical", "justifyContent": "center", "alignItems": "center", "gap": 8, "children": [ { "type": "text", "id": "m-hero-photo-label", "content": "대표 음식 사진", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 22, "fontWeight": "700" }, { "type": "text", "id": "m-hero-photo-note", "content": "김 오르는 매운 등갈비찜", "fill": "$color.straw", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "500" } ] },
-            { "type": "frame", "id": "m-hero-booking", "width": 342, "height": 56, "fill": "$color.gochujang", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-hero-booking-label", "content": "네이버 예약하기", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] },
-            { "type": "text", "id": "m-hero-benefit", "content": "예약 시 낙지파전 또는 추가 등갈비 1인분 서비스", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700", "textAlign": "center", "textGrowth": "fixed-width", "width": 342 }
-          ]
-        },
-        { "type": "frame", "id": "m-proof", "width": "fill_container", "height": 160, "fill": "$color.deep", "layout": "vertical", "padding": [24, 24], "gap": 12, "justifyContent": "center", "children": [ { "type": "text", "id": "m-proof-rating", "content": "네이버 별점 4.91 · 리뷰 364", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-proof-space", "content": "12테이블 · 52석 · 단체석 · 주차 가능", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "500" } ] },
-        {
-          "type": "frame",
-          "id": "m-story",
-          "width": "fill_container",
-          "height": 780,
-          "fill": "$color.rice",
-          "layout": "vertical",
-          "padding": [48, 24],
-          "gap": 20,
-          "children": [
-            { "type": "frame", "id": "m-story-photo", "width": 342, "height": 280, "fill": "$color.hairline", "cornerRadius": 8, "layout": "vertical", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-story-photo-label", "content": "황토·볏짚 공간 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" } ] },
-            { "type": "text", "id": "m-story-kicker", "content": "BRAND STORY", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" },
-            { "type": "text", "id": "m-story-title", "content": "좋은 것은 늘\n자식 앞으로 밀어주시던 마음", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 30, "fontWeight": "700", "lineHeight": 1.35 },
-            { "type": "text", "id": "m-story-body", "content": "함께 둘러앉아 취향대로 푸짐하게 즐기고, 돌아가는 길에 ‘오늘 참 잘 먹었다’는 말이 자연스럽게 나오는 곳을 만듭니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "400", "lineHeight": 1.7, "textGrowth": "fixed-width", "width": 342 }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "m-experience",
-          "width": "fill_container",
-          "height": 660,
-          "fill": "$color.hanji",
-          "layout": "vertical",
-          "padding": [44, 24],
-          "gap": 18,
-          "children": [
-            { "type": "text", "id": "m-exp-title", "content": "내가 완성하는\n샤브형 등갈비찜", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 30, "fontWeight": "700", "lineHeight": 1.3 },
-            { "type": "text", "id": "m-exp-lead", "content": "30여 종 셀프바에서 원하는 재료를 골라보세요.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "500", "lineHeight": 1.5, "textGrowth": "fixed-width", "width": 342 },
-            { "type": "frame", "id": "m-step-1", "width": 342, "height": 100, "fill": "$color.rice", "cornerRadius": 8, "layout": "horizontal", "padding": 20, "gap": 16, "alignItems": "center", "children": [ { "type": "text", "id": "m-step-1-num", "content": "01", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-step-1-copy", "content": "등갈비와 육수를\n보글보글 끓인다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700", "lineHeight": 1.45 } ] },
-            { "type": "frame", "id": "m-step-2", "width": 342, "height": 100, "fill": "$color.rice", "cornerRadius": 8, "layout": "horizontal", "padding": 20, "gap": 16, "alignItems": "center", "children": [ { "type": "text", "id": "m-step-2-num", "content": "02", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-step-2-copy", "content": "30여 종 재료를\n취향대로 고른다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700", "lineHeight": 1.45 } ] },
-            { "type": "frame", "id": "m-step-3", "width": 342, "height": 100, "fill": "$color.rice", "cornerRadius": 8, "layout": "horizontal", "padding": 20, "gap": 16, "alignItems": "center", "children": [ { "type": "text", "id": "m-step-3-num", "content": "03", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-step-3-copy", "content": "한 냄비에 더해\n샤브처럼 나눈다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700", "lineHeight": 1.45 } ] },
-            { "type": "frame", "id": "m-step-4", "width": 342, "height": 100, "fill": "$color.rice", "cornerRadius": 8, "layout": "horizontal", "padding": 20, "gap": 16, "alignItems": "center", "children": [ { "type": "text", "id": "m-step-4-num", "content": "04", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-step-4-copy", "content": "수제 우유빙수로\n부드럽게 마무리", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700", "lineHeight": 1.45 } ] }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "m-menu",
-          "width": "fill_container",
-          "height": 840,
-          "fill": "$color.rice",
-          "layout": "vertical",
-          "padding": [44, 24],
-          "gap": 20,
-          "children": [
-            { "type": "text", "id": "m-menu-title", "content": "부족함 없이\n대접하는 한 상", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 30, "fontWeight": "700", "lineHeight": 1.3 },
-            { "type": "frame", "id": "m-menu-spicy", "width": 342, "height": 330, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 20, "gap": 12, "children": [ { "type": "frame", "id": "m-menu-spicy-photo", "width": 302, "height": 150, "fill": "$color.gochujang", "cornerRadius": 6, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-menu-spicy-photo-label", "content": "매운 세트 사진", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] }, { "type": "text", "id": "m-menu-spicy-title", "content": "매운 등갈비찜 세트 · 19,900원", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" }, { "type": "text", "id": "m-menu-spicy-body", "content": "매콤한 육수와 등갈비를 샤브처럼. 임궁밥과 메밀전 포함.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400", "lineHeight": 1.5, "textGrowth": "fixed-width", "width": 300 } ] },
-            { "type": "frame", "id": "m-menu-soy", "width": 342, "height": 330, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 20, "gap": 12, "children": [ { "type": "frame", "id": "m-menu-soy-photo", "width": 302, "height": 150, "fill": "$color.straw", "cornerRadius": 6, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-menu-soy-photo-label", "content": "간장 세트 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] }, { "type": "text", "id": "m-menu-soy-title", "content": "간장 등갈비찜 세트 · 19,900원", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" }, { "type": "text", "id": "m-menu-soy-body", "content": "달콤짭짤하고 부드러운 등갈비. 남녀노소 편안한 한 상.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400", "lineHeight": 1.5, "textGrowth": "fixed-width", "width": 300 } ] }
-          ]
-        },
-        { "type": "frame", "id": "m-space", "width": "fill_container", "height": 600, "fill": "$color.ocher", "layout": "vertical", "padding": [44, 24], "gap": 18, "children": [ { "type": "text", "id": "m-space-title", "content": "가족 외식부터 회식까지", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 29, "fontWeight": "700" }, { "type": "text", "id": "m-space-body", "content": "12테이블 52석, 6인 단체석 2테이블을 갖췄습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "400", "lineHeight": 1.6, "textGrowth": "fixed-width", "width": 342 }, { "type": "frame", "id": "m-space-photo-1", "width": 342, "height": 190, "fill": "$color.hairline", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-space-photo-1-label", "content": "전체 좌석 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "700" } ] }, { "type": "frame", "id": "m-space-photo-2", "width": 342, "height": 190, "fill": "$color.deep", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-space-photo-2-label", "content": "단체석 사진", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "700" } ] } ] },
-        { "type": "frame", "id": "m-faq", "width": "fill_container", "height": 780, "fill": "$color.rice", "layout": "vertical", "padding": [44, 24], "gap": 16, "children": [ { "type": "text", "id": "m-faq-title", "content": "자주 묻는 질문", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 30, "fontWeight": "700" }, { "type": "frame", "id": "m-faq-1", "width": 342, "height": 140, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 18, "gap": 8, "children": [ { "type": "text", "id": "m-faq-1-q", "content": "매운 음식을 못 먹어도 되나요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-faq-1-a", "content": "간장 등갈비찜 세트를 준비하고 있습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400", "lineHeight": 1.5, "textGrowth": "fixed-width", "width": 300 } ] }, { "type": "frame", "id": "m-faq-2", "width": 342, "height": 140, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 18, "gap": 8, "children": [ { "type": "text", "id": "m-faq-2-q", "content": "단체 예약이 가능한가요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-faq-2-a", "content": "네이버와 전화로 예약할 수 있습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] }, { "type": "frame", "id": "m-faq-3", "width": 342, "height": 140, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 18, "gap": 8, "children": [ { "type": "text", "id": "m-faq-3-q", "content": "주차는 어디에 하나요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-faq-3-a", "content": "건물 뒤편 무료 지상주차장을 이용하세요.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] }, { "type": "frame", "id": "m-faq-4", "width": 342, "height": 140, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 18, "gap": 8, "children": [ { "type": "text", "id": "m-faq-4-q", "content": "포장과 배달이 가능한가요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-faq-4-a", "content": "포장은 가능하며 배달은 하지 않습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] } ] },
-        { "type": "frame", "id": "m-visit", "width": "fill_container", "height": 780, "fill": "$color.deep", "layout": "vertical", "padding": [44, 24], "gap": 18, "children": [ { "type": "text", "id": "m-visit-title", "content": "어믜뜰에서 만나요", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 30, "fontWeight": "700" }, { "type": "text", "id": "m-visit-address", "content": "충북 청주시 흥덕구\n백봉로 213-1 1층", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "600", "lineHeight": 1.5 }, { "type": "text", "id": "m-visit-hours", "content": "11:00 - 22:00\n브레이크타임 15:30 - 16:30\n주말·공휴일 브레이크타임 없음\n매주 월요일 정기휴무", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.6 }, { "type": "text", "id": "m-visit-phone", "content": "0507-1449-0004", "fill": "$color.straw", "fontFamily": "Pretendard", "fontSize": 22, "fontWeight": "700" }, { "type": "frame", "id": "m-map-slot", "width": 342, "height": 230, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-map-slot-label", "content": "지도 / 외관 / 주차 진입 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] }, { "type": "frame", "id": "m-visit-booking", "width": 342, "height": 56, "fill": "$color.gochujang", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-visit-booking-label", "content": "네이버 예약", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] }, { "type": "frame", "id": "m-visit-map", "width": 342, "height": 56, "fill": "$color.rice", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-visit-map-label", "content": "네이버 길찾기", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] } ] },
-        { "type": "frame", "id": "m-sticky", "width": "fill_container", "height": 160, "fill": "$color.rice", "layout": "vertical", "padding": [20, 24], "gap": 12, "children": [ { "type": "frame", "id": "m-sticky-row", "width": 342, "height": 56, "layout": "horizontal", "gap": 10, "children": [ { "type": "frame", "id": "m-sticky-call", "width": 112, "height": 56, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-sticky-call-label", "content": "전화", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "700" } ] }, { "type": "frame", "id": "m-sticky-route", "width": 112, "height": 56, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-sticky-route-label", "content": "길찾기", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "700" } ] }, { "type": "frame", "id": "m-sticky-book", "width": 108, "height": 56, "fill": "$color.gochujang", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-sticky-book-label", "content": "예약", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "700" } ] } ] }, { "type": "text", "id": "m-footer-copy", "content": "어믜뜰 등갈비찜 청주봉명동본점", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600", "textAlign": "center", "textGrowth": "fixed-width", "width": 342 } ] }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "admin-login",
-      "x": 1990,
-      "y": 0,
-      "name": "관리자 로그인 - Desktop",
-      "clip": true,
-      "width": 480,
-      "height": 720,
-      "fill": "$color.ocher",
-      "layout": "vertical",
-      "padding": [96, 54],
-      "gap": 22,
-      "alignItems": "center",
-      "children": [
-        { "type": "text", "id": "a-login-brand", "content": "어믜뜰", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 34, "fontWeight": "700" },
-        { "type": "text", "id": "a-login-title", "content": "매장 관리", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 22, "fontWeight": "600" },
-        { "type": "text", "id": "a-login-description", "content": "메뉴, 사진, 영업시간과 소식을 관리합니다.", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400", "textAlign": "center", "textGrowth": "fixed-width", "width": 340 },
-        { "type": "frame", "id": "a-login-email", "width": 372, "height": 58, "fill": "$color.rice", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "horizontal", "padding": [18, 16], "alignItems": "center", "children": [ { "type": "text", "id": "a-login-email-label", "content": "이메일", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "500" } ] },
-        { "type": "frame", "id": "a-login-password", "width": 372, "height": 58, "fill": "$color.rice", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "horizontal", "padding": [18, 16], "alignItems": "center", "children": [ { "type": "text", "id": "a-login-password-label", "content": "비밀번호", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "500" } ] },
-        { "type": "frame", "id": "a-login-button", "width": 372, "height": 56, "fill": "$color.gochujang", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "a-login-button-label", "content": "로그인", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] },
-        { "type": "text", "id": "a-login-help", "content": "관리자 계정은 승인된 사용자만 접근할 수 있습니다.", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400", "textAlign": "center", "textGrowth": "fixed-width", "width": 360 }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "admin-dashboard",
-      "x": 2550,
-      "y": 0,
-      "name": "관리자 대시보드 - Desktop 1440",
-      "clip": true,
-      "width": 1440,
-      "height": 1100,
-      "fill": "#F4F1EA",
-      "layout": "horizontal",
-      "children": [
-        {
-          "type": "frame",
-          "id": "a-sidebar",
-          "width": 260,
-          "height": 1100,
-          "fill": "$color.deep",
-          "layout": "vertical",
-          "padding": [32, 24],
-          "gap": 18,
-          "children": [
-            { "type": "text", "id": "a-sidebar-brand", "content": "어믜뜰 관리", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 25, "fontWeight": "700" },
-            { "type": "text", "id": "a-sidebar-home", "content": "대시보드", "fill": "$color.straw", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" },
-            { "type": "text", "id": "a-sidebar-store", "content": "매장 기본 정보", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" },
-            { "type": "text", "id": "a-sidebar-hours", "content": "영업시간·휴무일", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" },
-            { "type": "text", "id": "a-sidebar-menu", "content": "메뉴·가격", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" },
-            { "type": "text", "id": "a-sidebar-photo", "content": "사진 관리", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" },
-            { "type": "text", "id": "a-sidebar-notice", "content": "공지·쿠폰", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" },
-            { "type": "text", "id": "a-sidebar-faq", "content": "자주 묻는 질문", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" },
-            { "type": "text", "id": "a-sidebar-seo", "content": "검색·GEO 상태", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "a-main",
-          "width": 1180,
-          "height": 1100,
-          "fill": "#F4F1EA",
-          "layout": "vertical",
-          "children": [
-            { "type": "frame", "id": "a-topbar", "width": "fill_container", "height": 84, "fill": "$color.rice", "layout": "horizontal", "padding": [20, 32], "justifyContent": "space_between", "alignItems": "center", "children": [ { "type": "text", "id": "a-topbar-title", "content": "대시보드", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 28, "fontWeight": "700" }, { "type": "frame", "id": "a-preview-button", "width": 150, "height": 48, "fill": "$color.rice", "stroke": "$color.body", "strokeWidth": 1, "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "a-preview-button-label", "content": "홈페이지 보기", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" } ] } ] },
+            {
+              "type": "text",
+              "id": "eCxVC",
+              "name": "모바일 지역 설명",
+              "fill": "#E8C98E",
+              "content": "청주 봉명동 · 샤브형 등갈비찜",
+              "fontFamily": "Inter",
+              "fontSize": 17,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "FIISe",
+              "name": "모바일 히어로 제목",
+              "fill": "#FFFFFF",
+              "textGrowth": "fixed-width",
+              "width": 340,
+              "content": "처음 보는\n등갈비찜",
+              "lineHeight": 1.2,
+              "fontFamily": "Inter",
+              "fontSize": 44,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "fZtMT",
+              "name": "모바일 히어로 보조 제목",
+              "fill": "#FFFFFF",
+              "textGrowth": "fixed-width",
+              "width": 340,
+              "content": "함께 끓여 더 맛있는 한 상",
+              "fontFamily": "Inter",
+              "fontSize": 24,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "e2Y2u",
+              "name": "모바일 히어로 설명",
+              "fill": "#F8EEE2",
+              "textGrowth": "fixed-width",
+              "width": 340,
+              "content": "30여 종의 재료를 취향대로 더해 샤브처럼 즐겨보세요.",
+              "lineHeight": 1.6,
+              "fontFamily": "Inter",
+              "fontSize": 18,
+              "fontWeight": "500"
+            },
             {
               "type": "frame",
-              "id": "a-content",
-              "width": "fill_container",
-              "height": 1016,
+              "id": "UbGSY",
+              "name": "모바일 실제 대표 사진 자리",
+              "width": 342,
+              "height": 170,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "초안-assets/spicy-ribs.jpg",
+                "mode": "fill"
+              },
+              "stroke": "#C9A96E",
+              "strokeWidth": 1,
               "layout": "vertical",
-              "padding": 32,
-              "gap": 24,
+              "justifyContent": "center",
+              "alignItems": "center"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "RJRH7",
+          "name": "모바일 핵심 증거",
+          "width": 390,
+          "height": 180,
+          "fill": "#7F1D1D",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            22,
+            24
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "p40Of",
+              "name": "모바일 핵심 증거 1",
+              "fill": "#FFFFFF",
+              "content": "세트 19,900원 · 임궁밥·메밀전 포함",
+              "fontFamily": "Inter",
+              "fontSize": 17,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "A7mQI",
+              "name": "모바일 핵심 증거 2",
+              "fill": "#FFFFFF",
+              "content": "30여 종 셀프바 · 수제우유빙수 후식",
+              "fontFamily": "Inter",
+              "fontSize": 17,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "xCoya",
+              "name": "모바일 핵심 증거 3",
+              "fill": "#F3DED7",
+              "content": "포장 가능 · 배달 미운영",
+              "fontFamily": "Inter",
+              "fontSize": 16,
+              "fontWeight": "600"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "f7xMvw",
+          "name": "모바일 브랜드 이야기",
+          "width": 390,
+          "height": 560,
+          "fill": "#FFFDF8",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            42,
+            24
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "XsXeN",
+              "name": "모바일 실제 한상 사진 자리",
+              "width": 342,
+              "height": 220,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "초안-assets/hero-table.jpg",
+                "mode": "fill"
+              },
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center"
+            },
+            {
+              "type": "text",
+              "id": "JDu0h",
+              "name": "모바일 브랜드 한줄",
+              "fill": "#A52A24",
+              "textGrowth": "fixed-width",
+              "width": 342,
+              "content": "늘 자식 쪽으로 기울던 접시, 그날의 식탁",
+              "fontFamily": "Inter",
+              "fontSize": 17,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "kEN7o",
+              "name": "모바일 브랜드 제목",
+              "fill": "#2B2118",
+              "textGrowth": "fixed-width",
+              "width": 342,
+              "content": "엄마의 마음으로\n푸짐하게 차려내는 한 상",
+              "lineHeight": 1.35,
+              "fontFamily": "Inter",
+              "fontSize": 30,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "ZJVk4",
+              "name": "모바일 브랜드 설명",
+              "fill": "#6E6258",
+              "textGrowth": "fixed-width",
+              "width": 342,
+              "content": "누군가를 배부르게 먹이고 싶은 마음을 닮은 식당입니다.",
+              "lineHeight": 1.6,
+              "fontFamily": "Inter",
+              "fontSize": 17,
+              "fontWeight": "500"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "NzM2z",
+          "name": "모바일 식사 경험",
+          "width": 390,
+          "height": 740,
+          "fill": "#F7F1E6",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            38,
+            24
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "k7Pm2w",
+              "name": "모바일 식사 경험 제목",
+              "fill": "#2B2118",
+              "textGrowth": "fixed-width",
+              "width": 342,
+              "content": "등갈비찜을 즐기는 네 단계",
+              "fontFamily": "Inter",
+              "fontSize": 29,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "v2onWj",
+              "name": "모바일 등갈비찜 선택",
+              "width": 342,
+              "height": 130,
+              "fill": "#FFFDF8",
+              "cornerRadius": 6,
+              "stroke": "#D8CBB8",
+              "strokeWidth": 1,
+              "gap": 18,
+              "padding": 18,
+              "alignItems": "center",
               "children": [
-                { "type": "text", "id": "a-welcome", "content": "오늘의 어믜뜰", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 30, "fontWeight": "700" },
                 {
                   "type": "frame",
-                  "id": "a-status-cards",
-                  "width": 1116,
-                  "height": 150,
-                  "layout": "horizontal",
-                  "gap": 16,
+                  "id": "x6cSI",
+                  "name": "모바일 등갈비찜 선택 번호",
+                  "width": 54,
+                  "height": 54,
+                  "fill": "#A52A24",
+                  "cornerRadius": 4,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
                   "children": [
-                    { "type": "frame", "id": "a-status-hours", "width": 268, "height": 150, "fill": "$color.rice", "cornerRadius": 8, "layout": "vertical", "padding": 22, "gap": 10, "children": [ { "type": "text", "id": "a-status-hours-label", "content": "오늘 영업", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-status-hours-value", "content": "11:00 - 22:00", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 23, "fontWeight": "700" }, { "type": "text", "id": "a-status-hours-note", "content": "브레이크 15:30 - 16:30", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] },
-                    { "type": "frame", "id": "a-status-menu", "width": 268, "height": 150, "fill": "$color.rice", "cornerRadius": 8, "layout": "vertical", "padding": 22, "gap": 10, "children": [ { "type": "text", "id": "a-status-menu-label", "content": "공개 메뉴", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-status-menu-value", "content": "2개", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 26, "fontWeight": "700" }, { "type": "text", "id": "a-status-menu-note", "content": "두 메뉴 모두 19,900원", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] },
-                    { "type": "frame", "id": "a-status-news", "width": 268, "height": 150, "fill": "$color.rice", "cornerRadius": 8, "layout": "vertical", "padding": 22, "gap": 10, "children": [ { "type": "text", "id": "a-status-news-label", "content": "예약 혜택", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-status-news-value", "content": "게시 중", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" }, { "type": "text", "id": "a-status-news-note", "content": "낙지파전 또는 등갈비 1인분", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] },
-                    { "type": "frame", "id": "a-status-geo", "width": 268, "height": 150, "fill": "$color.rice", "cornerRadius": 8, "layout": "vertical", "padding": 22, "gap": 10, "children": [ { "type": "text", "id": "a-status-geo-label", "content": "검색 정보", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-status-geo-value", "content": "정보 일치", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" }, { "type": "text", "id": "a-status-geo-note", "content": "주소·전화·영업시간", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] }
+                    {
+                      "type": "text",
+                      "id": "Jb2N7",
+                      "name": "모바일 등갈비찜 선택 번호 글자",
+                      "fill": "#FFFFFF",
+                      "content": "01",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "800"
+                    }
                   ]
                 },
                 {
                   "type": "frame",
-                  "id": "a-workspace",
-                  "width": 1116,
-                  "height": 650,
-                  "layout": "horizontal",
-                  "gap": 24,
+                  "id": "m8Wks",
+                  "name": "모바일 등갈비찜 선택 설명 영역",
+                  "width": 230,
+                  "height": 82,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "VR0Nj",
+                      "name": "모바일 등갈비찜 선택 제목",
+                      "fill": "#2B2118",
+                      "content": "등갈비찜 선택",
+                      "fontFamily": "Inter",
+                      "fontSize": 20,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "V9ynN",
+                      "name": "모바일 등갈비찜 선택 설명",
+                      "fill": "#6E6258",
+                      "content": "매운맛 또는 간장맛",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Ii2pq",
+              "name": "모바일 재료 담기",
+              "width": 342,
+              "height": 130,
+              "fill": "#FFFDF8",
+              "cornerRadius": 6,
+              "stroke": "#D8CBB8",
+              "strokeWidth": 1,
+              "gap": 18,
+              "padding": 18,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "bzV37",
+                  "name": "모바일 재료 담기 번호",
+                  "width": 54,
+                  "height": 54,
+                  "fill": "#A52A24",
+                  "cornerRadius": 4,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "c2NQF",
+                      "name": "모바일 재료 담기 번호 글자",
+                      "fill": "#FFFFFF",
+                      "content": "02",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "cbRVS",
+                  "name": "모바일 재료 담기 설명 영역",
+                  "width": 230,
+                  "height": 82,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Z1rAN",
+                      "name": "모바일 재료 담기 제목",
+                      "fill": "#2B2118",
+                      "content": "재료 담기",
+                      "fontFamily": "Inter",
+                      "fontSize": 20,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "IHQEv",
+                      "name": "모바일 재료 담기 설명",
+                      "fill": "#6E6258",
+                      "content": "채소·버섯·떡·당면",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "rtdFt",
+              "name": "모바일 샤브처럼 끓이기",
+              "width": 342,
+              "height": 130,
+              "fill": "#FFFDF8",
+              "cornerRadius": 6,
+              "stroke": "#D8CBB8",
+              "strokeWidth": 1,
+              "gap": 18,
+              "padding": 18,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "w7dXpO",
+                  "name": "모바일 샤브처럼 끓이기 번호",
+                  "width": 54,
+                  "height": 54,
+                  "fill": "#A52A24",
+                  "cornerRadius": 4,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "htGJl",
+                      "name": "모바일 샤브처럼 끓이기 번호 글자",
+                      "fill": "#FFFFFF",
+                      "content": "03",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "cAb2u",
+                  "name": "모바일 샤브처럼 끓이기 설명 영역",
+                  "width": 230,
+                  "height": 82,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "XA4GS",
+                      "name": "모바일 샤브처럼 끓이기 제목",
+                      "fill": "#2B2118",
+                      "content": "샤브처럼 끓이기",
+                      "fontFamily": "Inter",
+                      "fontSize": 20,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "XHkzN",
+                      "name": "모바일 샤브처럼 끓이기 설명",
+                      "fill": "#6E6258",
+                      "content": "취향대로 함께",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Tb6cO",
+              "name": "모바일 빙수로 마무리",
+              "width": 342,
+              "height": 130,
+              "fill": "#FFFDF8",
+              "cornerRadius": 6,
+              "stroke": "#D8CBB8",
+              "strokeWidth": 1,
+              "gap": 18,
+              "padding": 18,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "zgBK7",
+                  "name": "모바일 빙수로 마무리 번호",
+                  "width": 54,
+                  "height": 54,
+                  "fill": "#A52A24",
+                  "cornerRadius": 4,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "UiKay",
+                      "name": "모바일 빙수로 마무리 번호 글자",
+                      "fill": "#FFFFFF",
+                      "content": "04",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "RKy3y",
+                  "name": "모바일 빙수로 마무리 설명 영역",
+                  "width": 230,
+                  "height": 82,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "S3MDT4",
+                      "name": "모바일 빙수로 마무리 제목",
+                      "fill": "#2B2118",
+                      "content": "빙수로 마무리",
+                      "fontFamily": "Inter",
+                      "fontSize": 20,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "NqHcI",
+                      "name": "모바일 빙수로 마무리 설명",
+                      "fill": "#6E6258",
+                      "content": "수제우유빙수 후식",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "C6mwt",
+          "name": "모바일 대표 메뉴",
+          "width": 390,
+          "height": 760,
+          "fill": "#2F3F32",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            38,
+            24
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "HJwv4",
+              "name": "모바일 대표 메뉴 제목",
+              "fill": "#FFFFFF",
+              "content": "대표 메뉴",
+              "fontFamily": "Inter",
+              "fontSize": 30,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "hs8lZ",
+              "name": "모바일 대표 메뉴 설명",
+              "fill": "#DDE8DF",
+              "content": "임궁밥과 메밀전이 함께 제공됩니다.",
+              "fontFamily": "Inter",
+              "fontSize": 17,
+              "fontWeight": "500"
+            },
+            {
+              "type": "frame",
+              "id": "L8dCk",
+              "name": "모바일 매운 등갈비찜 세트",
+              "width": 342,
+              "height": 280,
+              "fill": "#FFFDF8",
+              "cornerRadius": 6,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Z2OlZt",
+                  "name": "모바일 매운 등갈비찜 세트 사진 자리",
+                  "width": 306,
+                  "height": 120,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "초안-assets/spicy-ribs.jpg",
+                    "mode": "fill"
+                  },
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center"
+                },
+                {
+                  "type": "text",
+                  "id": "xPue4",
+                  "name": "모바일 매운 등갈비찜 세트 이름",
+                  "fill": "#2B2118",
+                  "content": "매운 등갈비찜 세트",
+                  "fontFamily": "Inter",
+                  "fontSize": 22,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "HcBtX",
+                  "name": "모바일 매운 등갈비찜 세트 가격",
+                  "fill": "#A52A24",
+                  "content": "19,900원",
+                  "fontFamily": "Inter",
+                  "fontSize": 22,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "kpUbC",
+                  "name": "모바일 매운 등갈비찜 세트 포함",
+                  "fill": "#355843",
+                  "content": "임궁밥 · 메밀전 포함",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "qai88",
+              "name": "모바일 간장 등갈비찜 세트",
+              "width": 342,
+              "height": 280,
+              "fill": "#FFFDF8",
+              "cornerRadius": 6,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 18,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Y5X8VQ",
+                  "name": "모바일 간장 등갈비찜 세트 사진 자리",
+                  "width": 306,
+                  "height": 120,
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "초안-assets/soy-ribs.jpg",
+                    "mode": "fill"
+                  },
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center"
+                },
+                {
+                  "type": "text",
+                  "id": "LgomT",
+                  "name": "모바일 간장 등갈비찜 세트 이름",
+                  "fill": "#2B2118",
+                  "content": "간장 등갈비찜 세트",
+                  "fontFamily": "Inter",
+                  "fontSize": 22,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "YH2EA",
+                  "name": "모바일 간장 등갈비찜 세트 가격",
+                  "fill": "#A52A24",
+                  "content": "19,900원",
+                  "fontFamily": "Inter",
+                  "fontSize": 22,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "lGKKt",
+                  "name": "모바일 간장 등갈비찜 세트 포함",
+                  "fill": "#355843",
+                  "content": "임궁밥 · 메밀전 포함",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "c8XB2",
+          "name": "모바일 예약 혜택",
+          "width": 390,
+          "height": 620,
+          "fill": "#FFFDF8",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            38,
+            24
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "zQthb",
+              "name": "모바일 예약 혜택 표시",
+              "fill": "#A52A24",
+              "content": "네이버 예약 고객 혜택",
+              "fontFamily": "Inter",
+              "fontSize": 17,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "QziIh",
+              "name": "모바일 예약 혜택 제목",
+              "fill": "#2B2118",
+              "textGrowth": "fixed-width",
+              "width": 342,
+              "content": "낙지파전 또는\n등갈비 1인분 추가",
+              "lineHeight": 1.3,
+              "fontFamily": "Inter",
+              "fontSize": 30,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "VZwDj",
+              "name": "모바일 좌석 정보",
+              "fill": "#6E6258",
+              "textGrowth": "fixed-width",
+              "width": 342,
+              "content": "12테이블 · 52석\n6인 단체석 2테이블 · 전화 예약 가능",
+              "lineHeight": 1.6,
+              "fontFamily": "Inter",
+              "fontSize": 17,
+              "fontWeight": "500"
+            },
+            {
+              "type": "frame",
+              "id": "d5BREk",
+              "name": "모바일 실제 매장 공간 사진",
+              "width": 342,
+              "height": 180,
+              "fill": {
+                "type": "image",
+                "enabled": true,
+                "url": "초안-assets/interior.jpg",
+                "mode": "fill"
+              },
+              "cornerRadius": 4
+            },
+            {
+              "type": "frame",
+              "id": "KgTSD",
+              "name": "모바일 네이버 예약 버튼",
+              "width": 342,
+              "height": 58,
+              "fill": "#A52A24",
+              "cornerRadius": 6,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "vdZRX",
+                  "name": "모바일 네이버 예약 버튼 글자",
+                  "fill": "#FFFFFF",
+                  "content": "네이버에서 예약하기",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "nlWAZ",
+          "name": "모바일 방문자 리뷰",
+          "width": 390,
+          "height": 920,
+          "fill": "#F7F1E6",
+          "layout": "none",
+          "children": [
+            {
+              "type": "text",
+              "id": "B1965F",
+              "layoutPosition": "absolute",
+              "x": 24,
+              "y": 36,
+              "name": "모바일 방문자 리뷰 제목",
+              "fill": "#2B2118",
+              "textGrowth": "fixed-width",
+              "width": 342,
+              "content": "손님이 먼저 알아본 어믜뜰",
+              "fontFamily": "Inter",
+              "fontSize": 29,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "sDD76",
+              "layoutPosition": "absolute",
+              "x": 24,
+              "y": 82,
+              "name": "모바일 방문자 리뷰 설명",
+              "fill": "#6E6258",
+              "textGrowth": "fixed-width",
+              "width": 342,
+              "content": "네이버 방문자 리뷰에서 반복해 언급된 어믜뜰의 특별함입니다.",
+              "lineHeight": 1.5,
+              "fontFamily": "Inter",
+              "fontSize": 17,
+              "fontWeight": "500"
+            },
+            {
+              "type": "text",
+              "id": "y1kZds",
+              "layoutPosition": "absolute",
+              "x": 24,
+              "y": 136,
+              "name": "모바일 리뷰 핵심 키워드",
+              "fill": "#A52A24",
+              "textGrowth": "fixed-width",
+              "width": 342,
+              "content": "음식이 맛있어요 30 · 고기 질이 좋아요 20\n특별한 메뉴가 있어요 12 · 매장이 넓어요 12",
+              "lineHeight": 1.5,
+              "fontFamily": "Inter",
+              "fontSize": 16,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "EFBRG",
+              "layoutPosition": "absolute",
+              "x": 24,
+              "y": 198,
+              "name": "모바일 색다른 한 상 리뷰 카드",
+              "width": 342,
+              "height": 210,
+              "fill": "#FFFDF8",
+              "cornerRadius": 6,
+              "stroke": "#D8CBB8",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 20,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "gzUh4",
+                  "name": "모바일 색다른 한 상 별점",
+                  "fill": "#A52A24",
+                  "content": "평점 5.0 · 네이버 방문자 리뷰",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "Xd1yq",
+                  "name": "모바일 색다른 한 상 리뷰 문장",
+                  "fill": "#2B2118",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "“등갈비찜+샤브샤브라니 너무 색다른 메뉴예요. 부모님도 취향저격이라며 맛있게 드셨어요.”",
+                  "lineHeight": 1.55,
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "sM1CJ",
+                  "name": "모바일 색다른 한 상 출처",
+                  "fill": "#6E6258",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "리뷰 일부 발췌 · 원문 보기 ↗",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "n5GrwF",
+              "layoutPosition": "absolute",
+              "x": 24,
+              "y": 422,
+              "name": "모바일 부드러운 등갈비 리뷰 카드",
+              "width": 342,
+              "height": 210,
+              "fill": "#FFFDF8",
+              "cornerRadius": 6,
+              "stroke": "#D8CBB8",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 20,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "HmkHH",
+                  "name": "모바일 부드러운 등갈비 별점",
+                  "fill": "#A52A24",
+                  "content": "평점 5.0 · 네이버 방문자 리뷰",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "Cql0n",
+                  "name": "모바일 부드러운 등갈비 리뷰 문장",
+                  "fill": "#2B2118",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "“고기가 아주 부드러워 어르신들도 편하게 드실 것 같아요. 야채도 가득해 정말 배불렀어요.”",
+                  "lineHeight": 1.55,
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "R9AYD",
+                  "name": "모바일 부드러운 등갈비 출처",
+                  "fill": "#6E6258",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "리뷰 일부 발췌 · 원문 보기 ↗",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "pFSXY",
+              "layoutPosition": "absolute",
+              "x": 24,
+              "y": 646,
+              "name": "모바일 골라 먹는 재미 리뷰 카드",
+              "width": 342,
+              "height": 210,
+              "fill": "#FFFDF8",
+              "cornerRadius": 6,
+              "stroke": "#D8CBB8",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 12,
+              "padding": 20,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "HJ3oW",
+                  "name": "모바일 골라 먹는 재미 별점",
+                  "fill": "#A52A24",
+                  "content": "평점 5.0 · 네이버 방문자 리뷰",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "CcmUR",
+                  "name": "모바일 골라 먹는 재미 리뷰 문장",
+                  "fill": "#2B2118",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "“샤브샤브 느낌이라 야채를 많이 먹을 수 있고, 메밀전에 싸 먹는 조합도 좋았어요.”",
+                  "lineHeight": 1.55,
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "500"
+                },
+                {
+                  "type": "text",
+                  "id": "biso8",
+                  "name": "모바일 골라 먹는 재미 출처",
+                  "fill": "#6E6258",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "리뷰 일부 발췌 · 원문 보기 ↗",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Tks6m",
+          "name": "모바일 FAQ",
+          "width": 390,
+          "height": 520,
+          "fill": "#F7F1E6",
+          "layout": "vertical",
+          "gap": 12,
+          "padding": [
+            36,
+            24
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "tON1L",
+              "name": "모바일 FAQ 제목",
+              "fill": "#2B2118",
+              "content": "방문 전 궁금한 점",
+              "fontFamily": "Inter",
+              "fontSize": 28,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "D04rSp",
+              "name": "모바일 FAQ 월요일 영업",
+              "width": 342,
+              "height": 88,
+              "fill": "#FFFDF8",
+              "cornerRadius": 4,
+              "stroke": "#D8CBB8",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ZzQb4",
+                  "name": "모바일 FAQ 월요일 영업 질문",
+                  "fill": "#2B2118",
+                  "content": "월요일 영업",
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "gZqXU",
+                  "name": "모바일 FAQ 월요일 영업 답변",
+                  "fill": "#6E6258",
+                  "content": "매주 월요일 정기휴무",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Zjufg",
+              "name": "모바일 FAQ 브레이크 타임",
+              "width": 342,
+              "height": 88,
+              "fill": "#FFFDF8",
+              "cornerRadius": 4,
+              "stroke": "#D8CBB8",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "V4tnGk",
+                  "name": "모바일 FAQ 브레이크 타임 질문",
+                  "fill": "#2B2118",
+                  "content": "브레이크 타임",
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "H9AXiO",
+                  "name": "모바일 FAQ 브레이크 타임 답변",
+                  "fill": "#6E6258",
+                  "content": "평일 15:30~16:30",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "KZCB8",
+              "name": "모바일 FAQ 주차",
+              "width": 342,
+              "height": 88,
+              "fill": "#FFFDF8",
+              "cornerRadius": 4,
+              "stroke": "#D8CBB8",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "IKxTd",
+                  "name": "모바일 FAQ 주차 질문",
+                  "fill": "#2B2118",
+                  "content": "주차",
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "rodlr",
+                  "name": "모바일 FAQ 주차 답변",
+                  "fill": "#6E6258",
+                  "content": "건물 뒤 무료 지상주차장",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "aPw1K",
+              "name": "모바일 FAQ 포장·배달",
+              "width": 342,
+              "height": 88,
+              "fill": "#FFFDF8",
+              "cornerRadius": 4,
+              "stroke": "#D8CBB8",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "K9RZF",
+                  "name": "모바일 FAQ 포장·배달 질문",
+                  "fill": "#2B2118",
+                  "content": "포장·배달",
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "v0XheF",
+                  "name": "모바일 FAQ 포장·배달 답변",
+                  "fill": "#6E6258",
+                  "content": "포장 가능 · 배달 미운영",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "bRsQM",
+          "name": "모바일 방문 정보",
+          "width": 390,
+          "height": 550,
+          "fill": "#FFFDF8",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            36,
+            24
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "dxfYN",
+              "name": "모바일 방문 정보 제목",
+              "fill": "#2B2118",
+              "textGrowth": "fixed-width",
+              "width": 342,
+              "content": "어믜뜰 등갈비찜\n청주봉명동본점",
+              "lineHeight": 1.3,
+              "fontFamily": "Inter",
+              "fontSize": 28,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "Ngqyo",
+              "name": "모바일 네이버 지도 자리",
+              "width": 342,
+              "height": 190,
+              "fill": "#D8D0BE",
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "FySgS",
+                  "name": "모바일 지도 자리 글자",
+                  "fill": "#2B2118",
+                  "content": "네이버 지도",
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "zN9sq",
+              "name": "모바일 주소",
+              "fill": "#2B2118",
+              "textGrowth": "fixed-width",
+              "width": 342,
+              "content": "충북 청주시 흥덕구 백봉로 213-1 1층",
+              "fontFamily": "Inter",
+              "fontSize": 17,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "LjTk4",
+              "name": "모바일 영업시간",
+              "fill": "#6E6258",
+              "textGrowth": "fixed-width",
+              "width": 342,
+              "content": "화~일 11:00~22:00 · 월요일 휴무\n브레이크 15:30~16:30",
+              "lineHeight": 1.6,
+              "fontFamily": "Inter",
+              "fontSize": 16,
+              "fontWeight": "500"
+            },
+            {
+              "type": "text",
+              "id": "r4onv",
+              "name": "모바일 주차 안내",
+              "fill": "#6E6258",
+              "content": "건물 뒤 무료 지상주차장",
+              "fontFamily": "Inter",
+              "fontSize": 16,
+              "fontWeight": "500"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ouvdm",
+          "name": "모바일 하단 고정 행동",
+          "width": 390,
+          "height": 82,
+          "fill": "#261D17",
+          "gap": 8,
+          "padding": [
+            10,
+            12
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "tAeKN",
+              "name": "모바일 하단 전화",
+              "width": 116,
+              "height": 62,
+              "fill": "#9B6B43",
+              "cornerRadius": 6,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "d3zeJ",
+                  "name": "모바일 하단 전화 글자",
+                  "fill": "#FFFFFF",
+                  "content": "전화",
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wZiq8",
+              "name": "모바일 하단 길찾기",
+              "width": 116,
+              "height": 62,
+              "fill": "#355843",
+              "cornerRadius": 6,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "rwi1D",
+                  "name": "모바일 하단 길찾기 글자",
+                  "fill": "#FFFFFF",
+                  "content": "길찾기",
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Ti00w",
+              "name": "모바일 하단 예약",
+              "width": 116,
+              "height": 62,
+              "fill": "#A52A24",
+              "cornerRadius": 6,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Cou6E",
+                  "name": "모바일 하단 예약 글자",
+                  "fill": "#FFFFFF",
+                  "content": "예약",
+                  "fontFamily": "Inter",
+                  "fontSize": 17,
+                  "fontWeight": "700"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "E5jMv",
+      "x": -17792,
+      "y": -3433,
+      "name": "관리자 로그인 최종 초안",
+      "clip": true,
+      "width": 480,
+      "height": 720,
+      "fill": "#F7F1E6",
+      "layout": "vertical",
+      "padding": 48,
+      "justifyContent": "center",
+      "alignItems": "center",
+      "children": [
+        {
+          "type": "frame",
+          "id": "gVl97",
+          "name": "관리자 로그인 카드",
+          "width": 384,
+          "height": 600,
+          "fill": "#FFFDF8",
+          "cornerRadius": 6,
+          "stroke": "#D8CBB8",
+          "strokeWidth": 1,
+          "layout": "vertical",
+          "gap": 8,
+          "padding": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "K31ZN",
+              "name": "관리자 로그인 머리글",
+              "width": 320,
+              "height": 88,
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "r3YNBT",
+                  "name": "관리자 로그인 통합 제목 행",
+                  "width": 320,
+                  "height": 42,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ukR2g",
+                      "name": "관리자 로그인 통합 제목",
+                      "fill": "#2B2118",
+                      "content": "어믜뜰 | 매장 홈페이지 관리",
+                      "fontFamily": "Inter",
+                      "fontSize": 22,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "TqvRE",
+              "name": "관리자 로그인 별도 설명 행",
+              "width": 320,
+              "height": 50,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Xigp2",
+                  "name": "관리자 로그인 별도 설명",
+                  "fill": "#6E6258",
+                  "content": "등록된 관리자 계정으로 로그인하세요.",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "z4HdEs",
+              "name": "이메일 입력 그룹",
+              "width": 320,
+              "height": 86,
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "CgB1h",
+                  "name": "이메일 라벨",
+                  "fill": "#2B2118",
+                  "content": "이메일",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "w33aMu",
+                  "name": "이메일 입력창",
+                  "width": 320,
+                  "height": 52,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 4,
+                  "stroke": "#CDBFAE",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "padding": [
+                    0,
+                    14
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "fNcgR",
+                      "name": "이메일 입력값",
+                      "fill": "#6E6258",
+                      "content": "tldyd4400@gmail.com",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "qBPi4",
+              "name": "비밀번호 입력 그룹",
+              "width": 320,
+              "height": 86,
+              "layout": "vertical",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "kEkzN",
+                  "name": "비밀번호 라벨",
+                  "fill": "#2B2118",
+                  "content": "비밀번호",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "WyKqU",
+                  "name": "비밀번호 입력창",
+                  "width": 320,
+                  "height": 52,
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 4,
+                  "stroke": "#CDBFAE",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "padding": [
+                    0,
+                    14
+                  ],
+                  "justifyContent": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "G8RpJc",
+                      "name": "비밀번호 입력값",
+                      "fill": "#6E6258",
+                      "content": "••••••••••",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tX5WI",
+              "name": "관리자 로그인 버튼",
+              "width": 320,
+              "height": 56,
+              "fill": "#355843",
+              "cornerRadius": 6,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "QFebS",
+                  "name": "관리자 로그인 버튼 글자",
+                  "fill": "#FFFFFF",
+                  "content": "로그인",
+                  "fontFamily": "Inter",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "q6inl",
+      "x": -17192,
+      "y": -3433,
+      "name": "관리자 대시보드 최종 초안",
+      "clip": true,
+      "width": 1360,
+      "height": 1020,
+      "fill": "#F4F1EB",
+      "children": [
+        {
+          "type": "frame",
+          "id": "ge1c9",
+          "name": "관리자 사이드바",
+          "width": 250,
+          "height": 1020,
+          "fill": "#2B2118",
+          "layout": "vertical",
+          "gap": 18,
+          "padding": [
+            28,
+            22
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "p6whj",
+              "name": "관리자 사이드바 브랜드",
+              "fill": "#FFFFFF",
+              "content": "어믜뜰 관리자",
+              "fontFamily": "Inter",
+              "fontSize": 25,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "KHyd7",
+              "name": "관리자 사이드바 매장",
+              "fill": "#D8CBB8",
+              "content": "청주봉명동본점",
+              "fontFamily": "Inter",
+              "fontSize": 16,
+              "fontWeight": "600"
+            },
+            {
+              "type": "frame",
+              "id": "o3k8Pg",
+              "name": "관리 메뉴 대시보드",
+              "width": 206,
+              "height": 48,
+              "fill": "#A52A24",
+              "cornerRadius": 4,
+              "layout": "vertical",
+              "padding": [
+                0,
+                14
+              ],
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "mICOU",
+                  "name": "관리 메뉴 대시보드 글자",
+                  "fill": "#FFFFFF",
+                  "content": "대시보드",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "lnYyN",
+              "name": "관리 메뉴 매장 기본 정보",
+              "width": 206,
+              "height": 48,
+              "fill": "#2B2118",
+              "cornerRadius": 4,
+              "layout": "vertical",
+              "padding": [
+                0,
+                14
+              ],
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "z4fbXs",
+                  "name": "관리 메뉴 매장 기본 정보 글자",
+                  "fill": "#E8DDD0",
+                  "content": "매장 기본 정보",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "T7N6dj",
+              "name": "관리 메뉴 메뉴·가격",
+              "width": 206,
+              "height": 48,
+              "fill": "#2B2118",
+              "cornerRadius": 4,
+              "layout": "vertical",
+              "padding": [
+                0,
+                14
+              ],
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Hm0H5",
+                  "name": "관리 메뉴 메뉴·가격 글자",
+                  "fill": "#E8DDD0",
+                  "content": "메뉴·가격",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wTYh1",
+              "name": "관리 메뉴 사진 관리",
+              "width": 206,
+              "height": 48,
+              "fill": "#2B2118",
+              "cornerRadius": 4,
+              "layout": "vertical",
+              "padding": [
+                0,
+                14
+              ],
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "NCbWn",
+                  "name": "관리 메뉴 사진 관리 글자",
+                  "fill": "#E8DDD0",
+                  "content": "사진 관리",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "huJd2",
+              "name": "관리 메뉴 리뷰 노출 관리",
+              "width": 206,
+              "height": 48,
+              "fill": "#2B2118",
+              "cornerRadius": 4,
+              "layout": "vertical",
+              "padding": [
+                0,
+                14
+              ],
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "S4LDY",
+                  "name": "관리 메뉴 사진 관리 글자",
+                  "fill": "#E8DDD0",
+                  "content": "리뷰 노출 관리",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "h0tnVc",
+              "name": "관리 메뉴 예약 혜택",
+              "width": 206,
+              "height": 48,
+              "fill": "#2B2118",
+              "cornerRadius": 4,
+              "layout": "vertical",
+              "padding": [
+                0,
+                14
+              ],
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "qg47x",
+                  "name": "관리 메뉴 예약 혜택 글자",
+                  "fill": "#E8DDD0",
+                  "content": "예약 혜택",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "x4D0P",
+              "name": "관리 메뉴 FAQ·검색 답변",
+              "width": 206,
+              "height": 48,
+              "fill": "#2B2118",
+              "cornerRadius": 4,
+              "layout": "vertical",
+              "padding": [
+                0,
+                14
+              ],
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "CzQp5",
+                  "name": "관리 메뉴 FAQ·검색 답변 글자",
+                  "fill": "#E8DDD0",
+                  "content": "FAQ·검색 답변",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "wbbpU",
+              "name": "관리 메뉴 사이트 설정",
+              "width": 206,
+              "height": 48,
+              "fill": "#2B2118",
+              "cornerRadius": 4,
+              "layout": "vertical",
+              "padding": [
+                0,
+                14
+              ],
+              "justifyContent": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "tbZ3T",
+                  "name": "관리 메뉴 사이트 설정 글자",
+                  "fill": "#E8DDD0",
+                  "content": "사이트 설정",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "YI0on",
+              "name": "관리자 로그아웃",
+              "fill": "#E8C98E",
+              "content": "로그아웃",
+              "fontFamily": "Inter",
+              "fontSize": 16,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "Y0mr8c",
+          "name": "관리자 메인",
+          "width": 1110,
+          "height": 1020,
+          "fill": "#F4F1EB",
+          "layout": "vertical",
+          "gap": 22,
+          "padding": [
+            30,
+            34
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "UX0Xo",
+              "name": "관리자 대시보드 머리글",
+              "width": 1042,
+              "height": 80,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "sH3mv",
+                  "name": "관리자 제목 영역",
+                  "width": 650,
+                  "height": 74,
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Mkyy2",
+                      "name": "관리자 페이지 제목",
+                      "fill": "#2B2118",
+                      "content": "매장 운영 대시보드",
+                      "fontFamily": "Inter",
+                      "fontSize": 29,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "hSeLH",
+                      "name": "관리자 페이지 설명",
+                      "fill": "#6E6258",
+                      "content": "홈페이지에 노출되는 정보를 한곳에서 관리합니다.",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "T0lBE",
+                  "name": "공개 사이트 미리보기 버튼",
+                  "width": 180,
+                  "height": 50,
+                  "fill": "#355843",
+                  "cornerRadius": 6,
+                  "layout": "vertical",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Ifedd",
+                      "name": "공개 사이트 미리보기 글자",
+                      "fill": "#FFFFFF",
+                      "content": "공개 사이트 보기",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "dGKN7",
+              "name": "관리 상태 카드",
+              "width": 1042,
+              "height": 136,
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "nYZ9e",
+                  "name": "영업 정보 상태 카드",
+                  "width": 248,
+                  "height": 136,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 20,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "IItYV",
+                      "name": "영업 정보 상태 이름",
+                      "fill": "#6E6258",
+                      "content": "영업 정보",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "H24Fed",
+                      "name": "영업 정보 상태 값",
+                      "fill": "#355843",
+                      "content": "게시 중",
+                      "fontFamily": "Inter",
+                      "fontSize": 27,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "MgRYz",
+                  "name": "대표 메뉴 상태 카드",
+                  "width": 248,
+                  "height": 136,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 20,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "OGzzb",
+                      "name": "대표 메뉴 상태 이름",
+                      "fill": "#6E6258",
+                      "content": "대표 메뉴",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "y72kko",
+                      "name": "대표 메뉴 상태 값",
+                      "fill": "#A52A24",
+                      "content": "2개",
+                      "fontFamily": "Inter",
+                      "fontSize": 27,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "HDTuX",
+                  "name": "등록 사진 상태 카드",
+                  "width": 248,
+                  "height": 136,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 20,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "g7fP6N",
+                      "name": "등록 사진 상태 이름",
+                      "fill": "#6E6258",
+                      "content": "등록 사진",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "d5vJjR",
+                      "name": "등록 사진 상태 값",
+                      "fill": "#9B6B43",
+                      "content": "18장",
+                      "fontFamily": "Inter",
+                      "fontSize": 27,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "N0GdB",
+                  "name": "노출 리뷰 상태 카드",
+                  "width": 248,
+                  "height": 136,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "padding": 20,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "J1YGM",
+                      "name": "노출 리뷰 상태 이름",
+                      "fill": "#6E6258",
+                      "content": "홈페이지 노출 리뷰",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "q6MOA",
+                      "name": "노출 리뷰 상태 값",
+                      "fill": "#A52A24",
+                      "content": "3개",
+                      "fontFamily": "Inter",
+                      "fontSize": 27,
+                      "fontWeight": "800"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "c6Yac",
+              "name": "관리자 주요 편집 영역",
+              "width": 1042,
+              "height": 620,
+              "gap": 20,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "jieXG",
+                  "name": "빠른 정보 수정",
+                  "width": 650,
+                  "height": 620,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": 24,
                   "children": [
                     {
                       "type": "frame",
-                      "id": "a-quick-edit",
-                      "width": 680,
-                      "height": 650,
-                      "fill": "$color.rice",
-                      "cornerRadius": 8,
-                      "layout": "vertical",
-                      "padding": 28,
-                      "gap": 18,
+                      "id": "M3jOe",
+                      "name": "빠른 수정 머리글",
+                      "width": 602,
+                      "height": 58,
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
                       "children": [
-                        { "type": "text", "id": "a-quick-edit-title", "content": "빠른 수정", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" },
-                        { "type": "text", "id": "a-quick-edit-desc", "content": "오늘 바뀐 내용만 빠르게 수정하고 홈페이지에 반영합니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" },
-                        { "type": "frame", "id": "a-field-hours", "width": 624, "height": 88, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 16, "gap": 8, "children": [ { "type": "text", "id": "a-field-hours-label", "content": "오늘 영업시간", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-field-hours-value", "content": "11:00 - 22:00", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "600" } ] },
-                        { "type": "frame", "id": "a-field-notice", "width": 624, "height": 110, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 16, "gap": 8, "children": [ { "type": "text", "id": "a-field-notice-label", "content": "현재 공지", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-field-notice-value", "content": "네이버 예약 시 낙지파전 또는 추가 등갈비 1인분 서비스", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600", "textGrowth": "fixed-width", "width": 590 } ] },
-                        { "type": "frame", "id": "a-field-holiday", "width": 624, "height": 88, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 16, "gap": 8, "children": [ { "type": "text", "id": "a-field-holiday-label", "content": "임시 휴무·특별 영업", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-field-holiday-value", "content": "등록된 일정 없음", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" } ] },
-                        { "type": "frame", "id": "a-save-button", "width": 180, "height": 52, "fill": "$color.gochujang", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "a-save-button-label", "content": "저장하고 반영", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] }
+                        {
+                          "type": "text",
+                          "id": "xYNGk",
+                          "name": "빠른 수정 제목",
+                          "fill": "#2B2118",
+                          "content": "빠른 정보 수정",
+                          "fontFamily": "Inter",
+                          "fontSize": 22,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "frame",
+                          "id": "EVdHu",
+                          "name": "변경사항 저장 버튼",
+                          "width": 130,
+                          "height": 46,
+                          "fill": "#A52A24",
+                          "cornerRadius": 6,
+                          "layout": "vertical",
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "xLd5A",
+                              "name": "변경사항 저장 글자",
+                              "fill": "#FFFFFF",
+                              "content": "저장",
+                              "fontFamily": "Inter",
+                              "fontSize": 16,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
                       ]
                     },
                     {
                       "type": "frame",
-                      "id": "a-checklist",
-                      "width": 412,
-                      "height": 650,
-                      "fill": "$color.rice",
-                      "cornerRadius": 8,
-                      "layout": "vertical",
-                      "padding": 28,
-                      "gap": 18,
+                      "id": "qi7E1",
+                      "name": "빠른 수정 오늘 영업 상태",
+                      "width": 602,
+                      "height": 82,
+                      "fill": "#F7F1E6",
+                      "cornerRadius": 4,
+                      "padding": [
+                        0,
+                        16
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
                       "children": [
-                        { "type": "text", "id": "a-checklist-title", "content": "콘텐츠 점검", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" },
-                        { "type": "text", "id": "a-check-1", "content": "완료  상호·주소·전화번호", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
-                        { "type": "text", "id": "a-check-2", "content": "완료  메뉴와 가격", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
-                        { "type": "text", "id": "a-check-3", "content": "확인  대표 사진 등록", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
-                        { "type": "text", "id": "a-check-4", "content": "확인  FAQ 최신 상태", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
-                        { "type": "text", "id": "a-check-5", "content": "완료  네이버 예약 링크", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
-                        { "type": "frame", "id": "a-seo-preview", "width": 356, "height": 220, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 18, "gap": 10, "children": [ { "type": "text", "id": "a-seo-preview-label", "content": "검색 미리보기", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-seo-preview-title", "content": "어믜뜰 등갈비찜 청주봉명동본점", "fill": "#1A0DAB", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "600", "textGrowth": "fixed-width", "width": 320 }, { "type": "text", "id": "a-seo-preview-url", "content": "my-shop-ecru-six.vercel.app", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "500" }, { "type": "text", "id": "a-seo-preview-description", "content": "청주 봉명동에서 샤브처럼 즐기는 매운 등갈비찜 한 상. 네이버 예약과 주차 안내를 확인하세요.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400", "lineHeight": 1.45, "textGrowth": "fixed-width", "width": 320 } ] }
+                        {
+                          "type": "text",
+                          "id": "PgUX6",
+                          "name": "빠른 수정 오늘 영업 상태 라벨",
+                          "fill": "#2B2118",
+                          "content": "오늘 영업 상태",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "XqhQ4",
+                          "name": "빠른 수정 오늘 영업 상태 값",
+                          "fill": "#6E6258",
+                          "content": "영업 중 · 11:00~22:00",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "S4yq2m",
+                      "name": "빠른 수정 브레이크 타임",
+                      "width": 602,
+                      "height": 82,
+                      "fill": "#F7F1E6",
+                      "cornerRadius": 4,
+                      "padding": [
+                        0,
+                        16
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "wgua1",
+                          "name": "빠른 수정 브레이크 타임 라벨",
+                          "fill": "#2B2118",
+                          "content": "브레이크 타임",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "QeM02",
+                          "name": "빠른 수정 브레이크 타임 값",
+                          "fill": "#6E6258",
+                          "content": "15:30~16:30",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "BwtDx",
+                      "name": "빠른 수정 정기 휴무",
+                      "width": 602,
+                      "height": 82,
+                      "fill": "#F7F1E6",
+                      "cornerRadius": 4,
+                      "padding": [
+                        0,
+                        16
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "CKYiB",
+                          "name": "빠른 수정 정기 휴무 라벨",
+                          "fill": "#2B2118",
+                          "content": "정기 휴무",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Hs9Ue",
+                          "name": "빠른 수정 정기 휴무 값",
+                          "fill": "#6E6258",
+                          "content": "매주 월요일",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "N4Nbs",
+                      "name": "빠른 수정 예약 혜택",
+                      "width": 602,
+                      "height": 82,
+                      "fill": "#F7F1E6",
+                      "cornerRadius": 4,
+                      "padding": [
+                        0,
+                        16
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ay7HB",
+                          "name": "빠른 수정 예약 혜택 라벨",
+                          "fill": "#2B2118",
+                          "content": "예약 혜택",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "jICU0",
+                          "name": "빠른 수정 예약 혜택 값",
+                          "fill": "#6E6258",
+                          "content": "낙지파전 또는 등갈비 1인분",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cXdfO",
+                      "name": "빠른 수정 대표 연락처",
+                      "width": 602,
+                      "height": 82,
+                      "fill": "#F7F1E6",
+                      "cornerRadius": 4,
+                      "padding": [
+                        0,
+                        16
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Z6Ptj",
+                          "name": "빠른 수정 대표 연락처 라벨",
+                          "fill": "#2B2118",
+                          "content": "대표 연락처",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "eEo5x",
+                          "name": "빠른 수정 대표 연락처 값",
+                          "fill": "#6E6258",
+                          "content": "0507-1449-0004",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "500"
+                        }
                       ]
                     }
                   ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Rt9Il",
+                  "name": "검색 노출 점검",
+                  "width": 372,
+                  "height": 620,
+                  "fill": "#FFFDF8",
+                  "cornerRadius": 6,
+                  "stroke": "#D8CBB8",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": 24,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Ma47g",
+                      "name": "검색 노출 점검 제목",
+                      "fill": "#2B2118",
+                      "content": "검색·AI 노출 점검",
+                      "fontFamily": "Inter",
+                      "fontSize": 22,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Y65bUI",
+                      "name": "검색 노출 점검 설명",
+                      "fill": "#6E6258",
+                      "content": "GEO · SEO · AEO 핵심 항목",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "500"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "v428qM",
+                      "name": "검색 점검 매장명·주소·전화",
+                      "width": 324,
+                      "height": 62,
+                      "fill": "#F7F1E6",
+                      "cornerRadius": 4,
+                      "padding": [
+                        0,
+                        14
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "gt2mu",
+                          "name": "검색 점검 매장명·주소·전화 이름",
+                          "fill": "#2B2118",
+                          "content": "매장명·주소·전화",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Tb578",
+                          "name": "검색 점검 매장명·주소·전화 상태",
+                          "fill": "#355843",
+                          "content": "일치",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "KhSEH",
+                      "name": "검색 점검 영업시간",
+                      "width": 324,
+                      "height": 62,
+                      "fill": "#F7F1E6",
+                      "cornerRadius": 4,
+                      "padding": [
+                        0,
+                        14
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "znpI3",
+                          "name": "검색 점검 영업시간 이름",
+                          "fill": "#2B2118",
+                          "content": "영업시간",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "MIUzl",
+                          "name": "검색 점검 영업시간 상태",
+                          "fill": "#355843",
+                          "content": "최신",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "xX1Nr",
+                      "name": "검색 점검 대표 메뉴·가격",
+                      "width": 324,
+                      "height": 62,
+                      "fill": "#F7F1E6",
+                      "cornerRadius": 4,
+                      "padding": [
+                        0,
+                        14
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "n9gBz",
+                          "name": "검색 점검 대표 메뉴·가격 이름",
+                          "fill": "#2B2118",
+                          "content": "대표 메뉴·가격",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "niusg",
+                          "name": "검색 점검 대표 메뉴·가격 상태",
+                          "fill": "#355843",
+                          "content": "게시",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "GTR5k",
+                      "name": "검색 점검 FAQ 답변",
+                      "width": 324,
+                      "height": 62,
+                      "fill": "#F7F1E6",
+                      "cornerRadius": 4,
+                      "padding": [
+                        0,
+                        14
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "w63YV",
+                          "name": "검색 점검 FAQ 답변 이름",
+                          "fill": "#2B2118",
+                          "content": "FAQ 답변",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "sCnfA",
+                          "name": "검색 점검 FAQ 답변 상태",
+                          "fill": "#355843",
+                          "content": "8개",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "f7uObr",
+                      "name": "검색 점검 Restaurant 구조화 데이터",
+                      "width": 324,
+                      "height": 62,
+                      "fill": "#F7F1E6",
+                      "cornerRadius": 4,
+                      "padding": [
+                        0,
+                        14
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "gQHp7",
+                          "name": "검색 점검 Restaurant 구조화 데이터 이름",
+                          "fill": "#2B2118",
+                          "content": "Restaurant 구조화 데이터",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "r6BhHQ",
+                          "name": "검색 점검 Restaurant 구조화 데이터 상태",
+                          "fill": "#355843",
+                          "content": "정상",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "euYwJ",
+                      "name": "검색 점검 사이트맵·robots",
+                      "width": 324,
+                      "height": 62,
+                      "fill": "#F7F1E6",
+                      "cornerRadius": 4,
+                      "padding": [
+                        0,
+                        14
+                      ],
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "lchxB",
+                          "name": "검색 점검 사이트맵·robots 이름",
+                          "fill": "#2B2118",
+                          "content": "사이트맵·robots",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "lE7K9",
+                          "name": "검색 점검 사이트맵·robots 상태",
+                          "fill": "#355843",
+                          "content": "정상",
+                          "fontFamily": "Inter",
+                          "fontSize": 16,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "meX2g",
+              "name": "관리자 저장 안내",
+              "width": 1042,
+              "height": 74,
+              "fill": "#E9E2D6",
+              "cornerRadius": 4,
+              "padding": [
+                0,
+                20
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "j5FaTu",
+                  "name": "관리자 저장 안내 문구",
+                  "fill": "#2B2118",
+                  "content": "저장한 내용은 공개 홈페이지와 검색용 구조화 데이터에 함께 반영됩니다.",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "Rp70x",
+                  "name": "마지막 저장 시각",
+                  "fill": "#6E6258",
+                  "content": "마지막 저장 2026.07.13 14:20",
+                  "fontFamily": "Inter",
+                  "fontSize": 16,
+                  "fontWeight": "500"
                 }
               ]
             }
@@ -593,5 +4177,51 @@
       ]
     }
   ],
+  "variables": {
+    "paper": {
+      "type": "color",
+      "value": "#F7F1E6"
+    },
+    "hanji": {
+      "type": "color",
+      "value": "#FFFDF8"
+    },
+    "ink": {
+      "type": "color",
+      "value": "#2B2118"
+    },
+    "muted": {
+      "type": "color",
+      "value": "#6E6258"
+    },
+    "straw": {
+      "type": "color",
+      "value": "#C9A96E"
+    },
+    "clay": {
+      "type": "color",
+      "value": "#9B6B43"
+    },
+    "red": {
+      "type": "color",
+      "value": "#A52A24"
+    },
+    "red-dark": {
+      "type": "color",
+      "value": "#7F1D1D"
+    },
+    "green": {
+      "type": "color",
+      "value": "#355843"
+    },
+    "line": {
+      "type": "color",
+      "value": "#D8CBB8"
+    },
+    "white": {
+      "type": "color",
+      "value": "#FFFFFF"
+    }
+  },
   "fileToken": "15ea0c11-530b-49b1-a8da-57e2c5bf33ff"
 }

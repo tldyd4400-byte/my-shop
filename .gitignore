@@ -40,6 +40,9 @@ yarn-error.log*
 # isolated feature worktrees
 .worktrees/
 
+# local Pencil exports
+/초안-assets/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts

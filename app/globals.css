@@ -159,7 +159,7 @@ summary:focus-visible {
   align-items: center;
   gap: 30px;
   color: var(--body);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 650;
 }
 
@@ -270,20 +270,7 @@ summary:focus-visible {
 .hero {
   position: relative;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 82% 8%, rgba(216, 184, 106, 0.36), transparent 28%),
-    linear-gradient(135deg, var(--ocher), #f9eed8 75%);
-}
-
-.hero::before {
-  position: absolute;
-  top: 38px;
-  left: -90px;
-  width: 260px;
-  height: 260px;
-  border: 1px solid rgba(159, 47, 31, 0.18);
-  border-radius: 50%;
-  content: "";
+  background: #4b392e;
 }
 
 .hero-grid {
@@ -299,18 +286,26 @@ summary:focus-visible {
   padding-block: 26px;
 }
 
+.hero h1 {
+  color: var(--rice);
+}
+
+.hero .eyebrow {
+  color: #e8c98e;
+}
+
 .eyebrow,
 .kicker {
   margin-bottom: 16px;
   color: var(--gochujang);
-  font-size: 0.92rem;
+  font-size: 1rem;
   font-weight: 800;
   letter-spacing: 0.1em;
 }
 
 .hero-lead {
   margin-top: 26px;
-  color: var(--body);
+  color: var(--rice);
   font-size: clamp(1.1rem, 2vw, 1.3rem);
   font-weight: 550;
   line-height: 1.65;
@@ -326,8 +321,8 @@ summary:focus-visible {
 
 .benefit-note {
   margin-top: 18px;
-  color: var(--green);
-  font-size: 0.9rem;
+  color: #dde8df;
+  font-size: 1rem;
   font-weight: 750;
 }
 
@@ -356,7 +351,7 @@ summary:focus-visible {
   border-radius: 999px;
   background: rgba(42, 37, 32, 0.76);
   color: var(--rice);
-  font-size: 0.72rem;
+  font-size: 1rem;
   font-weight: 650;
   line-height: 1.2;
   padding: 7px 11px;
@@ -484,13 +479,25 @@ summary:focus-visible {
 .step-card p {
   margin-top: 14px;
   color: var(--muted);
-  font-size: 0.94rem;
+  font-size: 1rem;
 }
 
 .menu-grid {
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.menu {
+  background: #2f3f32;
+}
+
+.menu .section-heading h2 {
+  color: var(--rice);
+}
+
+.menu .section-heading > p:last-child {
+  color: #dde8df;
 }
 
 .menu-card {
@@ -526,7 +533,7 @@ summary:focus-visible {
 .menu-card-body > p {
   margin-top: 14px;
   color: var(--muted);
-  font-size: 0.94rem;
+  font-size: 1rem;
 }
 
 .space {
@@ -563,6 +570,86 @@ summary:focus-visible {
   color: var(--gochujang);
 }
 
+.reviews-heading {
+  display: grid;
+  align-items: end;
+  gap: 36px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  margin-bottom: 34px;
+}
+
+.reviews-heading > div > p:last-child {
+  max-width: 680px;
+  margin-top: 14px;
+  color: var(--muted);
+}
+
+.review-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px 18px;
+  margin: 0;
+  color: var(--gochujang);
+  font-size: 16px;
+  font-weight: 700;
+  list-style: none;
+  padding: 0;
+}
+
+.review-keywords strong {
+  font-weight: 850;
+}
+
+.review-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.review-card {
+  display: flex;
+  min-height: 292px;
+  flex-direction: column;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: var(--rice);
+  padding: 26px;
+}
+
+.review-source {
+  color: var(--gochujang);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.review-summary {
+  margin-top: 20px;
+  color: var(--deep);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.65;
+}
+
+.review-card a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: auto;
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 650;
+}
+
+.review-card a:hover {
+  color: var(--gochujang);
+}
+
+.review-card a svg {
+  width: 17px;
+  height: 17px;
+}
+
 .faq-shell {
   display: grid;
   align-items: start;
@@ -595,7 +682,7 @@ summary:focus-visible {
 .faq-list details p {
   border-top: 1px solid var(--hairline);
   color: var(--muted);
-  font-size: 0.94rem;
+  font-size: 1rem;
   padding: 18px 0 24px;
 }
 
@@ -636,11 +723,11 @@ summary:focus-visible {
   display: block;
   margin-bottom: 4px;
   color: var(--straw);
-  font-size: 0.88rem;
+  font-size: 1rem;
 }
 
 .visit-detail p {
-  font-size: 0.98rem;
+  font-size: 1rem;
 }
 
 .phone-number {
@@ -711,7 +798,7 @@ summary:focus-visible {
   align-items: center;
   justify-content: space-between;
   gap: 40px;
-  font-size: 0.85rem;
+  font-size: 1rem;
 }
 
 .footer-inner strong {
@@ -760,6 +847,15 @@ summary:focus-visible {
   .faq-shell {
     gap: 28px;
     grid-template-columns: 1fr;
+  }
+
+  .reviews-heading {
+    align-items: start;
+    grid-template-columns: 1fr;
+  }
+
+  .review-keywords {
+    justify-content: flex-start;
   }
 
   .faq-shell .section-heading {
@@ -816,6 +912,10 @@ summary:focus-visible {
   }
 
   .menu-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .review-grid {
     grid-template-columns: 1fr;
   }
 
@@ -919,6 +1019,26 @@ summary:focus-visible {
     padding: 22px;
   }
 
+  .reviews-heading {
+    gap: 20px;
+    margin-bottom: 26px;
+  }
+
+  .review-keywords {
+    display: grid;
+    gap: 6px;
+  }
+
+  .review-card {
+    min-height: 210px;
+    padding: 20px;
+  }
+
+  .review-summary {
+    margin-top: 14px;
+    font-size: 17px;
+  }
+
   .faq-list details {
     padding-inline: 18px;
   }
@@ -953,7 +1073,7 @@ summary:focus-visible {
     border: 1px solid var(--hairline);
     border-radius: 8px;
     color: var(--deep);
-    font-size: 0.88rem;
+    font-size: 1rem;
     font-weight: 800;
   }
 
