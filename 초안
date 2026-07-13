@@ -1,0 +1,597 @@
+{
+  "version": "2.14",
+  "variables": {
+    "color.gochujang": { "type": "color", "value": "#9F2F1F" },
+    "color.deep": { "type": "color", "value": "#2A2520" },
+    "color.body": { "type": "color", "value": "#3A3028" },
+    "color.muted": { "type": "color", "value": "#6F6258" },
+    "color.ocher": { "type": "color", "value": "#F4E4C8" },
+    "color.rice": { "type": "color", "value": "#FFF8EA" },
+    "color.hanji": { "type": "color", "value": "#F7EEDC" },
+    "color.straw": { "type": "color", "value": "#D8B86A" },
+    "color.green": { "type": "color", "value": "#496B3A" },
+    "color.hairline": { "type": "color", "value": "#D9C3A3" }
+  },
+  "children": [
+    {
+      "type": "frame",
+      "id": "desktop-home",
+      "x": 0,
+      "y": 0,
+      "name": "고객용 홈페이지 - Desktop 1440",
+      "clip": true,
+      "width": 1440,
+      "height": 4840,
+      "fill": "$color.ocher",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "d-nav",
+          "name": "상단 내비게이션",
+          "width": "fill_container",
+          "height": 88,
+          "fill": "$color.rice",
+          "layout": "horizontal",
+          "padding": [18, 120],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            { "type": "text", "id": "d-logo", "content": "어믜뜰", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 28, "fontWeight": "700" },
+            {
+              "type": "frame",
+              "id": "d-nav-links",
+              "layout": "horizontal",
+              "gap": 30,
+              "alignItems": "center",
+              "children": [
+                { "type": "text", "id": "d-nav-story", "content": "어믜뜰 이야기", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
+                { "type": "text", "id": "d-nav-menu", "content": "메뉴", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
+                { "type": "text", "id": "d-nav-guide", "content": "맛있게 즐기는 법", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
+                { "type": "text", "id": "d-nav-visit", "content": "오시는 길", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
+                {
+                  "type": "frame",
+                  "id": "d-nav-booking",
+                  "width": 148,
+                  "height": 52,
+                  "fill": "$color.gochujang",
+                  "cornerRadius": 8,
+                  "layout": "horizontal",
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    { "type": "text", "id": "d-nav-booking-label", "content": "네이버 예약", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "d-hero",
+          "name": "히어로",
+          "width": "fill_container",
+          "height": 720,
+          "fill": "$color.ocher",
+          "layout": "horizontal",
+          "padding": [80, 120],
+          "gap": 40,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "d-hero-copy",
+              "width": 620,
+              "height": 560,
+              "layout": "vertical",
+              "gap": 22,
+              "justifyContent": "center",
+              "children": [
+                { "type": "text", "id": "d-hero-eyebrow", "content": "청주 봉명동 · 샤브형 등갈비찜 전문점", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" },
+                { "type": "text", "id": "d-hero-title", "content": "늘 자식 쪽으로 기울던 접시,\n그날의 식탁", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 52, "fontWeight": "700", "lineHeight": 1.25, "textGrowth": "fixed-width", "width": 620 },
+                { "type": "text", "id": "d-hero-lead", "content": "엄마의 마음으로 푸짐하게 차려내는\n어믜뜰만의 등갈비찜 한 상", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 21, "fontWeight": "500", "lineHeight": 1.6, "textGrowth": "fixed-width", "width": 570 },
+                {
+                  "type": "frame",
+                  "id": "d-hero-actions",
+                  "layout": "horizontal",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "d-hero-primary",
+                      "width": 180,
+                      "height": 56,
+                      "fill": "$color.gochujang",
+                      "cornerRadius": 8,
+                      "layout": "horizontal",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        { "type": "text", "id": "d-hero-primary-label", "content": "네이버 예약하기", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "d-hero-secondary",
+                      "width": 150,
+                      "height": 56,
+                      "fill": "$color.rice",
+                      "stroke": "$color.body",
+                      "strokeWidth": 1,
+                      "cornerRadius": 8,
+                      "layout": "horizontal",
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        { "type": "text", "id": "d-hero-secondary-label", "content": "전화 문의", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }
+                      ]
+                    }
+                  ]
+                },
+                { "type": "text", "id": "d-hero-benefit", "content": "네이버 예약 시 낙지파전 또는 추가 등갈비 1인분 서비스", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "d-hero-photo",
+              "name": "대표 음식 사진 슬롯",
+              "width": 540,
+              "height": 560,
+              "fill": "$color.deep",
+              "cornerRadius": 8,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "gap": 12,
+              "children": [
+                { "type": "text", "id": "d-hero-photo-label", "content": "대표 음식 사진", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 26, "fontWeight": "700" },
+                { "type": "text", "id": "d-hero-photo-note", "content": "김 오르는 매운 등갈비찜과\n손님이 재료를 넣는 순간", "fill": "$color.straw", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "500", "lineHeight": 1.5, "textAlign": "center" }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "d-proof",
+          "name": "신뢰 지표",
+          "width": "fill_container",
+          "height": 112,
+          "fill": "$color.deep",
+          "layout": "horizontal",
+          "padding": [24, 120],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            { "type": "text", "id": "d-proof-rating", "content": "네이버 별점 4.91 · 리뷰 364", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" },
+            { "type": "text", "id": "d-proof-space", "content": "12테이블 · 52석 · 단체석", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "600" },
+            { "type": "text", "id": "d-proof-service", "content": "포장 · 예약 · 주차 가능", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "600" }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "d-story",
+          "name": "브랜드 이야기",
+          "width": "fill_container",
+          "height": 600,
+          "fill": "$color.rice",
+          "layout": "horizontal",
+          "padding": [72, 120],
+          "gap": 56,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "d-story-photo",
+              "width": 500,
+              "height": 440,
+              "fill": "$color.hairline",
+              "cornerRadius": 8,
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                { "type": "text", "id": "d-story-photo-label", "content": "공간 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" },
+                { "type": "text", "id": "d-story-photo-note", "content": "황토·볏짚 질감과 정갈한 한식당 분위기", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "d-story-copy",
+              "width": 644,
+              "height": 440,
+              "layout": "vertical",
+              "gap": 18,
+              "justifyContent": "center",
+              "children": [
+                { "type": "text", "id": "d-story-kicker", "content": "BRAND STORY", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" },
+                { "type": "text", "id": "d-story-title", "content": "좋은 것은 늘\n자식 앞으로 밀어주시던 마음", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 38, "fontWeight": "700", "lineHeight": 1.3, "textGrowth": "fixed-width", "width": 620 },
+                { "type": "text", "id": "d-story-body", "content": "어믜뜰은 단순히 등갈비찜 한 끼를 내어드리는 식당이 아닙니다. 함께 둘러앉아 취향대로 푸짐하게 즐기고, 돌아가는 길에 ‘오늘 참 잘 먹었다’는 말이 자연스럽게 나오는 곳을 만듭니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "400", "lineHeight": 1.7, "textGrowth": "fixed-width", "width": 620 }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "d-experience",
+          "name": "샤브형 식사 경험",
+          "width": "fill_container",
+          "height": 560,
+          "fill": "$color.hanji",
+          "layout": "vertical",
+          "padding": [64, 120],
+          "gap": 28,
+          "alignItems": "center",
+          "children": [
+            { "type": "text", "id": "d-exp-title", "content": "같은 등갈비찜도, 먹는 사람에 따라 다른 한 상", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 36, "fontWeight": "700" },
+            { "type": "text", "id": "d-exp-lead", "content": "30여 종의 채소·버섯·떡·당면을 자유롭게 더해 나만의 방식으로 즐깁니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "500" },
+            {
+              "type": "frame",
+              "id": "d-exp-steps",
+              "width": 1200,
+              "height": 280,
+              "layout": "horizontal",
+              "gap": 16,
+              "children": [
+                { "type": "frame", "id": "d-step-1", "width": 288, "height": 280, "fill": "$color.rice", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 24, "gap": 16, "children": [ { "type": "text", "id": "d-step-1-num", "content": "01", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "d-step-1-title", "content": "보글보글 끓인다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 23, "fontWeight": "700" }, { "type": "text", "id": "d-step-1-body", "content": "등갈비와 매콤한 육수가 충분히 어우러질 때까지 끓입니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.6, "textGrowth": "fixed-width", "width": 240 } ] },
+                { "type": "frame", "id": "d-step-2", "width": 288, "height": 280, "fill": "$color.rice", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 24, "gap": 16, "children": [ { "type": "text", "id": "d-step-2-num", "content": "02", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "d-step-2-title", "content": "취향대로 고른다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 23, "fontWeight": "700" }, { "type": "text", "id": "d-step-2-body", "content": "30여 종 셀프바에서 채소, 버섯, 떡과 당면을 고릅니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.6, "textGrowth": "fixed-width", "width": 240 } ] },
+                { "type": "frame", "id": "d-step-3", "width": 288, "height": 280, "fill": "$color.rice", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 24, "gap": 16, "children": [ { "type": "text", "id": "d-step-3-num", "content": "03", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "d-step-3-title", "content": "한 냄비에 더한다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 23, "fontWeight": "700" }, { "type": "text", "id": "d-step-3-body", "content": "함께 고른 재료를 넣고 샤브처럼 익혀 나누어 먹습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.6, "textGrowth": "fixed-width", "width": 240 } ] },
+                { "type": "frame", "id": "d-step-4", "width": 288, "height": 280, "fill": "$color.rice", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 24, "gap": 16, "children": [ { "type": "text", "id": "d-step-4-num", "content": "04", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "d-step-4-title", "content": "빙수로 마무리한다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 23, "fontWeight": "700" }, { "type": "text", "id": "d-step-4-body", "content": "매콤한 한 상 끝에 수제 우유빙수로 입안을 달랩니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.6, "textGrowth": "fixed-width", "width": 240 } ] }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "d-menu",
+          "name": "대표 메뉴",
+          "width": "fill_container",
+          "height": 680,
+          "fill": "$color.rice",
+          "layout": "vertical",
+          "padding": [64, 120],
+          "gap": 28,
+          "children": [
+            { "type": "text", "id": "d-menu-kicker", "content": "SIGNATURE MENU", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" },
+            { "type": "text", "id": "d-menu-title", "content": "부족함 없이 대접하는 한 상", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 36, "fontWeight": "700" },
+            {
+              "type": "frame",
+              "id": "d-menu-cards",
+              "width": 1200,
+              "height": 430,
+              "layout": "horizontal",
+              "gap": 24,
+              "children": [
+                { "type": "frame", "id": "d-menu-spicy", "width": 588, "height": 430, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 28, "gap": 16, "children": [ { "type": "frame", "id": "d-menu-spicy-photo", "width": 532, "height": 190, "fill": "$color.gochujang", "cornerRadius": 6, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "d-menu-spicy-photo-label", "content": "매운 등갈비찜 세트 사진", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" } ] }, { "type": "text", "id": "d-menu-spicy-title", "content": "매운 등갈비찜 세트", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 26, "fontWeight": "700" }, { "type": "text", "id": "d-menu-spicy-price", "content": "19,900원", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 22, "fontWeight": "700" }, { "type": "text", "id": "d-menu-spicy-body", "content": "매콤한 육수와 등갈비를 샤브처럼. 임궁밥과 메밀전이 함께 제공됩니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.55, "textGrowth": "fixed-width", "width": 520 } ] },
+                { "type": "frame", "id": "d-menu-soy", "width": 588, "height": 430, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 28, "gap": 16, "children": [ { "type": "frame", "id": "d-menu-soy-photo", "width": 532, "height": 190, "fill": "$color.straw", "cornerRadius": 6, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "d-menu-soy-photo-label", "content": "간장 등갈비찜 세트 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" } ] }, { "type": "text", "id": "d-menu-soy-title", "content": "간장 등갈비찜 세트", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 26, "fontWeight": "700" }, { "type": "text", "id": "d-menu-soy-price", "content": "19,900원", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 22, "fontWeight": "700" }, { "type": "text", "id": "d-menu-soy-body", "content": "달콤짭짤한 간장 양념과 부드러운 등갈비. 남녀노소 편하게 즐기는 한 상입니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.55, "textGrowth": "fixed-width", "width": 520 } ] }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "d-space",
+          "name": "공간과 모임",
+          "width": "fill_container",
+          "height": 520,
+          "fill": "$color.ocher",
+          "layout": "horizontal",
+          "padding": [64, 120],
+          "gap": 48,
+          "alignItems": "center",
+          "children": [
+            { "type": "frame", "id": "d-space-copy", "width": 470, "height": 380, "layout": "vertical", "gap": 18, "justifyContent": "center", "children": [ { "type": "text", "id": "d-space-title", "content": "함께 둘러앉기 좋은\n따뜻하고 넉넉한 자리", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 36, "fontWeight": "700", "lineHeight": 1.3 }, { "type": "text", "id": "d-space-body", "content": "12테이블 52석과 6인 단체석 2테이블. 가족 외식부터 회식까지 편안하게 머물 수 있습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "400", "lineHeight": 1.65, "textGrowth": "fixed-width", "width": 450 } ] },
+            { "type": "frame", "id": "d-space-photo-1", "width": 330, "height": 360, "fill": "$color.hairline", "cornerRadius": 8, "layout": "vertical", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "d-space-photo-1-label", "content": "전체 좌석 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" } ] },
+            { "type": "frame", "id": "d-space-photo-2", "width": 330, "height": 360, "fill": "$color.deep", "cornerRadius": 8, "layout": "vertical", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "d-space-photo-2-label", "content": "단체석 사진", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" } ] }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "d-faq",
+          "name": "자주 묻는 질문",
+          "width": "fill_container",
+          "height": 640,
+          "fill": "$color.rice",
+          "layout": "vertical",
+          "padding": [64, 220],
+          "gap": 22,
+          "children": [
+            { "type": "text", "id": "d-faq-title", "content": "자주 묻는 질문", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 36, "fontWeight": "700" },
+            { "type": "frame", "id": "d-faq-1", "width": 1000, "height": 104, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": [18, 24], "gap": 8, "children": [ { "type": "text", "id": "d-faq-1-q", "content": "Q. 매운 음식을 못 먹어도 방문할 수 있나요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "700" }, { "type": "text", "id": "d-faq-1-a", "content": "A. 달콤짭짤한 간장 등갈비찜 세트를 준비하고 있습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400" } ] },
+            { "type": "frame", "id": "d-faq-2", "width": 1000, "height": 104, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": [18, 24], "gap": 8, "children": [ { "type": "text", "id": "d-faq-2-q", "content": "Q. 단체 예약이 가능한가요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "700" }, { "type": "text", "id": "d-faq-2-a", "content": "A. 52석 규모이며 네이버 예약과 전화 예약 모두 가능합니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400" } ] },
+            { "type": "frame", "id": "d-faq-3", "width": 1000, "height": 104, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": [18, 24], "gap": 8, "children": [ { "type": "text", "id": "d-faq-3-q", "content": "Q. 주차는 어디에 하나요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "700" }, { "type": "text", "id": "d-faq-3-a", "content": "A. 건물 뒤편 지상주차장을 무료로 이용할 수 있습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400" } ] },
+            { "type": "frame", "id": "d-faq-4", "width": 1000, "height": 104, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": [18, 24], "gap": 8, "children": [ { "type": "text", "id": "d-faq-4-q", "content": "Q. 포장이나 배달이 가능한가요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "700" }, { "type": "text", "id": "d-faq-4-a", "content": "A. 포장은 가능하며 배달은 운영하지 않습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400" } ] }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "d-visit",
+          "name": "방문 정보",
+          "width": "fill_container",
+          "height": 720,
+          "fill": "$color.deep",
+          "layout": "horizontal",
+          "padding": [72, 120],
+          "gap": 56,
+          "children": [
+            {
+              "type": "frame",
+              "id": "d-visit-info",
+              "width": 590,
+              "height": 560,
+              "layout": "vertical",
+              "gap": 18,
+              "children": [
+                { "type": "text", "id": "d-visit-title", "content": "어믜뜰에서 만나요", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 38, "fontWeight": "700" },
+                { "type": "text", "id": "d-visit-address", "content": "충북 청주시 흥덕구 백봉로 213-1 1층", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "600" },
+                { "type": "text", "id": "d-visit-hours", "content": "매일 11:00 - 22:00\n브레이크타임 15:30 - 16:30\n주말·공휴일 브레이크타임 없음\n매주 월요일 정기휴무", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "400", "lineHeight": 1.65 },
+                { "type": "text", "id": "d-visit-phone", "content": "0507-1449-0004", "fill": "$color.straw", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" },
+                { "type": "text", "id": "d-visit-parking", "content": "주차: 건물 뒤편 무료 지상주차장\n대중교통: 백봉아파트 정류장 하차 후 도보 약 1분", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.6 },
+                {
+                  "type": "frame",
+                  "id": "d-visit-actions",
+                  "layout": "horizontal",
+                  "gap": 12,
+                  "children": [
+                    { "type": "frame", "id": "d-visit-booking", "width": 180, "height": 56, "fill": "$color.gochujang", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "d-visit-booking-label", "content": "네이버 예약", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] },
+                    { "type": "frame", "id": "d-visit-map", "width": 180, "height": 56, "fill": "$color.rice", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "d-visit-map-label", "content": "네이버 길찾기", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] }
+                  ]
+                }
+              ]
+            },
+            { "type": "frame", "id": "d-map-slot", "width": 554, "height": 560, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "justifyContent": "center", "alignItems": "center", "gap": 10, "children": [ { "type": "text", "id": "d-map-slot-label", "content": "지도 / 외관 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" }, { "type": "text", "id": "d-map-slot-note", "content": "백봉어린이공원 건너편\n건물 뒤편 주차장 진입 안내", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "500", "lineHeight": 1.5, "textAlign": "center" } ] }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "d-footer",
+          "name": "푸터",
+          "width": "fill_container",
+          "height": 200,
+          "fill": "$color.rice",
+          "layout": "horizontal",
+          "padding": [44, 120],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            { "type": "text", "id": "d-footer-brand", "content": "어믜뜰 등갈비찜 청주봉명동본점\n늘 자식 쪽으로 기울던 접시, 그날의 식탁", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "600", "lineHeight": 1.55 },
+            { "type": "text", "id": "d-footer-links", "content": "네이버 플레이스 · 인스타그램 · 전화 0507-1449-0004", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "500" }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "mobile-home",
+      "x": 1520,
+      "y": 0,
+      "name": "고객용 홈페이지 - Mobile 390",
+      "clip": true,
+      "width": 390,
+      "height": 5668,
+      "fill": "$color.ocher",
+      "layout": "vertical",
+      "children": [
+        { "type": "frame", "id": "m-nav", "width": "fill_container", "height": 68, "fill": "$color.rice", "layout": "horizontal", "padding": [14, 20], "justifyContent": "space_between", "alignItems": "center", "children": [ { "type": "text", "id": "m-logo", "content": "어믜뜰", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" }, { "type": "text", "id": "m-menu-icon", "content": "메뉴", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" } ] },
+        {
+          "type": "frame",
+          "id": "m-hero",
+          "width": "fill_container",
+          "height": 840,
+          "fill": "$color.ocher",
+          "layout": "vertical",
+          "padding": [42, 24],
+          "gap": 20,
+          "children": [
+            { "type": "text", "id": "m-hero-eyebrow", "content": "청주 봉명동 · 샤브형 등갈비찜", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" },
+            { "type": "text", "id": "m-hero-title", "content": "늘 자식 쪽으로\n기울던 접시,\n그날의 식탁", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 40, "fontWeight": "700", "lineHeight": 1.25, "textGrowth": "fixed-width", "width": 342 },
+            { "type": "text", "id": "m-hero-lead", "content": "엄마의 마음으로 푸짐하게 차려내는\n어믜뜰만의 등갈비찜 한 상", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "500", "lineHeight": 1.6 },
+            { "type": "frame", "id": "m-hero-photo", "width": 342, "height": 310, "fill": "$color.deep", "cornerRadius": 8, "layout": "vertical", "justifyContent": "center", "alignItems": "center", "gap": 8, "children": [ { "type": "text", "id": "m-hero-photo-label", "content": "대표 음식 사진", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 22, "fontWeight": "700" }, { "type": "text", "id": "m-hero-photo-note", "content": "김 오르는 매운 등갈비찜", "fill": "$color.straw", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "500" } ] },
+            { "type": "frame", "id": "m-hero-booking", "width": 342, "height": 56, "fill": "$color.gochujang", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-hero-booking-label", "content": "네이버 예약하기", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] },
+            { "type": "text", "id": "m-hero-benefit", "content": "예약 시 낙지파전 또는 추가 등갈비 1인분 서비스", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700", "textAlign": "center", "textGrowth": "fixed-width", "width": 342 }
+          ]
+        },
+        { "type": "frame", "id": "m-proof", "width": "fill_container", "height": 160, "fill": "$color.deep", "layout": "vertical", "padding": [24, 24], "gap": 12, "justifyContent": "center", "children": [ { "type": "text", "id": "m-proof-rating", "content": "네이버 별점 4.91 · 리뷰 364", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-proof-space", "content": "12테이블 · 52석 · 단체석 · 주차 가능", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "500" } ] },
+        {
+          "type": "frame",
+          "id": "m-story",
+          "width": "fill_container",
+          "height": 780,
+          "fill": "$color.rice",
+          "layout": "vertical",
+          "padding": [48, 24],
+          "gap": 20,
+          "children": [
+            { "type": "frame", "id": "m-story-photo", "width": 342, "height": 280, "fill": "$color.hairline", "cornerRadius": 8, "layout": "vertical", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-story-photo-label", "content": "황토·볏짚 공간 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" } ] },
+            { "type": "text", "id": "m-story-kicker", "content": "BRAND STORY", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" },
+            { "type": "text", "id": "m-story-title", "content": "좋은 것은 늘\n자식 앞으로 밀어주시던 마음", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 30, "fontWeight": "700", "lineHeight": 1.35 },
+            { "type": "text", "id": "m-story-body", "content": "함께 둘러앉아 취향대로 푸짐하게 즐기고, 돌아가는 길에 ‘오늘 참 잘 먹었다’는 말이 자연스럽게 나오는 곳을 만듭니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "400", "lineHeight": 1.7, "textGrowth": "fixed-width", "width": 342 }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "m-experience",
+          "width": "fill_container",
+          "height": 660,
+          "fill": "$color.hanji",
+          "layout": "vertical",
+          "padding": [44, 24],
+          "gap": 18,
+          "children": [
+            { "type": "text", "id": "m-exp-title", "content": "내가 완성하는\n샤브형 등갈비찜", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 30, "fontWeight": "700", "lineHeight": 1.3 },
+            { "type": "text", "id": "m-exp-lead", "content": "30여 종 셀프바에서 원하는 재료를 골라보세요.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "500", "lineHeight": 1.5, "textGrowth": "fixed-width", "width": 342 },
+            { "type": "frame", "id": "m-step-1", "width": 342, "height": 100, "fill": "$color.rice", "cornerRadius": 8, "layout": "horizontal", "padding": 20, "gap": 16, "alignItems": "center", "children": [ { "type": "text", "id": "m-step-1-num", "content": "01", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-step-1-copy", "content": "등갈비와 육수를\n보글보글 끓인다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700", "lineHeight": 1.45 } ] },
+            { "type": "frame", "id": "m-step-2", "width": 342, "height": 100, "fill": "$color.rice", "cornerRadius": 8, "layout": "horizontal", "padding": 20, "gap": 16, "alignItems": "center", "children": [ { "type": "text", "id": "m-step-2-num", "content": "02", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-step-2-copy", "content": "30여 종 재료를\n취향대로 고른다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700", "lineHeight": 1.45 } ] },
+            { "type": "frame", "id": "m-step-3", "width": 342, "height": 100, "fill": "$color.rice", "cornerRadius": 8, "layout": "horizontal", "padding": 20, "gap": 16, "alignItems": "center", "children": [ { "type": "text", "id": "m-step-3-num", "content": "03", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-step-3-copy", "content": "한 냄비에 더해\n샤브처럼 나눈다", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700", "lineHeight": 1.45 } ] },
+            { "type": "frame", "id": "m-step-4", "width": 342, "height": 100, "fill": "$color.rice", "cornerRadius": 8, "layout": "horizontal", "padding": 20, "gap": 16, "alignItems": "center", "children": [ { "type": "text", "id": "m-step-4-num", "content": "04", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-step-4-copy", "content": "수제 우유빙수로\n부드럽게 마무리", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700", "lineHeight": 1.45 } ] }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "m-menu",
+          "width": "fill_container",
+          "height": 840,
+          "fill": "$color.rice",
+          "layout": "vertical",
+          "padding": [44, 24],
+          "gap": 20,
+          "children": [
+            { "type": "text", "id": "m-menu-title", "content": "부족함 없이\n대접하는 한 상", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 30, "fontWeight": "700", "lineHeight": 1.3 },
+            { "type": "frame", "id": "m-menu-spicy", "width": 342, "height": 330, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 20, "gap": 12, "children": [ { "type": "frame", "id": "m-menu-spicy-photo", "width": 302, "height": 150, "fill": "$color.gochujang", "cornerRadius": 6, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-menu-spicy-photo-label", "content": "매운 세트 사진", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] }, { "type": "text", "id": "m-menu-spicy-title", "content": "매운 등갈비찜 세트 · 19,900원", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" }, { "type": "text", "id": "m-menu-spicy-body", "content": "매콤한 육수와 등갈비를 샤브처럼. 임궁밥과 메밀전 포함.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400", "lineHeight": 1.5, "textGrowth": "fixed-width", "width": 300 } ] },
+            { "type": "frame", "id": "m-menu-soy", "width": 342, "height": 330, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "vertical", "padding": 20, "gap": 12, "children": [ { "type": "frame", "id": "m-menu-soy-photo", "width": 302, "height": 150, "fill": "$color.straw", "cornerRadius": 6, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-menu-soy-photo-label", "content": "간장 세트 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] }, { "type": "text", "id": "m-menu-soy-title", "content": "간장 등갈비찜 세트 · 19,900원", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 20, "fontWeight": "700" }, { "type": "text", "id": "m-menu-soy-body", "content": "달콤짭짤하고 부드러운 등갈비. 남녀노소 편안한 한 상.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400", "lineHeight": 1.5, "textGrowth": "fixed-width", "width": 300 } ] }
+          ]
+        },
+        { "type": "frame", "id": "m-space", "width": "fill_container", "height": 600, "fill": "$color.ocher", "layout": "vertical", "padding": [44, 24], "gap": 18, "children": [ { "type": "text", "id": "m-space-title", "content": "가족 외식부터 회식까지", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 29, "fontWeight": "700" }, { "type": "text", "id": "m-space-body", "content": "12테이블 52석, 6인 단체석 2테이블을 갖췄습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "400", "lineHeight": 1.6, "textGrowth": "fixed-width", "width": 342 }, { "type": "frame", "id": "m-space-photo-1", "width": 342, "height": 190, "fill": "$color.hairline", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-space-photo-1-label", "content": "전체 좌석 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "700" } ] }, { "type": "frame", "id": "m-space-photo-2", "width": 342, "height": 190, "fill": "$color.deep", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-space-photo-2-label", "content": "단체석 사진", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 19, "fontWeight": "700" } ] } ] },
+        { "type": "frame", "id": "m-faq", "width": "fill_container", "height": 780, "fill": "$color.rice", "layout": "vertical", "padding": [44, 24], "gap": 16, "children": [ { "type": "text", "id": "m-faq-title", "content": "자주 묻는 질문", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 30, "fontWeight": "700" }, { "type": "frame", "id": "m-faq-1", "width": 342, "height": 140, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 18, "gap": 8, "children": [ { "type": "text", "id": "m-faq-1-q", "content": "매운 음식을 못 먹어도 되나요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-faq-1-a", "content": "간장 등갈비찜 세트를 준비하고 있습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400", "lineHeight": 1.5, "textGrowth": "fixed-width", "width": 300 } ] }, { "type": "frame", "id": "m-faq-2", "width": 342, "height": 140, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 18, "gap": 8, "children": [ { "type": "text", "id": "m-faq-2-q", "content": "단체 예약이 가능한가요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-faq-2-a", "content": "네이버와 전화로 예약할 수 있습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] }, { "type": "frame", "id": "m-faq-3", "width": 342, "height": 140, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 18, "gap": 8, "children": [ { "type": "text", "id": "m-faq-3-q", "content": "주차는 어디에 하나요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-faq-3-a", "content": "건물 뒤편 무료 지상주차장을 이용하세요.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] }, { "type": "frame", "id": "m-faq-4", "width": 342, "height": 140, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 18, "gap": 8, "children": [ { "type": "text", "id": "m-faq-4-q", "content": "포장과 배달이 가능한가요?", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" }, { "type": "text", "id": "m-faq-4-a", "content": "포장은 가능하며 배달은 하지 않습니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] } ] },
+        { "type": "frame", "id": "m-visit", "width": "fill_container", "height": 780, "fill": "$color.deep", "layout": "vertical", "padding": [44, 24], "gap": 18, "children": [ { "type": "text", "id": "m-visit-title", "content": "어믜뜰에서 만나요", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 30, "fontWeight": "700" }, { "type": "text", "id": "m-visit-address", "content": "충북 청주시 흥덕구\n백봉로 213-1 1층", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "600", "lineHeight": 1.5 }, { "type": "text", "id": "m-visit-hours", "content": "11:00 - 22:00\n브레이크타임 15:30 - 16:30\n주말·공휴일 브레이크타임 없음\n매주 월요일 정기휴무", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "400", "lineHeight": 1.6 }, { "type": "text", "id": "m-visit-phone", "content": "0507-1449-0004", "fill": "$color.straw", "fontFamily": "Pretendard", "fontSize": 22, "fontWeight": "700" }, { "type": "frame", "id": "m-map-slot", "width": 342, "height": 230, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-map-slot-label", "content": "지도 / 외관 / 주차 진입 사진", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] }, { "type": "frame", "id": "m-visit-booking", "width": 342, "height": 56, "fill": "$color.gochujang", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-visit-booking-label", "content": "네이버 예약", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] }, { "type": "frame", "id": "m-visit-map", "width": 342, "height": 56, "fill": "$color.rice", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-visit-map-label", "content": "네이버 길찾기", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] } ] },
+        { "type": "frame", "id": "m-sticky", "width": "fill_container", "height": 160, "fill": "$color.rice", "layout": "vertical", "padding": [20, 24], "gap": 12, "children": [ { "type": "frame", "id": "m-sticky-row", "width": 342, "height": 56, "layout": "horizontal", "gap": 10, "children": [ { "type": "frame", "id": "m-sticky-call", "width": 112, "height": 56, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-sticky-call-label", "content": "전화", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "700" } ] }, { "type": "frame", "id": "m-sticky-route", "width": 112, "height": 56, "fill": "$color.hanji", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-sticky-route-label", "content": "길찾기", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "700" } ] }, { "type": "frame", "id": "m-sticky-book", "width": 108, "height": 56, "fill": "$color.gochujang", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "m-sticky-book-label", "content": "예약", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "700" } ] } ] }, { "type": "text", "id": "m-footer-copy", "content": "어믜뜰 등갈비찜 청주봉명동본점", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600", "textAlign": "center", "textGrowth": "fixed-width", "width": 342 } ] }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "admin-login",
+      "x": 1990,
+      "y": 0,
+      "name": "관리자 로그인 - Desktop",
+      "clip": true,
+      "width": 480,
+      "height": 720,
+      "fill": "$color.ocher",
+      "layout": "vertical",
+      "padding": [96, 54],
+      "gap": 22,
+      "alignItems": "center",
+      "children": [
+        { "type": "text", "id": "a-login-brand", "content": "어믜뜰", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 34, "fontWeight": "700" },
+        { "type": "text", "id": "a-login-title", "content": "매장 관리", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 22, "fontWeight": "600" },
+        { "type": "text", "id": "a-login-description", "content": "메뉴, 사진, 영업시간과 소식을 관리합니다.", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400", "textAlign": "center", "textGrowth": "fixed-width", "width": 340 },
+        { "type": "frame", "id": "a-login-email", "width": 372, "height": 58, "fill": "$color.rice", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "horizontal", "padding": [18, 16], "alignItems": "center", "children": [ { "type": "text", "id": "a-login-email-label", "content": "이메일", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "500" } ] },
+        { "type": "frame", "id": "a-login-password", "width": 372, "height": 58, "fill": "$color.rice", "stroke": "$color.hairline", "strokeWidth": 1, "cornerRadius": 8, "layout": "horizontal", "padding": [18, 16], "alignItems": "center", "children": [ { "type": "text", "id": "a-login-password-label", "content": "비밀번호", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "500" } ] },
+        { "type": "frame", "id": "a-login-button", "width": 372, "height": 56, "fill": "$color.gochujang", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "a-login-button-label", "content": "로그인", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] },
+        { "type": "text", "id": "a-login-help", "content": "관리자 계정은 승인된 사용자만 접근할 수 있습니다.", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400", "textAlign": "center", "textGrowth": "fixed-width", "width": 360 }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "admin-dashboard",
+      "x": 2550,
+      "y": 0,
+      "name": "관리자 대시보드 - Desktop 1440",
+      "clip": true,
+      "width": 1440,
+      "height": 1100,
+      "fill": "#F4F1EA",
+      "layout": "horizontal",
+      "children": [
+        {
+          "type": "frame",
+          "id": "a-sidebar",
+          "width": 260,
+          "height": 1100,
+          "fill": "$color.deep",
+          "layout": "vertical",
+          "padding": [32, 24],
+          "gap": 18,
+          "children": [
+            { "type": "text", "id": "a-sidebar-brand", "content": "어믜뜰 관리", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 25, "fontWeight": "700" },
+            { "type": "text", "id": "a-sidebar-home", "content": "대시보드", "fill": "$color.straw", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" },
+            { "type": "text", "id": "a-sidebar-store", "content": "매장 기본 정보", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" },
+            { "type": "text", "id": "a-sidebar-hours", "content": "영업시간·휴무일", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" },
+            { "type": "text", "id": "a-sidebar-menu", "content": "메뉴·가격", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" },
+            { "type": "text", "id": "a-sidebar-photo", "content": "사진 관리", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" },
+            { "type": "text", "id": "a-sidebar-notice", "content": "공지·쿠폰", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" },
+            { "type": "text", "id": "a-sidebar-faq", "content": "자주 묻는 질문", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" },
+            { "type": "text", "id": "a-sidebar-seo", "content": "검색·GEO 상태", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "a-main",
+          "width": 1180,
+          "height": 1100,
+          "fill": "#F4F1EA",
+          "layout": "vertical",
+          "children": [
+            { "type": "frame", "id": "a-topbar", "width": "fill_container", "height": 84, "fill": "$color.rice", "layout": "horizontal", "padding": [20, 32], "justifyContent": "space_between", "alignItems": "center", "children": [ { "type": "text", "id": "a-topbar-title", "content": "대시보드", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 28, "fontWeight": "700" }, { "type": "frame", "id": "a-preview-button", "width": 150, "height": 48, "fill": "$color.rice", "stroke": "$color.body", "strokeWidth": 1, "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "a-preview-button-label", "content": "홈페이지 보기", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "700" } ] } ] },
+            {
+              "type": "frame",
+              "id": "a-content",
+              "width": "fill_container",
+              "height": 1016,
+              "layout": "vertical",
+              "padding": 32,
+              "gap": 24,
+              "children": [
+                { "type": "text", "id": "a-welcome", "content": "오늘의 어믜뜰", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 30, "fontWeight": "700" },
+                {
+                  "type": "frame",
+                  "id": "a-status-cards",
+                  "width": 1116,
+                  "height": 150,
+                  "layout": "horizontal",
+                  "gap": 16,
+                  "children": [
+                    { "type": "frame", "id": "a-status-hours", "width": 268, "height": 150, "fill": "$color.rice", "cornerRadius": 8, "layout": "vertical", "padding": 22, "gap": 10, "children": [ { "type": "text", "id": "a-status-hours-label", "content": "오늘 영업", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-status-hours-value", "content": "11:00 - 22:00", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 23, "fontWeight": "700" }, { "type": "text", "id": "a-status-hours-note", "content": "브레이크 15:30 - 16:30", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] },
+                    { "type": "frame", "id": "a-status-menu", "width": 268, "height": 150, "fill": "$color.rice", "cornerRadius": 8, "layout": "vertical", "padding": 22, "gap": 10, "children": [ { "type": "text", "id": "a-status-menu-label", "content": "공개 메뉴", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-status-menu-value", "content": "2개", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 26, "fontWeight": "700" }, { "type": "text", "id": "a-status-menu-note", "content": "두 메뉴 모두 19,900원", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] },
+                    { "type": "frame", "id": "a-status-news", "width": 268, "height": 150, "fill": "$color.rice", "cornerRadius": 8, "layout": "vertical", "padding": 22, "gap": 10, "children": [ { "type": "text", "id": "a-status-news-label", "content": "예약 혜택", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-status-news-value", "content": "게시 중", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" }, { "type": "text", "id": "a-status-news-note", "content": "낙지파전 또는 등갈비 1인분", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] },
+                    { "type": "frame", "id": "a-status-geo", "width": 268, "height": 150, "fill": "$color.rice", "cornerRadius": 8, "layout": "vertical", "padding": 22, "gap": 10, "children": [ { "type": "text", "id": "a-status-geo-label", "content": "검색 정보", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-status-geo-value", "content": "정보 일치", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" }, { "type": "text", "id": "a-status-geo-note", "content": "주소·전화·영업시간", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" } ] }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "a-workspace",
+                  "width": 1116,
+                  "height": 650,
+                  "layout": "horizontal",
+                  "gap": 24,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "a-quick-edit",
+                      "width": 680,
+                      "height": 650,
+                      "fill": "$color.rice",
+                      "cornerRadius": 8,
+                      "layout": "vertical",
+                      "padding": 28,
+                      "gap": 18,
+                      "children": [
+                        { "type": "text", "id": "a-quick-edit-title", "content": "빠른 수정", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" },
+                        { "type": "text", "id": "a-quick-edit-desc", "content": "오늘 바뀐 내용만 빠르게 수정하고 홈페이지에 반영합니다.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400" },
+                        { "type": "frame", "id": "a-field-hours", "width": 624, "height": 88, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 16, "gap": 8, "children": [ { "type": "text", "id": "a-field-hours-label", "content": "오늘 영업시간", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-field-hours-value", "content": "11:00 - 22:00", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "600" } ] },
+                        { "type": "frame", "id": "a-field-notice", "width": 624, "height": 110, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 16, "gap": 8, "children": [ { "type": "text", "id": "a-field-notice-label", "content": "현재 공지", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-field-notice-value", "content": "네이버 예약 시 낙지파전 또는 추가 등갈비 1인분 서비스", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600", "textGrowth": "fixed-width", "width": 590 } ] },
+                        { "type": "frame", "id": "a-field-holiday", "width": 624, "height": 88, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 16, "gap": 8, "children": [ { "type": "text", "id": "a-field-holiday-label", "content": "임시 휴무·특별 영업", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-field-holiday-value", "content": "등록된 일정 없음", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "500" } ] },
+                        { "type": "frame", "id": "a-save-button", "width": 180, "height": 52, "fill": "$color.gochujang", "cornerRadius": 8, "layout": "horizontal", "justifyContent": "center", "alignItems": "center", "children": [ { "type": "text", "id": "a-save-button-label", "content": "저장하고 반영", "fill": "$color.rice", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "700" } ] }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "a-checklist",
+                      "width": 412,
+                      "height": 650,
+                      "fill": "$color.rice",
+                      "cornerRadius": 8,
+                      "layout": "vertical",
+                      "padding": 28,
+                      "gap": 18,
+                      "children": [
+                        { "type": "text", "id": "a-checklist-title", "content": "콘텐츠 점검", "fill": "$color.deep", "fontFamily": "Pretendard", "fontSize": 24, "fontWeight": "700" },
+                        { "type": "text", "id": "a-check-1", "content": "완료  상호·주소·전화번호", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
+                        { "type": "text", "id": "a-check-2", "content": "완료  메뉴와 가격", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
+                        { "type": "text", "id": "a-check-3", "content": "확인  대표 사진 등록", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
+                        { "type": "text", "id": "a-check-4", "content": "확인  FAQ 최신 상태", "fill": "$color.gochujang", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
+                        { "type": "text", "id": "a-check-5", "content": "완료  네이버 예약 링크", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 17, "fontWeight": "600" },
+                        { "type": "frame", "id": "a-seo-preview", "width": 356, "height": 220, "fill": "$color.hanji", "cornerRadius": 8, "layout": "vertical", "padding": 18, "gap": 10, "children": [ { "type": "text", "id": "a-seo-preview-label", "content": "검색 미리보기", "fill": "$color.muted", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "600" }, { "type": "text", "id": "a-seo-preview-title", "content": "어믜뜰 등갈비찜 청주봉명동본점", "fill": "#1A0DAB", "fontFamily": "Pretendard", "fontSize": 18, "fontWeight": "600", "textGrowth": "fixed-width", "width": 320 }, { "type": "text", "id": "a-seo-preview-url", "content": "my-shop-ecru-six.vercel.app", "fill": "$color.green", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "500" }, { "type": "text", "id": "a-seo-preview-description", "content": "청주 봉명동에서 샤브처럼 즐기는 매운 등갈비찜 한 상. 네이버 예약과 주차 안내를 확인하세요.", "fill": "$color.body", "fontFamily": "Pretendard", "fontSize": 16, "fontWeight": "400", "lineHeight": 1.45, "textGrowth": "fixed-width", "width": 320 } ] }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "fileToken": "15ea0c11-530b-49b1-a8da-57e2c5bf33ff"
+}
