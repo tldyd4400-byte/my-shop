@@ -4,6 +4,16 @@ import { SITE } from "@/lib/site-content";
 
 import "./globals.css";
 
+const googleVerification = process.env.GOOGLE_SITE_VERIFICATION;
+const naverVerification = process.env.NAVER_SITE_VERIFICATION;
+
+const verification: Metadata["verification"] = {
+  ...(googleVerification ? { google: googleVerification } : {}),
+  ...(naverVerification
+    ? { other: { "naver-site-verification": naverVerification } }
+    : {}),
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
@@ -36,6 +46,7 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification,
 };
 
 export default function RootLayout({
