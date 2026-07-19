@@ -9,7 +9,7 @@ import { breadcrumbSchema, restaurantSchema } from "../lib/seo/schema.ts";
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
-for (const route of ["menu", "store"]) {
+for (const route of ["menu", "store", "location", "faq"]) {
   test(`${route} route exists`, () => {
     assert.equal(
       existsSync(new URL(`../app/${route}/page.tsx`, import.meta.url)),
@@ -17,6 +17,45 @@ for (const route of ["menu", "store"]) {
     );
   });
 }
+
+test("location and FAQ expose direct-answer information", () => {
+  const location = read("app/location/page.tsx");
+  const faq = read("app/faq/page.tsx");
+
+  for (const source of [
+    "AnalyticsLink",
+    "HeroMedia",
+    "LocationPanel",
+    "ProofStrip",
+    "STORE.parking",
+  ]) {
+    assert.match(location, new RegExp(source.replace(".", "\\.")));
+  }
+  assert.match(location, /path: "\/location"/);
+  assert.match(location, /restaurantSchema\(\)/);
+  assert.match(location, /breadcrumbSchema\(\[/);
+  assert.doesNotMatch(location, /faqSchema/);
+  assert.match(location, /naver-map-location\.png/);
+  assert.match(location, /eventName="phone_click"/);
+  assert.match(location, /eventName="naver_map_click"/);
+
+  for (const source of [
+    "FAQ_ITEMS",
+    "FaqList",
+    "HeroMedia",
+    "LocationPanel",
+    "ProofStrip",
+    "faqSchema",
+  ]) {
+    assert.match(faq, new RegExp(source));
+  }
+  assert.match(faq, /path: "\/faq"/);
+  assert.match(faq, /items=\{FAQ_ITEMS\}/);
+  assert.match(faq, /faqSchema\(FAQ_ITEMS\)/);
+  assert.match(faq, /breadcrumbSchema\(\[/);
+  assert.match(faq, /interior\.jpg/);
+  assert.doesNotMatch(faq, /restaurantSchema/);
+});
 
 test("menu route uses approved central content and composition", () => {
   const page = read("app/menu/page.tsx");
@@ -74,6 +113,8 @@ test("route metadata and schemas serialize canonical central facts", () => {
   for (const [path, title] of [
     ["/menu", "청주 갈비찜 메뉴 | 어믜뜰 청주봉명동본점"],
     ["/store", "어믜뜰 매장 소개 | 청주 봉명동 가족 외식"],
+    ["/location", "어믜뜰 오시는 길·주차 | 청주 봉명동 맛집"],
+    ["/faq", "어믜뜰 FAQ | 예약·주차·영업시간·포장"],
   ]) {
     const metadata = createPageMetadata({ title, description: "route", path });
     const breadcrumbs = breadcrumbSchema([
@@ -92,11 +133,13 @@ test("route metadata and schemas serialize canonical central facts", () => {
 });
 
 test("routes avoid unverified claims and leave chrome to the root layout", () => {
-  const source = `${read("app/menu/page.tsx")}\n${read("app/store/page.tsx")}`;
+  const source = ["menu", "store", "location", "faq"]
+    .map((route) => read(`app/${route}/page.tsx`))
+    .join("\n");
 
   assert.doesNotMatch(
     source,
-    /AggregateRating|rating:|reviewCount|평점|낙지파전|등갈비 1인분 추가|일요일 (?:휴무|정기휴무)/,
+    /AggregateRating|rating:|reviewCount|평점|낙지파전|등갈비 1인분 추가|일요일 (?:휴무|정기휴무)|예약 완료|리치 결과 보장|사진을 제공하면|이 영역에 바로 교체/,
   );
   assert.doesNotMatch(source, /SiteHeader|SiteFooter|MobileActionBar/);
 });
