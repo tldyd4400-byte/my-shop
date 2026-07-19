@@ -19,8 +19,8 @@ export function ExperienceSteps() {
                   loop
                   playsInline
                   controls
-                  preload="metadata"
-                  poster="/images/eomeuittul/step-1-ribs.png"
+                  preload="none"
+                  poster="/images/eomeuittul/step-3-shabu-poster.webp"
                   aria-label={step.alt}
                 >
                   <source src={step.media} type="video/mp4" />

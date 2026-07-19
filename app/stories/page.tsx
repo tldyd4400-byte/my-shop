@@ -48,7 +48,6 @@ export default function StoriesPage() {
         description="등갈비찜을 맛있게 즐기는 법부터 가족 외식과 방문 정보까지 어믜뜰을 더 잘 경험할 수 있는 이야기를 전합니다."
         image="/images/eomeuittul/hero-table.jpg"
         imageAlt="어믜뜰 등갈비찜 한 상"
-        video="/media/eomeuittul/hero-brand-720p.mp4"
       >
         <Link className="button button-primary" href="#story-list">
           추천 이야기 읽기

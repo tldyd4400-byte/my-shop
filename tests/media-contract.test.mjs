@@ -172,6 +172,38 @@ function inspectMp4Tracks(path) {
     });
 }
 
+function readWebpDimensions(path) {
+  const bytes = readFileSync(path);
+  assert.equal(bytes.toString("ascii", 0, 4), "RIFF");
+  assert.equal(bytes.toString("ascii", 8, 12), "WEBP");
+
+  let offset = 12;
+  while (offset + 8 <= bytes.length) {
+    const type = bytes.toString("ascii", offset, offset + 4);
+    const size = bytes.readUInt32LE(offset + 4);
+    const dataStart = offset + 8;
+
+    if (type === "VP8 ") {
+      const signature = bytes.indexOf(Buffer.from([0x9d, 0x01, 0x2a]), dataStart);
+      assert.ok(signature >= dataStart && signature + 7 <= dataStart + size);
+      return {
+        width: bytes.readUInt16LE(signature + 3) & 0x3fff,
+        height: bytes.readUInt16LE(signature + 5) & 0x3fff,
+      };
+    }
+    if (type === "VP8X") {
+      return {
+        width: 1 + bytes.readUIntLE(dataStart + 4, 3),
+        height: 1 + bytes.readUIntLE(dataStart + 7, 3),
+      };
+    }
+
+    offset = dataStart + size + (size % 2);
+  }
+
+  assert.fail("WebP image has no supported dimension chunk");
+}
+
 test("approved step and map assets exist", () => {
   for (const path of [
     "images/eomeuittul/step-1-ribs.png",
@@ -335,6 +367,23 @@ test("experience step video has native controls and content-provided alt text", 
   assert.match(steps, /<video[^>]*\scontrols(?:\s|=|>)/s);
   assert.match(steps, /aria-label=\{step\.alt\}/);
   assert.match(steps, /alt=\{step\.alt\}/);
+  assert.match(steps, /preload="none"/);
+  assert.match(
+    steps,
+    /poster="\/images\/eomeuittul\/step-3-shabu-poster\.webp"/,
+  );
+});
+
+test("experience step video uses a small dedicated WebP poster", () => {
+  const poster = asset("images/eomeuittul/step-3-shabu-poster.webp");
+
+  assert.equal(existsSync(poster), true);
+  assert.ok(statSync(poster).size <= 250 * 1024);
+  assert.deepEqual(readWebpDimensions(poster), { width: 406, height: 720 });
+
+  const bytes = readFileSync(poster);
+  assert.equal(bytes.includes(Buffer.from("EXIF", "ascii")), false);
+  assert.equal(bytes.includes(Buffer.from("XMP ", "ascii")), false);
 });
 
 test("shared content sections consume central content and analytics exports", () => {

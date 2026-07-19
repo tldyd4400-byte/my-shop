@@ -10,6 +10,53 @@ import { breadcrumbSchema, restaurantSchema } from "../lib/seo/schema.ts";
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
+function cssVariable(styles, name) {
+  const match = styles.match(new RegExp(`--${name}:\\s*(#[0-9a-f]{3,8})`, "i"));
+  assert.ok(match, `Missing --${name} color token`);
+  return match[1];
+}
+
+function relativeLuminance(hex) {
+  const value = hex.slice(1);
+  const expanded =
+    value.length === 3
+      ? value
+          .split("")
+          .map((digit) => digit.repeat(2))
+          .join("")
+      : value.slice(0, 6);
+  const channels = [0, 2, 4].map((offset) =>
+    Number.parseInt(expanded.slice(offset, offset + 2), 16) / 255,
+  );
+  const [red, green, blue] = channels.map((channel) =>
+    channel <= 0.04045
+      ? channel / 12.92
+      : ((channel + 0.055) / 1.055) ** 2.4,
+  );
+  return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+}
+
+function contrastRatio(first, second) {
+  const values = [relativeLuminance(first), relativeLuminance(second)].sort(
+    (left, right) => right - left,
+  );
+  return (values[0] + 0.05) / (values[1] + 0.05);
+}
+
+function cssBlockAt(styles, start) {
+  const openingBrace = styles.indexOf("{", start);
+  assert.ok(openingBrace >= 0, "CSS block has no opening brace");
+
+  let depth = 0;
+  for (let index = openingBrace; index < styles.length; index += 1) {
+    if (styles[index] === "{") depth += 1;
+    if (styles[index] === "}") depth -= 1;
+    if (depth === 0) return styles.slice(openingBrace + 1, index);
+  }
+
+  assert.fail("CSS block has no closing brace");
+}
+
 for (const route of ["menu", "store", "location", "faq"]) {
   test(`${route} route exists`, () => {
     assert.equal(
@@ -57,6 +104,11 @@ test("story routes use central content, static generation, and approved SEO", ()
   assert.equal(index.split("<StoryCard").length - 1, 2);
   assert.equal(index.split("<JsonLd").length - 1, 1);
   assert.doesNotMatch(index, /restaurantSchema|faqSchema|AggregateRating/);
+  assert.doesNotMatch(
+    index,
+    /video=["'{]/,
+    "the stories index hero must use the approved still image only",
+  );
 
   for (const source of [
     "generateStaticParams",
@@ -116,6 +168,49 @@ test("story layouts match the approved desktop and 390px boundaries", () => {
     /\.story-card a\s*\{[\s\S]*?min-height:\s*48px/,
   );
   assert.match(styles, /\.article-body[\s\S]*?max-width:\s*900px/);
+  const mobileStart = styles.lastIndexOf("@media (max-width: 767px)");
+  assert.ok(mobileStart >= 0, "missing story mobile layout rules");
+  const mobile = cssBlockAt(styles, mobileStart);
+  const hiddenSelectors = [...mobile.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+    .filter(([, , body]) => /display:\s*none/.test(body))
+    .map(([, selectors]) => selectors)
+    .join("\n");
+  assert.doesNotMatch(
+    hiddenSelectors,
+    /\.stories-index \.hero-actions|\.story-detail \.hero-actions/,
+    "story CTAs must not be hidden on mobile",
+  );
+  assert.match(
+    mobile,
+    /\.stories-index \.hero-actions,[\s\S]*?\.story-detail \.hero-actions\s*\{[\s\S]*?display:\s*flex;[\s\S]*?flex-direction:\s*column;[\s\S]*?width:\s*100%/,
+  );
+  assert.match(
+    mobile,
+    /\.stories-index \.hero-actions \.button,[\s\S]*?\.story-detail \.hero-actions \.button\s*\{[\s\S]*?width:\s*100%/,
+  );
+});
+
+test("light-surface eyebrows and dual-color focus indicators meet contrast", () => {
+  const styles = read("app/globals.css");
+  const red = cssVariable(styles, "red");
+  const hanji = cssVariable(styles, "hanji");
+  const paper = cssVariable(styles, "paper");
+  const white = cssVariable(styles, "white");
+
+  assert.ok(contrastRatio(red, hanji) >= 4.5);
+  assert.ok(contrastRatio(red, paper) >= 4.5);
+  assert.ok(contrastRatio(white, "#261d17") >= 3);
+  assert.ok(contrastRatio(red, hanji) >= 3);
+
+  assert.match(styles, /\.eyebrow\s*\{[\s\S]*?color:\s*var\(--red\)/);
+  assert.match(
+    styles,
+    /\.hero-media \.eyebrow\s*\{[\s\S]*?color:\s*var\(--straw\)/,
+  );
+  assert.match(
+    styles,
+    /:focus-visible\s*\{[\s\S]*?outline:\s*2px solid var\(--white\);[\s\S]*?box-shadow:\s*0 0 0 5px var\(--red\)/,
+  );
 });
 
 test("reviews route presents checked source summaries without ratings", () => {

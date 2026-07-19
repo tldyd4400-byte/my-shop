@@ -48,8 +48,9 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid var(--straw);
-  outline-offset: 3px;
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--red);
 }
 
 .shell {
@@ -71,7 +72,7 @@ a {
 
 .eyebrow {
   margin: 0;
-  color: var(--straw);
+  color: var(--red);
   font-weight: 800;
   letter-spacing: 0.05em;
 }
@@ -161,6 +162,10 @@ a {
   overflow: hidden;
   background: #261d17;
   color: var(--white);
+}
+
+.hero-media .eyebrow {
+  color: var(--straw);
 }
 
 .hero-background,
@@ -804,10 +809,20 @@ a {
   .stories-index .hero-background video,
   .story-detail .hero-background video,
   .stories-index .hero-overlay,
-  .story-detail .hero-overlay,
+  .story-detail .hero-overlay {
+    display: none;
+  }
+
   .stories-index .hero-actions,
   .story-detail .hero-actions {
-    display: none;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .stories-index .hero-actions .button,
+  .story-detail .hero-actions .button {
+    width: 100%;
   }
 
   .stories-index .hero-content,
