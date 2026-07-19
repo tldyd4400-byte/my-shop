@@ -9,7 +9,7 @@ export function SiteFooter() {
           <p>{STORE.fullName}</p>
         </div>
         <p>
-          {STORE.address} \u00b7 {STORE.phoneDisplay}
+          {STORE.address} · {STORE.phoneDisplay}
         </p>
       </div>
     </footer>

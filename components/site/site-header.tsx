@@ -25,7 +25,7 @@ export function SiteHeader() {
         <Link className="brand" href="/">
           {STORE.name}
         </Link>
-        <nav className="desktop-nav" aria-label="\uc8fc\uc694 \uba54\ub274">
+        <nav className="desktop-nav" aria-label="주요 메뉴">
           {links.map(([label, href]) => (
             <Link key={href} href={href}>
               {label}
@@ -39,7 +39,7 @@ export function SiteHeader() {
             eventName="naver_reservation_click"
             placement="header"
           >
-            \ub124\uc774\ubc84 \uc608\uc57d
+            네이버 예약
           </AnalyticsLink>
         </nav>
         <button
