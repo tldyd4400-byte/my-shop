@@ -49,13 +49,23 @@ test("homepage exposes the approved phone and Naver actions", () => {
   assert.match(page, /네이버 길찾기/);
 });
 
-test("layout uses Korean metadata and document language", () => {
+test("layout uses central Korean metadata and document language", () => {
   const layout = read("app/layout.tsx");
-  const content = read("lib/site-content.ts");
+  const content = read("lib/content/store.ts");
 
   assert.match(layout, /lang="ko"/);
-  assert.match(layout, /어믜뜰 등갈비찜 청주봉명동본점/);
+  assert.match(layout, /청주 봉명동 맛집 어믜뜰 \| 색다른 등갈비찜/);
+  assert.match(layout, /STORE/);
   assert.match(content, /https:\/\/eomeutteull\.com/);
+});
+
+test("root layout uses shared chrome and optional GA4", () => {
+  const layout = read("app/layout.tsx");
+  assert.match(layout, /SiteHeader/);
+  assert.match(layout, /SiteFooter/);
+  assert.match(layout, /MobileActionBar/);
+  assert.match(layout, /NEXT_PUBLIC_GA_MEASUREMENT_ID/);
+  assert.match(layout, /lang="ko"/);
 });
 
 test("approved owner-provided visual assets exist", () => {

@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 
-import { SITE } from "@/lib/site-content";
+import { MobileActionBar } from "@/components/site/mobile-action-bar";
+import { SiteFooter } from "@/components/site/site-footer";
+import { SiteHeader } from "@/components/site/site-header";
+import { STORE } from "@/lib/content/store";
 
 import "./globals.css";
 
+const gaId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const googleVerification = process.env.GOOGLE_SITE_VERIFICATION;
 const naverVerification = process.env.NAVER_SITE_VERIFICATION;
 
@@ -15,13 +20,13 @@ const verification: Metadata["verification"] = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE.url),
+  metadataBase: new URL(STORE.url),
   title: {
-    default: "어믜뜰 등갈비찜 청주봉명동본점",
-    template: "%s | 어믜뜰 청주봉명동본점",
+    default: "청주 봉명동 맛집 어믜뜰 | 색다른 등갈비찜",
+    template: "%s | 어믜뜰",
   },
   description:
-    "청주 봉명동에서 채소와 버섯을 더해 샤브처럼 즐기는 매운 등갈비찜 전문점. 메뉴, 네이버 예약, 단체석, 주차와 오시는 길을 확인하세요.",
+    "청주 봉명동에서 등갈비찜과 30여 종 셀프바를 샤브처럼 즐기는 어믜뜰입니다.",
   alternates: {
     canonical: "/",
   },
@@ -29,15 +34,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "ko_KR",
     url: "/",
-    siteName: SITE.fullName,
-    title: "어믜뜰 등갈비찜 청주봉명동본점",
+    siteName: STORE.fullName,
+    title: "청주 봉명동 맛집 어믜뜰 | 색다른 등갈비찜",
     description:
-      "청주 봉명동에서 채소와 버섯을 더해 샤브처럼 즐기는 매운 등갈비찜 한 상",
+      "청주 봉명동에서 등갈비찜과 30여 종 셀프바를 샤브처럼 즐기는 어믜뜰입니다.",
     images: [
       {
-        url: SITE.image,
-        width: 2000,
-        height: 1333,
+        url: STORE.image,
         alt: "어믜뜰 매운 등갈비찜",
       },
     ],
@@ -56,7 +59,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        <SiteHeader />
+        {children}
+        <SiteFooter />
+        <MobileActionBar />
+        {gaId ? (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4" strategy="afterInteractive">
+              {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;gtag('js',new Date());gtag('config','${gaId}');`}
+            </Script>
+          </>
+        ) : null}
+      </body>
     </html>
   );
 }
