@@ -1094,6 +1094,10 @@ summary:focus-visible {
     scroll-behavior: auto;
   }
 
+  .hero-background video {
+    display: none;
+  }
+
   *,
   *::before,
   *::after {
