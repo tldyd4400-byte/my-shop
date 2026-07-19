@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { AnalyticsLink } from "@/components/site/analytics-link";
 import { ExperienceSteps } from "@/components/site/experience-steps";
 import { HeroMedia } from "@/components/site/hero-media";
+import { MenuViewTracker } from "@/components/site/menu-view-tracker";
 import { ProofStrip } from "@/components/site/proof-strip";
 import { ReservationCta } from "@/components/site/reservation-cta";
 import { MENU_ITEMS, STORE } from "@/lib/content/store";
@@ -29,6 +30,7 @@ export default function MenuPage() {
           ]),
         ]}
       />
+      <MenuViewTracker />
 
       <HeroMedia
         eyebrow="MENU · 청주갈비찜"

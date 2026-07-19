@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import { SITE } from "@/lib/site-content";
+import { STORE } from "@/lib/content/store";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -8,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: `${SITE.url}/sitemap.xml`,
-    host: SITE.url,
+    sitemap: `${STORE.url}/sitemap.xml`,
+    host: STORE.url,
   };
 }

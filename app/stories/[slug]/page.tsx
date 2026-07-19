@@ -7,6 +7,7 @@ import { FaqList } from "@/components/site/faq-list";
 import { HeroMedia } from "@/components/site/hero-media";
 import { ReservationCta } from "@/components/site/reservation-cta";
 import { StoryCard } from "@/components/site/story-card";
+import { StoryReadTracker } from "@/components/site/story-read-tracker";
 import { getStory, STORIES } from "@/lib/content/stories";
 import { FAQ_ITEMS } from "@/lib/content/store";
 import { createPageMetadata } from "@/lib/seo/metadata";
@@ -74,6 +75,7 @@ export default async function StoryPage({ params }: StoryPageProps) {
           ]),
         ]}
       />
+      <StoryReadTracker />
 
       <HeroMedia
         eyebrow={`${story.category} · ${story.readingTime} 읽기`}
