@@ -184,9 +184,9 @@ test("homepage publishes local restaurant, four-item FAQ, and website schemas", 
   assert.match(source, /websiteSchema/);
   assert.match(layout, /alternates/);
   assert.match(layout, /openGraph/);
-  assert.match(content, /평일 점심/);
-  assert.match(content, /평일 저녁/);
-  assert.match(content, /주말/);
+  assert.match(content, /화~금 점심/);
+  assert.match(content, /화~금 저녁/);
+  assert.match(content, /토~일/);
   assert.match(content, /15:30/);
   assert.match(content, /16:30/);
 });

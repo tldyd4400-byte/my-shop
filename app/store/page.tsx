@@ -40,7 +40,7 @@ export default function StorePage() {
         }
         description="늘 자식 쪽으로 기울던 접시처럼 좋은 것을 먼저 내어주는 마음으로 차린 식당입니다."
         image="/images/eomeuittul/facade.jpg"
-        imageAlt="어밀뜰 청주봉명동본점 외관"
+        imageAlt={`${STORE.name} 청주봉명동본점 외관`}
       >
         <AnalyticsLink
           className="button button-primary"
@@ -76,7 +76,7 @@ export default function StorePage() {
           <article className="route-story">
             <Image
               src="/images/eomeuittul/hero-table.jpg"
-              alt="어밀뜰 등갈비찜 한 상"
+              alt={`${STORE.name} 등갈비찜 한 상`}
               width={640}
               height={440}
             />
@@ -96,7 +96,7 @@ export default function StorePage() {
           <article className="route-story route-story--reverse">
             <Image
               src="/images/eomeuittul/identity-wall.jpg"
-              alt="어밀뜰 매장 브랜드 벽면"
+              alt={`${STORE.name} 매장 브랜드 벽면`}
               width={640}
               height={440}
             />
@@ -113,7 +113,7 @@ export default function StorePage() {
           <article className="route-story">
             <Image
               src="/images/eomeuittul/interior.jpg"
-              alt="어밀뜰 매장 내부 좌석"
+              alt={`${STORE.name} 매장 내부 좌석`}
               width={640}
               height={440}
             />

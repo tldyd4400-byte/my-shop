@@ -41,7 +41,7 @@ export default function MenuPage() {
         }
         description="매운맛과 간장맛을 고르고 셀프바 재료를 더해 샤브처럼 즐겨보세요."
         image="/images/eomeuittul/spicy-ribs.jpg"
-        imageAlt="어밀뜰 매운 등갈비찜"
+        imageAlt={`${STORE.name} 매운 등갈비찜`}
       >
         <AnalyticsLink
           className="button button-primary"
@@ -87,7 +87,7 @@ export default function MenuPage() {
         <div className="shell split-section">
           <Image
             src="/images/eomeuittul/step-2-selfbar.jpg"
-            alt="어밀뜰 셀프바"
+            alt={`${STORE.name} 셀프바`}
             width={640}
             height={440}
           />

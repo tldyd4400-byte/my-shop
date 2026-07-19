@@ -27,7 +27,7 @@ export function LocationPanel() {
       <div className="shell location-grid">
         <Image
           src="/images/eomeuittul/naver-map-location.png"
-          alt="어밀뜰 청주봉명동본점의 네이버 지도 위치"
+          alt={`${STORE.name} 청주봉명동본점의 네이버 지도 위치`}
           width={650}
           height={424}
         />

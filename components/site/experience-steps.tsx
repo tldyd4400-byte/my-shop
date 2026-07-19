@@ -6,9 +6,9 @@ export function ExperienceSteps() {
   return (
     <section className="experience section-pad surface-paper">
       <div className="shell">
-        <h2>등갈비찜부터 연유빙수까지, 한 끼의 식사 경험</h2>
+        <h2>등갈비찜부터 수제우유빙수까지, 한 끼의 식사 경험</h2>
         <p>
-          고르고, 담고, 함께 끓여 먹는 과정까지 즐거운 어밀뜰만의 네 단계
+          고르고, 담고, 함께 끓여 먹는 과정까지 즐거운 어믜뜰만의 네 단계
         </p>
         <ol className="experience-grid">
           {DINING_STEPS.map((step) => (
