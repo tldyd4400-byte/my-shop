@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
-import { STORE } from "../lib/content/store.ts";
+import { REVIEW_ITEMS, STORE } from "../lib/content/store.ts";
 import { createPageMetadata } from "../lib/seo/metadata.ts";
 import { breadcrumbSchema, restaurantSchema } from "../lib/seo/schema.ts";
 
@@ -17,6 +17,93 @@ for (const route of ["menu", "store", "location", "faq"]) {
     );
   });
 }
+
+test("reviews route exists", () => {
+  assert.equal(
+    existsSync(new URL("../app/reviews/page.tsx", import.meta.url)),
+    true,
+  );
+});
+
+test("reviews route presents checked source summaries without ratings", () => {
+  const page = read("app/reviews/page.tsx");
+  const styles = read("app/reviews/reviews.module.css");
+
+  for (const source of [
+    "REVIEW_ITEMS",
+    "STORE",
+    "HeroMedia",
+    "ProofStrip",
+    "ReservationCta",
+    "LocationPanel",
+    "JsonLd",
+  ]) {
+    assert.match(page, new RegExp(source));
+  }
+
+  assert.match(page, /title: "어믜뜰 방문자 후기 \| 청주 봉명동 등갈비찜"/);
+  assert.match(page, /path: "\/reviews"/);
+  assert.match(page, /image="\/images\/eomeuittul\/soy-ribs\.jpg"/);
+  assert.match(page, /breadcrumbSchema\(\[/);
+  assert.equal(page.split("<JsonLd").length - 1, 1);
+  assert.doesNotMatch(page, /restaurantSchema|AggregateRating/);
+  assert.match(
+    page,
+    /href=\{STORE\.placeUrl\}[\s\S]*?target="_blank"[\s\S]*?rel="noreferrer"/,
+  );
+
+  for (const proof of [
+    "네이버 원문 링크",
+    "2026.07.19 확인",
+    "후기 일부만 발췌",
+    "반복 반응 중심 요약",
+  ]) {
+    assert.match(page, new RegExp(proof));
+  }
+
+  assert.match(page, /REVIEW_ITEMS\.map\(\(review\) =>/);
+  assert.match(page, /review\.sourceLabel/);
+  assert.match(page, /review\.summary/);
+  assert.match(page, /review\.checkedAt/);
+  assert.match(page, /href=\{review\.sourceUrl\}/);
+  assert.match(
+    page,
+    /href=\{review\.sourceUrl\}[\s\S]*?target="_blank"[\s\S]*?rel="noreferrer"/,
+  );
+  assert.match(page, /전체 실시간 후기 데이터가 아닌/);
+  assert.match(page, /step-2-selfbar\.jpg/);
+  assert.equal(page.split("soy-ribs.jpg").length - 1, 3);
+  assert.match(page, /<ReservationCta placement="reviews_bottom" \/>/);
+  assert.match(page, /<LocationPanel \/>/);
+  assert.doesNotMatch(
+    page,
+    /평점|별점|reviewCount|리뷰 수|[“”]|예약 완료|효과|효능/,
+  );
+  assert.doesNotMatch(page, /SiteHeader|SiteFooter|MobileActionBar/);
+
+  assert.match(styles, /\.reviewGrid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/);
+  assert.match(
+    styles,
+    /@media \(max-width: 767px\)[\s\S]*?\.reviewGrid\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
+  );
+  assert.match(styles, /\.sourceLink\s*\{[\s\S]*?min-height:\s*48px/);
+});
+
+test("central review evidence has three safe, dated source records", () => {
+  assert.equal(REVIEW_ITEMS.length, 3);
+
+  for (const review of REVIEW_ITEMS) {
+    assert.equal(review.sourceUrl, STORE.placeUrl);
+    assert.equal(new URL(review.sourceUrl).protocol, "https:");
+    assert.equal(review.checkedAt, "2026-07-19");
+    assert.match(review.sourceLabel, /일부 요약/);
+    assert.match(review.summary, /반응이 있습니다\.$/);
+    assert.doesNotMatch(
+      `${review.title} ${review.summary}`,
+      /평점|별점|reviewCount|[“”]/,
+    );
+  }
+});
 
 test("location and FAQ expose direct-answer information", () => {
   const location = read("app/location/page.tsx");
@@ -142,6 +229,7 @@ test("route metadata and schemas serialize canonical central facts", () => {
     ["/store", "어믜뜰 매장 소개 | 청주 봉명동 가족 외식"],
     ["/location", "어믜뜰 오시는 길·주차 | 청주 봉명동 맛집"],
     ["/faq", "어믜뜰 FAQ | 예약·주차·영업시간·포장"],
+    ["/reviews", "어믜뜰 방문자 후기 | 청주 봉명동 등갈비찜"],
   ]) {
     const metadata = createPageMetadata({ title, description: "route", path });
     const breadcrumbs = breadcrumbSchema([
@@ -160,7 +248,7 @@ test("route metadata and schemas serialize canonical central facts", () => {
 });
 
 test("routes avoid unverified claims and leave chrome to the root layout", () => {
-  const source = ["menu", "store", "location", "faq"]
+  const source = ["menu", "store", "location", "faq", "reviews"]
     .map((route) => read(`app/${route}/page.tsx`))
     .join("\n");
 
