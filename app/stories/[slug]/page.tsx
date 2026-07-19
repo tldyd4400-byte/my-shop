@@ -1,0 +1,150 @@
+import Image from "next/image";
+import { notFound } from "next/navigation";
+
+import { JsonLd } from "@/components/seo/json-ld";
+import { ExperienceSteps } from "@/components/site/experience-steps";
+import { FaqList } from "@/components/site/faq-list";
+import { HeroMedia } from "@/components/site/hero-media";
+import { ReservationCta } from "@/components/site/reservation-cta";
+import { StoryCard } from "@/components/site/story-card";
+import { getStory, STORIES } from "@/lib/content/stories";
+import { FAQ_ITEMS } from "@/lib/content/store";
+import { createPageMetadata } from "@/lib/seo/metadata";
+import { articleSchema, breadcrumbSchema } from "@/lib/seo/schema";
+
+type StoryPageProps = { params: Promise<{ slug: string }> };
+
+function storyFaqItems(slug: string) {
+  if (slug === "family-dining-guide") {
+    return [FAQ_ITEMS[2], FAQ_ITEMS[5], FAQ_ITEMS[6], FAQ_ITEMS[7]];
+  }
+
+  if (slug === "self-bar-guide") {
+    return [FAQ_ITEMS[4], FAQ_ITEMS[5]];
+  }
+
+  if (slug === "spicy-or-soy") {
+    return [FAQ_ITEMS[4], FAQ_ITEMS[6]];
+  }
+
+  return FAQ_ITEMS.slice(4);
+}
+
+export function generateStaticParams() {
+  return STORIES.map((story) => ({ slug: story.slug }));
+}
+
+export async function generateMetadata({ params }: StoryPageProps) {
+  const { slug } = await params;
+  const story = getStory(slug);
+
+  if (!story) {
+    return {};
+  }
+
+  return createPageMetadata({
+    title: `${story.title} | 어믜뜰`,
+    description: story.description,
+    path: `/stories/${story.slug}`,
+    image: story.image,
+    type: "article",
+  });
+}
+
+export default async function StoryPage({ params }: StoryPageProps) {
+  const { slug } = await params;
+  const story = getStory(slug);
+
+  if (!story) {
+    notFound();
+  }
+
+  const related = STORIES.filter((item) => item.slug !== story.slug).slice(0, 2);
+  const faqs = storyFaqItems(story.slug);
+
+  return (
+    <main className="story-detail">
+      <JsonLd
+        data={[
+          articleSchema(story),
+          breadcrumbSchema([
+            { name: "홈", path: "/" },
+            { name: "이야기", path: "/stories" },
+            { name: story.title, path: `/stories/${story.slug}` },
+          ]),
+        ]}
+      />
+
+      <HeroMedia
+        eyebrow={`${story.category} · ${story.readingTime} 읽기`}
+        title={story.title}
+        description={story.description}
+        image={story.image}
+        imageAlt={story.imageAlt}
+      >
+        <a className="button button-primary" href="#article">
+          이야기 읽기
+        </a>
+      </HeroMedia>
+
+      <article id="article" className="article-body section-pad">
+        <div className="shell">
+          <p className="story-dates">
+            <time dateTime={story.publishedAt}>{story.publishedAt} 작성</time>
+            <span aria-hidden="true"> · </span>
+            <time dateTime={story.modifiedAt}>{story.modifiedAt} 수정</time>
+          </p>
+          {story.sections.map((section) => (
+            <section
+              className={section.image ? "story-section" : "story-section story-section--text"}
+              key={section.heading}
+            >
+              {section.image ? (
+                <Image
+                  src={section.image}
+                  alt={section.imageAlt ?? ""}
+                  width={760}
+                  height={500}
+                  sizes="(max-width: 767px) calc(100vw - 48px), 50vw"
+                />
+              ) : null}
+              <div>
+                <h2>{section.heading}</h2>
+                <p>{section.body}</p>
+              </div>
+            </section>
+          ))}
+        </div>
+      </article>
+
+      {story.slug === "how-to-enjoy-ribs" ? <ExperienceSteps /> : null}
+
+      <section className="story-faq section-pad surface-paper">
+        <div className="shell story-faq-grid">
+          <div>
+            <p className="eyebrow">FAQ</p>
+            <h2>함께 확인하면 좋은 질문</h2>
+            <p>메뉴 선택과 방문 전에 필요한 내용을 확인하세요.</p>
+          </div>
+          <FaqList items={faqs} openAll />
+        </div>
+      </section>
+
+      <section className="related-stories section-pad">
+        <div className="shell story-listing">
+          <div className="section-heading">
+            <h2>다음 이야기</h2>
+            <p>방문 준비와 메뉴 선택을 더 자세히 알아보세요.</p>
+          </div>
+          <div className="story-grid">
+            {related.map((item) => (
+              <StoryCard key={item.slug} story={item} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <ReservationCta placement="story_bottom" />
+    </main>
+  );
+}

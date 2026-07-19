@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
 
+import { STORIES } from "../lib/content/stories.ts";
 import { REVIEW_ITEMS, STORE } from "../lib/content/store.ts";
 import { createPageMetadata } from "../lib/seo/metadata.ts";
 import { breadcrumbSchema, restaurantSchema } from "../lib/seo/schema.ts";
@@ -23,6 +24,98 @@ test("reviews route exists", () => {
     existsSync(new URL("../app/reviews/page.tsx", import.meta.url)),
     true,
   );
+});
+
+test("story index and detail routes exist", () => {
+  assert.equal(
+    existsSync(new URL("../app/stories/page.tsx", import.meta.url)),
+    true,
+  );
+  assert.equal(
+    existsSync(new URL("../app/stories/[slug]/page.tsx", import.meta.url)),
+    true,
+  );
+});
+
+test("story routes use central content, static generation, and approved SEO", () => {
+  const index = read("app/stories/page.tsx");
+  const detail = read("app/stories/[slug]/page.tsx");
+
+  for (const source of [
+    "STORIES",
+    "StoryCard",
+    "ReservationCta",
+    "JsonLd",
+    "collectionPageSchema",
+    "breadcrumbSchema",
+  ]) {
+    assert.match(index, new RegExp(source));
+  }
+  assert.match(index, /path: STORIES_PATH/);
+  assert.match(index, /STORIES\.slice\(0, 2\)/);
+  assert.match(index, /STORIES\.slice\(2\)/);
+  assert.equal(index.split("<StoryCard").length - 1, 2);
+  assert.equal(index.split("<JsonLd").length - 1, 1);
+  assert.doesNotMatch(index, /restaurantSchema|faqSchema|AggregateRating/);
+
+  for (const source of [
+    "generateStaticParams",
+    "generateMetadata",
+    "articleSchema",
+    "breadcrumbSchema",
+    "notFound",
+    "ExperienceSteps",
+    "FaqList",
+    "StoryCard",
+    "ReservationCta",
+  ]) {
+    assert.match(detail, new RegExp(source));
+  }
+  assert.match(
+    detail,
+    /return STORIES\.map\(\(story\) => \(\{ slug: story\.slug \}\)\)/,
+  );
+  assert.match(detail, /type: "article"/);
+  assert.match(detail, /story\.sections\.map/);
+  assert.match(detail, /story\.publishedAt/);
+  assert.match(detail, /story\.modifiedAt/);
+  assert.match(detail, /story\.slug === "how-to-enjoy-ribs"/);
+  assert.match(detail, /\.filter\(\(item\) => item\.slug !== story\.slug\)/);
+  assert.match(detail, /\.slice\(0, 2\)/);
+  assert.match(detail, /openAll/);
+  assert.equal(detail.split("<JsonLd").length - 1, 1);
+  assert.doesNotMatch(
+    detail,
+    /faqSchema|restaurantSchema|AggregateRating|SiteHeader|SiteFooter|MobileActionBar/,
+  );
+
+  assert.deepEqual(
+    STORIES.map((story) => ({ slug: story.slug })),
+    [
+      { slug: "how-to-enjoy-ribs" },
+      { slug: "family-dining-guide" },
+      { slug: "self-bar-guide" },
+      { slug: "spicy-or-soy" },
+    ],
+  );
+});
+
+test("story layouts match the approved desktop and 390px boundaries", () => {
+  const styles = read("app/globals.css");
+
+  assert.match(
+    styles,
+    /\.story-grid\s*\{[\s\S]*?grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/,
+  );
+  assert.match(
+    styles,
+    /@media \(max-width: 767px\)[\s\S]*?\.story-grid\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
+  );
+  assert.match(
+    styles,
+    /\.story-card a\s*\{[\s\S]*?min-height:\s*48px/,
+  );
+  assert.match(styles, /\.article-body[\s\S]*?max-width:\s*900px/);
 });
 
 test("reviews route presents checked source summaries without ratings", () => {

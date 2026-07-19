@@ -8,6 +8,7 @@ import { createPageMetadata } from "../lib/seo/metadata.ts";
 import {
   articleSchema,
   breadcrumbSchema,
+  collectionPageSchema,
   faqSchema,
   restaurantSchema,
   websiteSchema,
@@ -69,6 +70,31 @@ test("breadcrumb, FAQ, and article schemas serialize supplied central content", 
   assert.equal(article.mainEntityOfPage, `${STORE.url}/stories/${STORIES[0].slug}`);
 });
 
+test("collection page schema serializes the central story listing", () => {
+  const collection = collectionPageSchema({
+    name: "어믜뜰 이야기",
+    description: "등갈비찜 이야기",
+    path: "/stories",
+    items: STORIES,
+  });
+
+  assert.equal(collection["@type"], "CollectionPage");
+  assert.equal(collection.url, `${STORE.url}/stories`);
+  assert.equal(collection.mainEntity["@type"], "ItemList");
+  assert.deepEqual(
+    collection.mainEntity.itemListElement.map((item) => item.position),
+    [1, 2, 3, 4],
+  );
+  assert.equal(
+    collection.mainEntity.itemListElement[0].url,
+    `${STORE.url}/stories/${STORIES[0].slug}`,
+  );
+  assert.equal(
+    JSON.stringify(collection).includes("AggregateRating"),
+    false,
+  );
+});
+
 test("SEO helpers contain only approved schema types and JsonLd escapes HTML delimiters", () => {
   const metadata = read("lib/seo/metadata.ts");
   const schema = read("lib/seo/schema.ts");
@@ -77,7 +103,14 @@ test("SEO helpers contain only approved schema types and JsonLd escapes HTML del
   assert.match(metadata, /metadataBase/);
   assert.match(metadata, /alternates/);
   assert.match(metadata, /openGraph/);
-  for (const type of ["WebSite", "Restaurant", "BreadcrumbList", "FAQPage", "Article"]) {
+  for (const type of [
+    "WebSite",
+    "Restaurant",
+    "BreadcrumbList",
+    "FAQPage",
+    "Article",
+    "CollectionPage",
+  ]) {
     assert.match(schema, new RegExp(type));
   }
   assert.doesNotMatch(schema, /AggregateRating/);

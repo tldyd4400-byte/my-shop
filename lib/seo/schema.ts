@@ -85,6 +85,32 @@ export function faqSchema(items: readonly FaqItem[] = FAQ_ITEMS) {
   };
 }
 
+export function collectionPageSchema(input: {
+  name: string;
+  description: string;
+  path: string;
+  items: readonly Story[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: input.name,
+    description: input.description,
+    url: `${STORE.url}${input.path}`,
+    inLanguage: "ko-KR",
+    isPartOf: { "@id": `${STORE.url}/#website` },
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: input.items.map((story, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: story.title,
+        url: `${STORE.url}/stories/${story.slug}`,
+      })),
+    },
+  };
+}
+
 export function articleSchema(story: Story) {
   return {
     "@context": "https://schema.org",
