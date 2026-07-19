@@ -20,11 +20,17 @@ type Props = AnchorHTMLAttributes<HTMLAnchorElement> & {
 
 export function AnalyticsLink({ eventName, placement, onClick, ...props }: Props) {
   function handleClick(event: MouseEvent<HTMLAnchorElement>) {
-    window.gtag?.("event", eventName, {
-      event_name: eventName,
-      placement,
-      page_path: window.location.pathname,
-    });
+    setTimeout(() => {
+      try {
+        window.gtag?.("event", eventName, {
+          event_name: eventName,
+          placement,
+          page_path: window.location.pathname,
+        });
+      } catch {
+        // Analytics must never interfere with the link's native navigation.
+      }
+    }, 0);
     onClick?.(event);
   }
 

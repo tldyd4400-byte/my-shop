@@ -15,7 +15,11 @@ test("shared navigation exposes every public route", () => {
 test("analytics link records approved events without blocking navigation", () => {
   const link = read("components/site/analytics-link.tsx");
 
-  assert.match(link, /window\.gtag\?\./);
+  assert.match(
+    link,
+    /setTimeout\(\(\) => \{\s*try \{\s*window\.gtag\?\.\("event"/s,
+  );
   assert.match(link, /event_name/);
+  assert.match(link, /catch\s*\{/);
   assert.doesNotMatch(link, /preventDefault/);
 });
