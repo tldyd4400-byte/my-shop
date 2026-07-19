@@ -24,6 +24,10 @@ test("home V2 exposes approved media, proof, trust, and conversion sections", ()
   }
 
   assert.match(page, /hero-brand-720p\.mp4/);
+  assert.match(
+    page,
+    /<HeroMedia[\s\S]*?image="\/images\/eomeuittul\/hero-poster\.webp"/,
+  );
   assert.match(page, /청주 봉명동 맛집 어믜뜰/);
 });
 

@@ -185,6 +185,16 @@ test("approved step and map assets exist", () => {
   }
 });
 
+test("hero poster is a dedicated web-sized WebP", () => {
+  const poster = asset("images/eomeuittul/hero-poster.webp");
+
+  assert.equal(existsSync(poster), true);
+  assert.ok(statSync(poster).size <= 700 * 1024);
+  const bytes = readFileSync(poster);
+  assert.equal(bytes.toString("ascii", 0, 4), "RIFF");
+  assert.equal(bytes.toString("ascii", 8, 12), "WEBP");
+});
+
 test("hero video stays within the approved budget", () => {
   assert.ok(
     statSync(asset("media/eomeuittul/hero-brand-720p.mp4")).size <=

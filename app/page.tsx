@@ -48,7 +48,7 @@ export default function HomePage() {
           </>
         }
         description="부드러운 등갈비와 30여 종의 채소를 취향대로 더해 샤브처럼 즐기는 어믜뜰만의 색다른 한 상"
-        image="/images/eomeuittul/hero-table.jpg"
+        image="/images/eomeuittul/hero-poster.webp"
         imageAlt="등갈비찜과 메밀전, 채소가 함께 차려진 어믜뜰 한 상"
         video="/media/eomeuittul/hero-brand-720p.mp4"
       >
