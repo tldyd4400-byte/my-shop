@@ -1,5 +1,4 @@
 import assert from "node:assert/strict";
-import { spawnSync } from "node:child_process";
 import {
   existsSync,
   readFileSync,
@@ -13,48 +12,6 @@ import test from "node:test";
 const asset = (path) => new URL(`../public/${path}`, import.meta.url);
 const source = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
-const ffprobeFallback = String.raw`C:\Users\ksgoe\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1.2-full_build\bin\ffprobe.exe`;
-
-function resolveFfprobe() {
-  const candidates = [
-    ["FFPROBE_PATH", process.env.FFPROBE_PATH?.trim()],
-    ["PATH", "ffprobe"],
-    ["WinGet fallback", ffprobeFallback],
-  ];
-  const attempts = [];
-
-  for (const [sourceName, command] of candidates) {
-    if (!command) continue;
-    const result = spawnSync(command, ["-version"], {
-      encoding: "utf8",
-      windowsHide: true,
-    });
-
-    if (result.status === 0) return command;
-    attempts.push(`${sourceName}: ${result.error?.code ?? result.status}`);
-  }
-
-  assert.fail(`ffprobe is unavailable (${attempts.join(", ")})`);
-}
-
-function probeMedia(path) {
-  const result = spawnSync(
-    resolveFfprobe(),
-    [
-      "-v",
-      "error",
-      "-show_entries",
-      "stream=codec_name,codec_type,width,height",
-      "-of",
-      "json",
-      fileURLToPath(asset(path)),
-    ],
-    { encoding: "utf8", windowsHide: true },
-  );
-
-  assert.equal(result.status, 0, result.stderr || result.error?.message);
-  return JSON.parse(result.stdout);
-}
 
 function extractCssBlock(css, atRulePattern) {
   const match = atRulePattern.exec(css);
@@ -86,29 +43,110 @@ function listFiles(directory) {
   });
 }
 
-function topLevelMp4Atoms(bytes) {
-  const atoms = [];
-  let offset = 0;
+function parseMp4Boxes(bytes, start = 0, end = bytes.length) {
+  const boxes = [];
+  let offset = start;
 
-  while (offset + 8 <= bytes.length) {
+  while (offset + 8 <= end) {
     const size32 = bytes.readUInt32BE(offset);
     const type = bytes.toString("ascii", offset + 4, offset + 8);
     const headerSize = size32 === 1 ? 16 : 8;
-    const atomSize =
+    assert.ok(offset + headerSize <= end, `${type} box header exceeds parent`);
+
+    const extendedSize =
+      size32 === 1 ? bytes.readBigUInt64BE(offset + 8) : undefined;
+    assert.ok(
+      extendedSize === undefined ||
+        extendedSize <= BigInt(Number.MAX_SAFE_INTEGER),
+      `${type} box is too large to inspect safely`,
+    );
+    const boxSize =
       size32 === 0
-        ? bytes.length - offset
+        ? end - offset
         : size32 === 1
-          ? Number(bytes.readBigUInt64BE(offset + 8))
+          ? Number(extendedSize)
           : size32;
 
-    assert.ok(atomSize >= headerSize, `invalid ${type} atom size ${atomSize}`);
-    assert.ok(offset + atomSize <= bytes.length, `${type} atom exceeds file`);
-    atoms.push({ offset, type });
-    offset += atomSize;
+    assert.ok(boxSize >= headerSize, `invalid ${type} box size ${boxSize}`);
+    assert.ok(offset + boxSize <= end, `${type} box exceeds parent`);
+    boxes.push({
+      dataStart: offset + headerSize,
+      end: offset + boxSize,
+      offset,
+      size: boxSize,
+      type,
+    });
+    offset += boxSize;
   }
 
-  assert.equal(offset, bytes.length, "MP4 has trailing bytes outside top-level atoms");
-  return atoms;
+  assert.equal(offset, end, "MP4 box region contains trailing bytes");
+  return boxes;
+}
+
+function requireChildBox(bytes, parent, type) {
+  const box = parseMp4Boxes(bytes, parent.dataStart, parent.end).find(
+    (candidate) => candidate.type === type,
+  );
+  assert.ok(box, `${parent.type} is missing ${type}`);
+  return box;
+}
+
+function readTrackHandler(bytes, track) {
+  const media = requireChildBox(bytes, track, "mdia");
+  const handler = requireChildBox(bytes, media, "hdlr");
+  assert.ok(handler.dataStart + 12 <= handler.end, "hdlr payload is truncated");
+  return bytes.toString("ascii", handler.dataStart + 8, handler.dataStart + 12);
+}
+
+function readTrackHeight(bytes, track) {
+  const header = requireChildBox(bytes, track, "tkhd");
+  const version = bytes.readUInt8(header.dataStart);
+  assert.ok(
+    version === 0 || version === 1,
+    `unsupported tkhd version ${version}`,
+  );
+
+  const heightOffset = header.dataStart + (version === 1 ? 92 : 80);
+  assert.ok(heightOffset + 4 <= header.end, "tkhd dimensions are truncated");
+  return bytes.readUInt32BE(heightOffset) / 65_536;
+}
+
+function readVideoSampleEntries(bytes, track) {
+  const media = requireChildBox(bytes, track, "mdia");
+  const mediaInfo = requireChildBox(bytes, media, "minf");
+  const sampleTable = requireChildBox(bytes, mediaInfo, "stbl");
+  const sampleDescription = requireChildBox(bytes, sampleTable, "stsd");
+  assert.ok(
+    sampleDescription.dataStart + 8 <= sampleDescription.end,
+    "stsd payload is truncated",
+  );
+
+  const entryCount = bytes.readUInt32BE(sampleDescription.dataStart + 4);
+  const entries = parseMp4Boxes(
+    bytes,
+    sampleDescription.dataStart + 8,
+    sampleDescription.end,
+  );
+  assert.equal(entries.length, entryCount, "stsd entry count does not match");
+  return entries.map((entry) => entry.type);
+}
+
+function inspectMp4Tracks(path) {
+  const bytes = readFileSync(asset(path));
+  const moov = parseMp4Boxes(bytes).find((box) => box.type === "moov");
+  assert.ok(moov, `${path} is missing moov`);
+
+  return parseMp4Boxes(bytes, moov.dataStart, moov.end)
+    .filter((box) => box.type === "trak")
+    .map((track) => {
+      const handler = readTrackHandler(bytes, track);
+      return {
+        handler,
+        height: handler === "vide" ? readTrackHeight(bytes, track) : undefined,
+        sampleEntries:
+          handler === "vide" ? readVideoSampleEntries(bytes, track) : [],
+      };
+    });
 }
 
 test("approved step and map assets exist", () => {
@@ -136,26 +174,28 @@ test("published videos are H.264 at 720px high with no audio", () => {
     "media/eomeuittul/hero-brand-720p.mp4",
     "media/eomeuittul/step-3-shabu-720p.mp4",
   ]) {
-    const metadata = probeMedia(path);
-    const videoStreams = metadata.streams.filter(
-      (stream) => stream.codec_type === "video",
-    );
-    const audioStreams = metadata.streams.filter(
-      (stream) => stream.codec_type === "audio",
-    );
+    const tracks = inspectMp4Tracks(path);
+    const videoTracks = tracks.filter((track) => track.handler === "vide");
+    const audioTracks = tracks.filter((track) => track.handler === "soun");
 
-    assert.equal(videoStreams.length, 1, path);
-    assert.equal(videoStreams[0].codec_name, "h264", path);
-    assert.equal(videoStreams[0].height, 720, path);
-    assert.equal(audioStreams.length, 0, path);
+    assert.equal(videoTracks.length, 1, path);
+    assert.equal(audioTracks.length, 0, path);
+    assert.equal(videoTracks[0].height, 720, path);
+    assert.ok(videoTracks[0].sampleEntries.length > 0, path);
+    assert.ok(
+      videoTracks[0].sampleEntries.every(
+        (codec) => codec === "avc1" || codec === "avc3",
+      ),
+      `${path}: ${videoTracks[0].sampleEntries.join(", ")}`,
+    );
   }
 });
 
 test("hero video is faststart with moov before mdat", () => {
   const bytes = readFileSync(asset("media/eomeuittul/hero-brand-720p.mp4"));
-  const atoms = topLevelMp4Atoms(bytes);
-  const moov = atoms.find((atom) => atom.type === "moov")?.offset;
-  const mdat = atoms.find((atom) => atom.type === "mdat")?.offset;
+  const boxes = parseMp4Boxes(bytes);
+  const moov = boxes.find((box) => box.type === "moov")?.offset;
+  const mdat = boxes.find((box) => box.type === "mdat")?.offset;
 
   assert.notEqual(moov, undefined, "hero is missing moov atom");
   assert.notEqual(mdat, undefined, "hero is missing mdat atom");
