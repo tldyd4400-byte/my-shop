@@ -45,12 +45,20 @@ test("central content exports approved menu, FAQ, review, and dining data", () =
   assert.deepEqual(MENU_ITEMS.map((item) => item.slug), ["spicy", "soy"]);
   assert.equal(MENU_ITEMS[0].price, "19,900원");
   assert.equal(FAQ_ITEMS.length, 8);
-  assert.equal(FAQ_ITEMS[0].question, "일요일에도 영업하나요?");
+  assert.equal(FAQ_ITEMS[0].question, "월요일에도 영업하나요?");
+  assert.equal(FAQ_ITEMS[0].answer, "매주 월요일은 정기휴무입니다.");
   assert.match(FAQ_ITEMS[5].answer, /최신 혜택/);
   assert.equal(REVIEW_ITEMS.length, 3);
   assert.equal(REVIEW_ITEMS[0].sourceUrl, STORE.placeUrl);
   assert.deepEqual(DINING_STEPS.map((step) => step.number), ["01", "02", "03", "04"]);
   assert.equal(DINING_STEPS[2].mediaType, "video");
+});
+
+test("central public content consistently identifies Monday as the closure", () => {
+  const publicContent = JSON.stringify({ FAQ_ITEMS, STORIES });
+
+  assert.match(publicContent, /월요일(?:은)? 정기휴무/);
+  assert.doesNotMatch(publicContent, /일요일(?:은)? 정기휴무/);
 });
 
 test("stories export four records and getStory finds a story or returns undefined", () => {

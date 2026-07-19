@@ -28,7 +28,7 @@ export const STORIES: readonly Story[] = [
     imageAlt: "어밀뜰 청주봉명동본점 외관",
     sections: [
       { heading: "가족과 편안하게 머무를 자리", body: "12테이블과 52석, 유아의자와 단체석을 갖추고 있습니다.", image: "/images/eomeuittul/interior.jpg", imageAlt: "어밀뜰 실제 매장 내부" },
-      { heading: "방문 전에 확인할 정보", body: "건물 앞 무료 지상주차장을 이용할 수 있으며 일요일은 정기휴무입니다." },
+      { heading: "방문 전에 확인할 정보", body: "건물 앞 무료 지상주차장을 이용할 수 있으며 월요일은 정기휴무입니다." },
     ],
   },
   {

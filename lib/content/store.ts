@@ -28,7 +28,7 @@ export const MENU_ITEMS: readonly MenuItem[] = [
 ];
 
 export const FAQ_ITEMS: readonly FaqItem[] = [
-  { question: "일요일에도 영업하나요?", answer: "매주 일요일은 정기휴무입니다." },
+  { question: "월요일에도 영업하나요?", answer: "매주 월요일은 정기휴무입니다." },
   { question: "브레이크 타임이 있나요?", answer: "평일 15:30~16:30이며 주말·공휴일은 제외됩니다." },
   { question: "주차가 가능한가요?", answer: "건물 앞 무료 지상주차장을 이용하실 수 있습니다." },
   { question: "포장이나 배달이 되나요?", answer: "포장은 가능하며 배달은 운영하지 않습니다." },
