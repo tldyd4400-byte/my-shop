@@ -21,6 +21,10 @@
 - GA4가 설정되지 않아도 모든 링크와 페이지는 정상 동작해야 한다.
 - 네이버 예약 완료 데이터가 없으므로 외부 링크 클릭을 예약 완료로 계산하지 않는다.
 - 모든 작업 단위는 `pnpm test`, 관련 계약 테스트, `pnpm lint`, `pnpm build` 중 해당하는 검사를 통과해야 한다.
+- 가능한 테스트는 실제 함수·출력·사용자 동작을 검증한다. Next 런타임을 직접 불러오기 어려운 정적 경계에서만 구체적인 소스 계약 테스트를 사용한다.
+- 모션 감소 환경에서도 히어로 포스터 이미지는 남아야 하며 검은 빈 배경이 나타나면 안 된다.
+- 화면에 보이는 FAQ 항목과 해당 페이지의 FAQPage JSON-LD 항목은 같은 범위여야 한다.
+- 현재 제공되지 않은 주차장·입구 사진을 위한 내부 교체 안내 문구를 공개 화면에 노출하지 않는다.
 
 ---
 
@@ -404,7 +408,7 @@ export function createPageMetadata(input: MetadataInput): Metadata {
 ```ts
 // lib/seo/schema.ts
 import { FAQ_ITEMS, MENU_ITEMS, STORE } from "@/lib/content/store";
-import type { Story } from "@/lib/content/types";
+import type { FaqItem, Story } from "@/lib/content/types";
 
 export function websiteSchema() {
   return {
@@ -442,8 +446,8 @@ export function breadcrumbSchema(items: readonly { name: string; path: string }[
   return { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: items.map((item, index) => ({ "@type": "ListItem", position: index + 1, name: item.name, item: `${STORE.url}${item.path}` })) };
 }
 
-export function faqSchema() {
-  return { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: FAQ_ITEMS.map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })) };
+export function faqSchema(items: readonly FaqItem[] = FAQ_ITEMS) {
+  return { "@context": "https://schema.org", "@type": "FAQPage", mainEntity: items.map((item) => ({ "@type": "Question", name: item.question, acceptedAnswer: { "@type": "Answer", text: item.answer } })) };
 }
 
 export function articleSchema(story: Story) {
@@ -689,7 +693,7 @@ Expected: the EXIF test passes.
 // components/site/hero-media.tsx
 import Image from "next/image";
 import type { ReactNode } from "react";
-export function HeroMedia({ title, eyebrow, description, image, imageAlt, video, children }: { title: ReactNode; eyebrow: string; description: string; image: string; imageAlt: string; video?: string; children: ReactNode }) { return <section className="hero-media"><div className="hero-background">{video ? <video autoPlay muted loop playsInline preload="metadata" poster={image} aria-label={imageAlt}><source src={video} type="video/mp4" /></video> : <Image src={image} alt={imageAlt} fill priority sizes="100vw" />}</div><div className="hero-overlay" /><div className="shell hero-content"><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{description}</p><div className="hero-actions">{children}</div></div></section>; }
+export function HeroMedia({ title, eyebrow, description, image, imageAlt, video, children }: { title: ReactNode; eyebrow: string; description: string; image: string; imageAlt: string; video?: string; children: ReactNode }) { return <section className="hero-media"><div className="hero-background"><Image src={image} alt={imageAlt} fill priority sizes="100vw" />{video ? <video autoPlay muted loop playsInline preload="metadata" poster={image} aria-label={imageAlt}><source src={video} type="video/mp4" /></video> : null}</div><div className="hero-overlay" /><div className="shell hero-content"><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{description}</p><div className="hero-actions">{children}</div></div></section>; }
 ```
 
 ```tsx
@@ -839,7 +843,7 @@ button,a { -webkit-tap-highlight-color:transparent; }
 .site-footer p { color:var(--line); }
 .hero-media { min-height:720px; position:relative; overflow:hidden; color:var(--white); background:#261d17; }
 .hero-background,.hero-overlay { position:absolute; inset:0; }
-.hero-background img,.hero-background video { width:100%; height:100%; object-fit:cover; }
+.hero-background img,.hero-background video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
 .hero-overlay { background:#1d1009a8; }
 .hero-content { position:relative; min-height:720px; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; gap:20px; }
 .hero-content h1 { max-width:760px; margin:0; font-size:clamp(44px,5vw,64px); line-height:1.2; }
@@ -932,7 +936,7 @@ import { faqSchema, restaurantSchema, websiteSchema } from "@/lib/seo/schema";
 
 export const metadata = createPageMetadata({ title: "청주 봉명동 맛집 어믜뜰 | 색다른 등갈비찜", description: "청주 봉명동에서 등갈비찜과 30여 종 셀프바를 샤브처럼 즐기는 어믜뜰입니다.", path: "/" });
 
-export default function HomePage() { return <main><JsonLd data={[websiteSchema(), restaurantSchema(), faqSchema()]} /><HeroMedia eyebrow="BRAND FILM · 청주 봉명동" title={<>처음 보는 등갈비찜,<br />함께 끓여 더 맛있는 한 상</>} description="부드러운 등갈비와 30여 종의 채소를 취향대로 더해 샤브처럼 즐기는 어믜뜰만의 색다른 한 상" image="/images/eomeuittul/hero-table.jpg" imageAlt="등갈비찜과 메밀전, 채소가 함께 차려진 어믜뜰 한 상" video="/media/eomeuittul/hero-brand-720p.mp4"><AnalyticsLink className="button button-primary" href={STORE.bookingUrl} target="_blank" rel="noreferrer" eventName="naver_reservation_click" placement="home_hero">네이버에서 예약하기</AnalyticsLink><a className="button button-secondary" href="/menu">메뉴 먼저 보기</a></HeroMedia><ProofStrip items={["청주 봉명동 본점", "30여 종 채소 셀프바", "등갈비찜 + 샤브의 색다른 조합", "네이버 예약 가능"]} /><section className="brand-story section-pad"><div className="shell split-section"><Image src="/images/eomeuittul/hero-table.jpg" alt="어믜뜰 등갈비찜 한 상" width={640} height={440} /><div><p className="eyebrow">늘 자식 쪽으로 기울던 접시, 그날의 식탁</p><h2>엄마의 마음으로 푸짐하게 차려내는 한 상</h2><p>좋은 것은 자식 앞으로 밀어주시고 하나라도 더 챙겨주시던 마음. 어믜뜰은 누군가를 배부르게 먹이고 싶은 그 마음을 닮은 식당입니다.</p></div></div></section><ExperienceSteps /><section className="menu-preview section-pad"><div className="shell"><h2>한 상에 빠짐없이 담았습니다</h2><div className="menu-grid">{MENU_ITEMS.map((item) => <article key={item.slug}><Image src={item.image} alt={item.imageAlt} width={640} height={360} /><h3>{item.name}</h3><strong>{item.price}</strong><p>{item.description}</p></article>)}</div></div></section><ReservationCta placement="home_mid" /><section className="review-preview section-pad surface-paper"><div className="shell"><h2>손님이 먼저 알아본 어믜뜰</h2><div className="review-grid">{REVIEW_ITEMS.map((review) => <article key={review.title}><h3>{review.title}</h3><p>{review.summary}</p><a href={review.sourceUrl} target="_blank" rel="noreferrer">원문 보기</a></article>)}</div></div></section><section className="faq-section section-pad"><div className="shell"><h2>방문 전 궁금한 점</h2><FaqList items={FAQ_ITEMS.slice(0,4)} /></div></section><LocationPanel /></main>; }
+export default function HomePage() { const homeFaqs = FAQ_ITEMS.slice(0,4); return <main><JsonLd data={[websiteSchema(), restaurantSchema(), faqSchema(homeFaqs)]} /><HeroMedia eyebrow="BRAND FILM · 청주 봉명동" title={<>처음 보는 등갈비찜,<br />함께 끓여 더 맛있는 한 상</>} description="부드러운 등갈비와 30여 종의 채소를 취향대로 더해 샤브처럼 즐기는 어믜뜰만의 색다른 한 상" image="/images/eomeuittul/hero-table.jpg" imageAlt="등갈비찜과 메밀전, 채소가 함께 차려진 어믜뜰 한 상" video="/media/eomeuittul/hero-brand-720p.mp4"><AnalyticsLink className="button button-primary" href={STORE.bookingUrl} target="_blank" rel="noreferrer" eventName="naver_reservation_click" placement="home_hero">네이버에서 예약하기</AnalyticsLink><a className="button button-secondary" href="/menu">메뉴 먼저 보기</a></HeroMedia><ProofStrip items={["청주 봉명동 본점", "30여 종 채소 셀프바", "등갈비찜 + 샤브의 색다른 조합", "네이버 예약 가능"]} /><section className="brand-story section-pad"><div className="shell split-section"><Image src="/images/eomeuittul/hero-table.jpg" alt="어믜뜰 등갈비찜 한 상" width={640} height={440} /><div><p className="eyebrow">늘 자식 쪽으로 기울던 접시, 그날의 식탁</p><h2>엄마의 마음으로 푸짐하게 차려내는 한 상</h2><p>좋은 것은 자식 앞으로 밀어주시고 하나라도 더 챙겨주시던 마음. 어믜뜰은 누군가를 배부르게 먹이고 싶은 그 마음을 닮은 식당입니다.</p></div></div></section><ExperienceSteps /><section className="menu-preview section-pad"><div className="shell"><h2>한 상에 빠짐없이 담았습니다</h2><div className="menu-grid">{MENU_ITEMS.map((item) => <article key={item.slug}><Image src={item.image} alt={item.imageAlt} width={640} height={360} /><h3>{item.name}</h3><strong>{item.price}</strong><p>{item.description}</p></article>)}</div></div></section><ReservationCta placement="home_mid" /><section className="review-preview section-pad surface-paper"><div className="shell"><h2>손님이 먼저 알아본 어믜뜰</h2><div className="review-grid">{REVIEW_ITEMS.map((review) => <article key={review.title}><h3>{review.title}</h3><p>{review.summary}</p><a href={review.sourceUrl} target="_blank" rel="noreferrer">원문 보기</a></article>)}</div></div></section><section className="faq-section section-pad"><div className="shell"><h2>방문 전 궁금한 점</h2><FaqList items={homeFaqs} /></div></section><LocationPanel /></main>; }
 ```
 
 - [ ] **Step 4: Add route-section CSS**
@@ -1057,7 +1061,7 @@ Expected: FAIL on the new assertions.
 
 - [ ] **Step 3: Implement `/location`**
 
-Use metadata `어믜뜰 오시는 길·주차 | 청주 봉명동 맛집`, a map hero, `ProofStrip`, `LocationPanel`, a parking section that explicitly says actual parking/entrance photos replace the map area only when provided, four visit FAQs, and Restaurant plus breadcrumb JSON-LD. Include `AnalyticsLink` for phone and map actions.
+Use metadata `어믜뜰 오시는 길·주차 | 청주 봉명동 맛집`, a map hero, `ProofStrip`, `LocationPanel`, a parking section with the currently verified parking facts, four visit FAQs, and Restaurant plus breadcrumb JSON-LD. Include `AnalyticsLink` for phone and map actions. Keep the approved map image until actual parking or entrance photos are provided, but do not expose this replacement workflow as public page copy.
 
 - [ ] **Step 4: Implement `/faq`**
 
