@@ -40,6 +40,9 @@ yarn-error.log*
 # isolated feature worktrees
 .worktrees/
 
+# local subagent progress ledger
+.superpowers/sdd/
+
 # local Pencil exports
 /초안-assets/
 
