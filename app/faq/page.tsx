@@ -65,10 +65,21 @@ export default function FaqPage() {
         <div className="shell split-section">
           <div>
             <p className="eyebrow">FAQ</p>
-            <h2>방문 전 궁금한 점</h2>
-            <p>각 질문을 열어 현재 안내 내용을 확인하세요.</p>
+            <h2>영업과 방문</h2>
+            <p>휴무일, 브레이크 타임, 주차와 포장 안내입니다.</p>
           </div>
-          <FaqList items={FAQ_ITEMS} />
+          <FaqList items={FAQ_ITEMS.slice(0, 4)} openAll />
+        </div>
+      </section>
+
+      <section className="faq-section section-pad surface-paper">
+        <div className="shell split-section">
+          <div>
+            <p className="eyebrow">MENU · RESERVATION</p>
+            <h2>메뉴·예약·아이 동반</h2>
+            <p>메뉴 선택부터 예약, 아이와 단체 방문 안내입니다.</p>
+          </div>
+          <FaqList items={FAQ_ITEMS.slice(4)} openAll />
         </div>
       </section>
 

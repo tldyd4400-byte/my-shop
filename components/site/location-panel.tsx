@@ -26,12 +26,13 @@ export function LocationPanel() {
     <section className="location-panel section-pad">
       <div className="shell location-grid">
         <Image
+          className="location-map"
           src="/images/eomeuittul/naver-map-location.png"
           alt={`${STORE.name} 청주봉명동본점의 네이버 지도 위치`}
           width={650}
           height={424}
         />
-        <div>
+        <div className="location-details">
           <h2>{STORE.fullName}</h2>
           <p>{STORE.address}</p>
           <dl className="location-hours">

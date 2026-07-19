@@ -50,11 +50,38 @@ test("location and FAQ expose direct-answer information", () => {
     assert.match(faq, new RegExp(source));
   }
   assert.match(faq, /path: "\/faq"/);
-  assert.match(faq, /items=\{FAQ_ITEMS\}/);
+  assert.match(faq, /영업과 방문/);
+  assert.match(faq, /메뉴·예약·아이 동반/);
+  assert.match(faq, /items=\{FAQ_ITEMS\.slice\(0, 4\)\}/);
+  assert.match(faq, /items=\{FAQ_ITEMS\.slice\(4\)\}/);
+  assert.equal(faq.split("openAll").length - 1, 2);
   assert.match(faq, /faqSchema\(FAQ_ITEMS\)/);
   assert.match(faq, /breadcrumbSchema\(\[/);
   assert.match(faq, /interior\.jpg/);
   assert.doesNotMatch(faq, /restaurantSchema/);
+});
+
+test("FAQ list can explicitly expose every answer without changing its default", () => {
+  const list = read("components/site/faq-list.tsx");
+
+  assert.match(list, /openAll\?: boolean/);
+  assert.match(list, /open=\{openAll \|\| index === 0\}/);
+});
+
+test("location panel keeps desktop map-first and mobile information-first order", () => {
+  const panel = read("components/site/location-panel.tsx");
+  const styles = read("app/globals.css");
+
+  assert.match(panel, /className="location-map"/);
+  assert.match(panel, /className="location-details"/);
+  assert.match(
+    styles,
+    /\.location-grid\s*\{[\s\S]*?grid-template-areas:\s*"map details"/,
+  );
+  assert.match(
+    styles,
+    /@media \(max-width: 767px\)[\s\S]*?\.location-grid\s*\{[\s\S]*?grid-template-areas:\s*"details"\s*"map"/,
+  );
 });
 
 test("menu route uses approved central content and composition", () => {

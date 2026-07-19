@@ -255,6 +255,18 @@ a {
   gap: 48px;
 }
 
+.location-grid {
+  grid-template-areas: "map details";
+}
+
+.location-map {
+  grid-area: map;
+}
+
+.location-details {
+  grid-area: details;
+}
+
 .faq-list {
   display: grid;
   gap: 10px;
@@ -420,6 +432,12 @@ a {
   .location-grid,
   .reservation-cta-inner {
     grid-template-columns: 1fr;
+  }
+
+  .location-grid {
+    grid-template-areas:
+      "details"
+      "map";
   }
 
   .footer-inner {
