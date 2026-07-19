@@ -1,10 +1,15 @@
 import assert from "node:assert/strict";
 import {
   existsSync,
+  mkdirSync,
+  mkdtempSync,
   readFileSync,
   readdirSync,
+  rmSync,
   statSync,
+  writeFileSync,
 } from "node:fs";
+import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import test from "node:test";
@@ -41,6 +46,14 @@ function listFiles(directory) {
     const path = join(directory, entry.name);
     return entry.isDirectory() ? listFiles(path) : [path];
   });
+}
+
+function findOversizedMp4s(directory, maximumBytes) {
+  return listFiles(directory).filter(
+    (path) =>
+      path.toLowerCase().endsWith(".mp4") &&
+      statSync(path).size > maximumBytes,
+  );
 }
 
 function parseMp4Boxes(bytes, start = 0, end = bytes.length) {
@@ -128,7 +141,17 @@ function readVideoSampleEntries(bytes, track) {
     sampleDescription.end,
   );
   assert.equal(entries.length, entryCount, "stsd entry count does not match");
-  return entries.map((entry) => entry.type);
+  return entries.map((entry) => {
+    assert.ok(
+      entry.dataStart + 28 <= entry.end,
+      `${entry.type} visual sample entry is truncated`,
+    );
+    return {
+      height: bytes.readUInt16BE(entry.dataStart + 26),
+      type: entry.type,
+      width: bytes.readUInt16BE(entry.dataStart + 24),
+    };
+  });
 }
 
 function inspectMp4Tracks(path) {
@@ -183,10 +206,20 @@ test("published videos are H.264 at 720px high with no audio", () => {
     assert.equal(videoTracks[0].height, 720, path);
     assert.ok(videoTracks[0].sampleEntries.length > 0, path);
     assert.ok(
+      videoTracks[0].sampleEntries.every((entry) => entry.width > 0),
+      `${path}: encoded sample width is missing`,
+    );
+    assert.ok(
       videoTracks[0].sampleEntries.every(
-        (codec) => codec === "avc1" || codec === "avc3",
+        (entry) => entry.height === 720,
       ),
-      `${path}: ${videoTracks[0].sampleEntries.join(", ")}`,
+      `${path}: encoded sample height is not 720`,
+    );
+    assert.ok(
+      videoTracks[0].sampleEntries.every(
+        (entry) => entry.type === "avc1" || entry.type === "avc3",
+      ),
+      `${path}: encoded sample entry is not AVC`,
     );
   }
 });
@@ -202,21 +235,26 @@ test("hero video is faststart with moov before mdat", () => {
   assert.ok(moov < mdat, `expected moov (${moov}) before mdat (${mdat})`);
 });
 
-test("published media directory contains no oversized MP4", () => {
-  const mediaDirectory = fileURLToPath(
-    new URL("../public/media/", import.meta.url),
-  );
-  const mp4Files = listFiles(mediaDirectory).filter((path) =>
+test("published public tree contains no oversized MP4", () => {
+  const publicDirectory = fileURLToPath(new URL("../public/", import.meta.url));
+  const mp4Files = listFiles(publicDirectory).filter((path) =>
     path.toLowerCase().endsWith(".mp4"),
   );
 
-  assert.ok(mp4Files.length > 0, "published media directory has no MP4 files");
-  for (const path of mp4Files) {
-    assert.ok(
-      statSync(path).size <= 12 * 1024 * 1024,
-      `${path} exceeds the 12 MiB published-media ceiling`,
-    );
-  }
+  assert.ok(mp4Files.length > 0, "published public tree has no MP4 files");
+  assert.deepEqual(findOversizedMp4s(publicDirectory, 12 * 1024 * 1024), []);
+});
+
+test("oversized scan catches an MP4 outside a media directory", (context) => {
+  const fixture = mkdtempSync(join(tmpdir(), "media-contract-"));
+  context.after(() => rmSync(fixture, { force: true, recursive: true }));
+
+  const nestedDirectory = join(fixture, "images", "raw-source");
+  const oversizedFile = join(nestedDirectory, "hero.mp4");
+  mkdirSync(nestedDirectory, { recursive: true });
+  writeFileSync(oversizedFile, Buffer.alloc(5));
+
+  assert.deepEqual(findOversizedMp4s(fixture, 4), [oversizedFile]);
 });
 
 test("published JPEG assets contain no EXIF block", () => {
