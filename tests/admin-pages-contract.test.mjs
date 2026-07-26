@@ -5,6 +5,20 @@ import test from "node:test";
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
+const runtimeBaseUrl = process.env.ADMIN_RUNTIME_BASE_URL;
+
+const chromeClasses = ["site-header", "site-footer", "mobile-actions"];
+
+const assertNoCustomerChrome = (html, path) => {
+  for (const className of chromeClasses) {
+    assert.doesNotMatch(
+      html,
+      new RegExp(`class=["'][^"']*${className}`, "u"),
+      `${path} must not render .${className}`,
+    );
+  }
+};
+
 test("root layout delegates the unchanged customer chrome boundary to RouteChrome", () => {
   const layout = read("app/layout.tsx");
   const routeChrome = read("components/site/route-chrome.tsx");
@@ -31,6 +45,61 @@ test("admin layout publishes Korean noindex nofollow metadata", () => {
   assert.match(source, /title:\s*["'][^"']*[가-힣][^"']*["']/u);
   assert.match(source, /robots:\s*\{[\s\S]*index:\s*false,[\s\S]*follow:\s*false/u);
 });
+
+test("admin optional catch-all keeps unmatched paths inside the admin segment", () => {
+  const source = read("app/admin/[[...adminPath]]/page.tsx");
+
+  assert.match(source, /import\s+\{\s*notFound\s*\}\s+from\s+["']next\/navigation["']/u);
+  assert.match(source, /notFound\(\)/u);
+  assert.doesNotMatch(source, /redirect|permanentRedirect/u);
+});
+
+test("admin not-found renders an accessible natural Korean explanation", () => {
+  const source = read("app/admin/not-found.tsx");
+
+  assert.match(source, /<main/u);
+  assert.match(source, /<h1[^>]*>[\s\S]*[가-힣][\s\S]*<\/h1>/u);
+  assert.match(source, /관리자 페이지를 찾을 수 없습니다\./u);
+  assert.match(source, /주소를 확인한 뒤 다시 시도해 주세요\./u);
+});
+
+test(
+  "production admin fallbacks return contained 404s without changing specific or public routes",
+  { skip: runtimeBaseUrl ? false : "set ADMIN_RUNTIME_BASE_URL to a production Next server" },
+  async () => {
+    for (const path of [
+      "/admin",
+      "/admin/nope",
+      "/admin/login/nope",
+      "/admin/logout/nope",
+    ]) {
+      const response = await fetch(`${runtimeBaseUrl}${path}`, { redirect: "manual" });
+      const html = await response.text();
+
+      assert.equal(response.status, 404, `${path} must return 404`);
+      assertNoCustomerChrome(html, path);
+      assert.match(html, /관리자 페이지를 찾을 수 없습니다\./u);
+      assert.match(
+        html,
+        /<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex[^"']*nofollow[^"']*["']/u,
+        `${path} must publish noindex,nofollow`,
+      );
+    }
+
+    assert.equal((await fetch(`${runtimeBaseUrl}/admin/login`)).status, 200);
+    assert.equal(
+      (await fetch(`${runtimeBaseUrl}/admin/logout`, { redirect: "manual" })).status,
+      303,
+    );
+
+    const publicResponse = await fetch(`${runtimeBaseUrl}/public-nope`);
+    const publicHtml = await publicResponse.text();
+    assert.equal(publicResponse.status, 404);
+    for (const className of chromeClasses) {
+      assert.match(publicHtml, new RegExp(`class=["'][^"']*${className}`, "u"));
+    }
+  },
+);
 
 test("login page has natural Korean copy and an accessible server-action form", () => {
   const source = read("app/admin/login/page.tsx");
