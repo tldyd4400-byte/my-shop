@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 
-import { MobileActionBar } from "@/components/site/mobile-action-bar";
-import { SiteFooter } from "@/components/site/site-footer";
-import { SiteHeader } from "@/components/site/site-header";
+import { RouteChrome } from "@/components/site/route-chrome";
+// RouteChrome owns SiteHeader, SiteFooter, and MobileActionBar visibility.
 import { STORE } from "@/lib/content/store";
 
 import "./globals.css";
@@ -60,10 +59,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body>
-        <SiteHeader />
-        {children}
-        <SiteFooter />
-        <MobileActionBar />
+        <RouteChrome>{children}</RouteChrome>
         {gaId ? (
           <>
             <Script
