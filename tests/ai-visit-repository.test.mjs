@@ -117,6 +117,133 @@ test("loadAiVisitRows binds the deterministic 60-day cutoff and maps approved su
   ]);
 });
 
+test("loadAiVisitRows skips malformed rows and snapshots accepted fields once", async () => {
+  const reads = Object.create(null);
+  const oneShotValues = {
+    created_at: "2026-07-25T03:04:05.006Z",
+    path: "/one-shot",
+    bot_id: "otherbot",
+    bot_name: "OtherBot",
+    vendor: "Example",
+    purpose: "other",
+  };
+  const oneShotRow = {};
+
+  for (const [field, value] of Object.entries(oneShotValues)) {
+    reads[field] = 0;
+    Object.defineProperty(oneShotRow, field, {
+      enumerable: true,
+      get() {
+        reads[field] += 1;
+        if (reads[field] > 1) throw new Error(`read ${field} twice`);
+        return value;
+      },
+    });
+  }
+
+  let extraReads = 0;
+  Object.defineProperty(oneShotRow, "connection_secret", {
+    enumerable: true,
+    get() {
+      extraReads += 1;
+      throw new Error("must not read extra executor data");
+    },
+  });
+
+  const validDateRow = {
+    created_at: new Date("2026-07-25T00:00:00.000Z"),
+    path: "/date",
+    bot_id: "datebot",
+    bot_name: "DateBot",
+    vendor: "Example",
+    purpose: "search_indexing",
+    executor_metadata: "must-not-be-returned",
+  };
+  const validOffsetRow = {
+    created_at: "2026-07-25T09:30:00+09:00",
+    path: "/offset",
+    bot_id: "offsetbot",
+    bot_name: "OffsetBot",
+    vendor: "Example",
+    purpose: "realtime_citation",
+  };
+  const otherwiseValid = {
+    created_at: "2026-07-25T00:00:00.000Z",
+    path: "/invalid",
+    bot_id: "invalidbot",
+    bot_name: "InvalidBot",
+    vendor: "Example",
+    purpose: "training",
+  };
+
+  const rows = await loadAiVisitRows(
+    new Date("2026-07-26T00:00:00.000Z"),
+    async () => [
+      null,
+      7,
+      "primitive",
+      { ...otherwiseValid, purpose: "not-approved" },
+      { created_at: otherwiseValid.created_at },
+      { ...otherwiseValid, path: 42 },
+      { ...otherwiseValid, created_at: new Date(Number.NaN) },
+      { ...otherwiseValid, created_at: "not-a-timestamp" },
+      { ...otherwiseValid, created_at: "2026-07-25T00:00:00" },
+      Object.defineProperty({}, "created_at", {
+        get() {
+          throw new Error("executor getter failed with sensitive value");
+        },
+      }),
+      validDateRow,
+      validOffsetRow,
+      oneShotRow,
+    ],
+  );
+
+  assert.deepEqual(rows, [
+    {
+      createdAt: "2026-07-25T00:00:00.000Z",
+      path: "/date",
+      botId: "datebot",
+      botName: "DateBot",
+      vendor: "Example",
+      purpose: "search_indexing",
+    },
+    {
+      createdAt: "2026-07-25T00:30:00.000Z",
+      path: "/offset",
+      botId: "offsetbot",
+      botName: "OffsetBot",
+      vendor: "Example",
+      purpose: "realtime_citation",
+    },
+    {
+      createdAt: "2026-07-25T03:04:05.006Z",
+      path: "/one-shot",
+      botId: "otherbot",
+      botName: "OtherBot",
+      vendor: "Example",
+      purpose: "other",
+    },
+  ]);
+  assert.deepEqual({ ...reads }, {
+    created_at: 1,
+    path: 1,
+    bot_id: 1,
+    bot_name: 1,
+    vendor: 1,
+    purpose: 1,
+  });
+  assert.equal(extraReads, 0);
+  assert.deepEqual(Object.keys(rows[0]), [
+    "createdAt",
+    "path",
+    "botId",
+    "botName",
+    "vendor",
+    "purpose",
+  ]);
+});
+
 test("loadAiVisitRows rejects an invalid now before querying and exposes no input value", async () => {
   let queryCount = 0;
   const invalidNow = new Date(Number.NaN);
