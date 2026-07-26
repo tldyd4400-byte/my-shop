@@ -244,6 +244,97 @@ test("loadAiVisitRows skips malformed rows and snapshots accepted fields once", 
   ]);
 });
 
+test("loadAiVisitRows skips impossible civil timestamps and preserves later valid rows", async () => {
+  const baseRow = {
+    path: "/invalid",
+    bot_id: "calendarbot",
+    bot_name: "CalendarBot",
+    vendor: "Example",
+    purpose: "other",
+  };
+  const malformedTimestamps = [
+    "2025-02-29T00:00:00Z",
+    "2026-02-30T00:00:00Z",
+    "2026-04-31T00:00:00Z",
+    "2026-00-15T00:00:00Z",
+    "2026-13-15T00:00:00Z",
+    "2026-01-00T00:00:00Z",
+    "2026-01-15T24:00:00Z",
+    "2026-01-15T23:60:00Z",
+    "2026-01-15T23:59:60Z",
+  ];
+  const invalidRows = malformedTimestamps.map((createdAt, index) => ({
+    ...baseRow,
+    created_at: createdAt,
+    path: `/invalid-${index}`,
+  }));
+  const validRows = [
+    {
+      ...baseRow,
+      created_at: "2024-02-29T12:34:56Z",
+      path: "/leap-day",
+    },
+    {
+      ...baseRow,
+      created_at: "2026-07-25T09:30:00+09:00",
+      path: "/numeric-timezone",
+    },
+    {
+      ...baseRow,
+      created_at: new Date("2026-07-25T00:00:00.000Z"),
+      path: "/date-object",
+    },
+    {
+      ...baseRow,
+      created_at: "+010000-02-29T00:00:00Z",
+      path: "/expanded-year",
+    },
+  ];
+
+  const rows = await loadAiVisitRows(
+    new Date("2026-07-26T00:00:00.000Z"),
+    async () => [...invalidRows, ...validRows],
+  );
+
+  assert.deepEqual(rows, [
+    {
+      createdAt: "2024-02-29T12:34:56.000Z",
+      path: "/leap-day",
+      botId: "calendarbot",
+      botName: "CalendarBot",
+      vendor: "Example",
+      purpose: "other",
+    },
+    {
+      createdAt: "2026-07-25T00:30:00.000Z",
+      path: "/numeric-timezone",
+      botId: "calendarbot",
+      botName: "CalendarBot",
+      vendor: "Example",
+      purpose: "other",
+    },
+    {
+      createdAt: "2026-07-25T00:00:00.000Z",
+      path: "/date-object",
+      botId: "calendarbot",
+      botName: "CalendarBot",
+      vendor: "Example",
+      purpose: "other",
+    },
+    {
+      createdAt: "+010000-02-29T00:00:00.000Z",
+      path: "/expanded-year",
+      botId: "calendarbot",
+      botName: "CalendarBot",
+      vendor: "Example",
+      purpose: "other",
+    },
+  ]);
+  for (const invalidRow of invalidRows) {
+    assert.equal(rows.some((row) => row.path === invalidRow.path), false);
+  }
+});
+
 test("loadAiVisitRows rejects an invalid now before querying and exposes no input value", async () => {
   let queryCount = 0;
   const invalidNow = new Date(Number.NaN);
