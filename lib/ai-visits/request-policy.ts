@@ -1,4 +1,5 @@
-const INTERNAL_BASE_URL = "https://internal.invalid";
+import { parseSafePathname } from "./privacy.ts";
+
 const PUBLIC_METHODS = new Set(["GET", "HEAD"]);
 const EXCLUDED_ROUTE_PREFIX =
   /^\/(?:admin|api|_next|images|media|uploads)(?:\/|$)/;
@@ -25,16 +26,14 @@ export function isCollectableRequest(
 
   if (!PUBLIC_METHODS.has(request.method.toUpperCase())) return false;
 
-  let pathname: string;
-  try {
-    pathname = new URL(request.pathname, INTERNAL_BASE_URL).pathname;
-  } catch {
-    return false;
-  }
+  const pathname = parseSafePathname(request.pathname);
+  if (pathname === null) return false;
+
+  const decodedPathname = decodeURIComponent(pathname);
 
   return (
-    !EXCLUDED_ROUTE_PREFIX.test(pathname) &&
-    !EXCLUDED_SPECIAL_PATH.test(pathname) &&
-    !STATIC_EXTENSION.test(pathname)
+    !EXCLUDED_ROUTE_PREFIX.test(decodedPathname) &&
+    !EXCLUDED_SPECIAL_PATH.test(decodedPathname) &&
+    !STATIC_EXTENSION.test(decodedPathname)
   );
 }

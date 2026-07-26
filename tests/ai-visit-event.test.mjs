@@ -82,6 +82,29 @@ test("falls back to the root path when the pathname is malformed", () => {
   assert.equal(event.path, "/");
 });
 
+test("falls back to the root path for unsafe pathname representations", () => {
+  for (const pathname of [
+    "//admin/ai-visits",
+    "///admin/ai-visits",
+    "https://example.com/menu",
+    "/admin\\ai-visits",
+    "\\\\admin\\ai-visits",
+    "/admin%2Fai-visits",
+    "/admin%5Cai-visits",
+    "/admin%3Fpublic",
+    "/admin%23public",
+  ]) {
+    const event = createAiVisitEvent({
+      pathname,
+      userAgent: "GPTBot/1.0",
+      bot,
+      now: new Date("2026-07-26T00:00:00.000Z"),
+    });
+
+    assert.equal(event.path, "/", pathname);
+  }
+});
+
 test("collects public HTML GET and HEAD requests case-insensitively", () => {
   for (const request of [
     { method: "GET", pathname: "/menu" },
@@ -110,6 +133,52 @@ test("excludes private and non-page route families", () => {
     assert.equal(
       isCollectableRequest({ method: "GET", pathname }),
       false,
+      pathname,
+    );
+  }
+});
+
+test("rejects non-path, authority-bearing, and backslash pathname forms", () => {
+  for (const pathname of [
+    "admin/ai-visits",
+    "//admin/ai-visits",
+    "///admin/ai-visits",
+    "https://example.com/menu",
+    "/admin\\ai-visits",
+    "\\\\admin\\ai-visits",
+  ]) {
+    assert.equal(
+      isCollectableRequest({ method: "GET", pathname }),
+      false,
+      pathname,
+    );
+  }
+});
+
+test("rejects encoded separators, delimiters, and static extensions", () => {
+  for (const pathname of [
+    "/admin%2Fai-visits",
+    "/admin%2fai-visits",
+    "/admin%5Cai-visits",
+    "/admin%3Fpublic",
+    "/admin%23public",
+    "/asset%2Ejs",
+    "/asset.%6As",
+    "/asset%252Ejs",
+  ]) {
+    assert.equal(
+      isCollectableRequest({ method: "GET", pathname }),
+      false,
+      pathname,
+    );
+  }
+});
+
+test("excludes only the admin segment boundary", () => {
+  for (const pathname of ["/administrator", "/administrator/x"]) {
+    assert.equal(
+      isCollectableRequest({ method: "GET", pathname }),
+      true,
       pathname,
     );
   }
