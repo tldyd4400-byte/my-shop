@@ -210,6 +210,8 @@
 
 .desktopTable th,
 .desktopTable td {
+  min-width: 0;
+  overflow-wrap: anywhere;
   padding: 16px;
   border-top: 1px solid var(--line);
   text-align: left;
@@ -234,6 +236,18 @@
 .mobileCards {
   display: none;
   gap: 16px;
+}
+
+.botCard,
+.botCard h3,
+.botCard dl,
+.botCard dl > div,
+.botCard dt,
+.botCard dd,
+.purposeGrid article,
+.purposeGrid p {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .botCard {

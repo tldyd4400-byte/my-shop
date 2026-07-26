@@ -224,6 +224,22 @@ test("AI visits dashboard is a pure summary view with complete desktop and mobil
   }
 });
 
+test("AI visits dashboard styles contain arbitrary long table and mobile values", () => {
+  const source = read("app/admin/admin.module.css");
+
+  assert.match(
+    source,
+    /\.desktopTable th,\s*\.desktopTable td\s*\{[^}]*min-width:\s*0;[^}]*overflow-wrap:\s*anywhere;/u,
+    "desktop bot names, vendors, purposes, and values must wrap inside table cells",
+  );
+  assert.match(
+    source,
+    /\.botCard,\s*\.botCard h3,\s*\.botCard dl,\s*\.botCard dl > div,\s*\.botCard dt,\s*\.botCard dd,\s*\.purposeGrid article,\s*\.purposeGrid p\s*\{[^}]*min-width:\s*0;[^}]*overflow-wrap:\s*anywhere;/u,
+    "mobile headings, labels, values, and purpose cards must contain unbroken text",
+  );
+  assert.match(source, /\.pathCell\s*\{[^}]*overflow-wrap:\s*anywhere;/u, "path wrapping must remain intact");
+});
+
 test("AI visits dashboard styles switch complete cards and table at 390px", () => {
   const source = read("app/admin/admin.module.css");
 
