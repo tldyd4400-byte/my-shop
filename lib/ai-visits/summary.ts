@@ -3,6 +3,8 @@ import type { Purpose } from "./types.ts";
 const DAY_MS = 24 * 60 * 60 * 1000;
 const WINDOW_MS = 30 * DAY_MS;
 const MINIMUM_DATE_MS = -8_640_000_000_000_000;
+const EXPLICIT_TIMEZONE_TIMESTAMP =
+  /^(?:\d{4}|[+-]\d{6})-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})$/;
 
 const PURPOSES: readonly Purpose[] = [
   "search_indexing",
@@ -73,6 +75,21 @@ function isPurpose(value: unknown): value is Purpose {
   return PURPOSES.includes(value as Purpose);
 }
 
+function hasValidContractFields(row: AiVisitRow): boolean {
+  return (
+    typeof row.createdAt === "string" &&
+    typeof row.path === "string" &&
+    typeof row.botId === "string" &&
+    typeof row.botName === "string" &&
+    typeof row.vendor === "string"
+  );
+}
+
+function parseExplicitTimezoneTimestamp(value: string): number {
+  if (!EXPLICIT_TIMEZONE_TIMESTAMP.test(value)) return Number.NaN;
+  return Date.parse(value);
+}
+
 function compareText(left: string, right: string): number {
   if (left < right) return -1;
   if (left > right) return 1;
@@ -122,33 +139,31 @@ export function summarizeAiVisits(
   const nowMs = now.getTime();
   if (!Number.isFinite(nowMs)) return emptySummary();
 
-  const currentStartMs = Math.max(MINIMUM_DATE_MS, nowMs - WINDOW_MS);
-  const previousStartMs = Math.max(
-    MINIMUM_DATE_MS,
-    nowMs - 2 * WINDOW_MS,
-  );
+  const mathematicalCurrentStartMs = nowMs - WINDOW_MS;
+  const mathematicalPreviousStartMs = nowMs - 2 * WINDOW_MS;
+  const currentStartWasClamped = mathematicalCurrentStartMs < MINIMUM_DATE_MS;
+  const previousStartWasClamped = mathematicalPreviousStartMs < MINIMUM_DATE_MS;
+  const currentStartMs = Math.max(MINIMUM_DATE_MS, mathematicalCurrentStartMs);
+  const previousStartMs = Math.max(MINIMUM_DATE_MS, mathematicalPreviousStartMs);
   const byPurpose = createPurposeTotals();
   const bots = new Map<string, BotState>();
   let total = 0;
 
   for (const row of rows) {
-    if (!isPurpose(row.purpose)) continue;
+    if (!hasValidContractFields(row) || !isPurpose(row.purpose)) continue;
 
-    const visitedMs = Date.parse(row.createdAt);
+    const visitedMs = parseExplicitTimezoneTimestamp(row.createdAt);
     if (!Number.isFinite(visitedMs)) continue;
 
     const isCurrent =
       visitedMs < nowMs &&
       (visitedMs > currentStartMs ||
-        (currentStartMs === MINIMUM_DATE_MS &&
-          previousStartMs === MINIMUM_DATE_MS &&
-          visitedMs === MINIMUM_DATE_MS));
+        (currentStartWasClamped && visitedMs === MINIMUM_DATE_MS));
     const isPrevious =
+      !currentStartWasClamped &&
       visitedMs <= currentStartMs &&
       (visitedMs > previousStartMs ||
-        (previousStartMs === MINIMUM_DATE_MS &&
-          currentStartMs > MINIMUM_DATE_MS &&
-          visitedMs === MINIMUM_DATE_MS));
+        (previousStartWasClamped && visitedMs === MINIMUM_DATE_MS));
     if (!isCurrent && !isPrevious) continue;
 
     let state = bots.get(row.botId);

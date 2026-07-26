@@ -154,6 +154,49 @@ test("skips invalid dates and unknown purposes without throwing or corrupting to
   assert.deepEqual(summary.bots.map((bot) => bot.botId), ["alpha"]);
 });
 
+test("rejects timezone-less timestamps so aggregation is host-timezone independent", () => {
+  const now = new Date("2026-07-26T00:00:00.000Z");
+  const rows = [
+    row("2026-07-25T23:00:00", "beta", "training", "/ambiguous"),
+    row("2026-07-26T08:00:00+09:00", "alpha", "other", "/explicit-zone"),
+  ];
+
+  const summary = summarizeAiVisits(rows, now);
+
+  assert.equal(summary.total, 1);
+  assert.deepEqual(summary.bots.map((bot) => bot.botId), ["alpha"]);
+});
+
+test("skips non-string contract fields without throwing or corrupting invariants", () => {
+  const now = new Date("2026-07-26T00:00:00.000Z");
+  const valid = row("2026-07-25T00:00:00.000Z", "alpha", "other", "/valid");
+  const rows = [
+    valid,
+    row("2026-07-24T00:00:00.000Z", Symbol("bot-id"), "training", "/bad-bot-id"),
+    row("2026-07-24T00:00:00.000Z", "beta", "training", "/bad-name", {
+      botName: Symbol("bot-name"),
+    }),
+    row("2026-07-24T00:00:00.000Z", "beta", "training", "/bad-vendor", {
+      vendor: 42,
+    }),
+    row("2026-07-24T00:00:00.000Z", "beta", "training", Symbol("bad-path")),
+  ];
+
+  assert.doesNotThrow(() => summarizeAiVisits(rows, now));
+  const summary = summarizeAiVisits(rows, now);
+
+  assert.equal(summary.total, 1);
+  assert.equal(
+    Object.values(summary.byPurpose).reduce((sum, count) => sum + count, 0),
+    summary.total,
+  );
+  assert.equal(
+    summary.bots.reduce((sum, bot) => sum + bot.count, 0),
+    summary.total,
+  );
+  assert.deepEqual(summary.bots.map((bot) => bot.botId), ["alpha"]);
+});
+
 test("returns a stable empty summary for an invalid now and does not mutate rows", () => {
   const rows = [row("2026-07-24T00:00:00.000Z", "alpha", "training", "/a")];
   const before = structuredClone(rows);
@@ -173,4 +216,25 @@ test("clamps range bounds near the minimum JavaScript date", () => {
   const summary = summarizeAiVisits(rows, now);
   assert.equal(summary.total, 1);
   assert.equal(summary.bots[0].lastVisitedAt, new Date(minimumDateMs).toISOString());
+});
+
+test("assigns the minimum date to previous at exactly minimum plus 30 days", () => {
+  const minimumDateMs = -8_640_000_000_000_000;
+  const now = new Date(minimumDateMs + 30 * DAY_MS);
+  const rows = [
+    row(new Date(minimumDateMs).toISOString(), "alpha", "training", "/minimum"),
+  ];
+
+  assert.doesNotThrow(() => summarizeAiVisits(rows, now));
+  const summary = summarizeAiVisits(rows, now);
+
+  assert.equal(summary.total, 0);
+  assert.deepEqual(summary.byPurpose, emptySummary().byPurpose);
+  assert.deepEqual(summary.bots.map(({ botId, count, previousCount }) => ({
+    botId,
+    count,
+    previousCount,
+  })), [
+    { botId: "alpha", count: 0, previousCount: 1 },
+  ]);
 });
