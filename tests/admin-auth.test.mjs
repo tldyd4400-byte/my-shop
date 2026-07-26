@@ -1,9 +1,10 @@
 import assert from "node:assert/strict";
-import { createHmac } from "node:crypto";
+import { createHmac, scryptSync } from "node:crypto";
 import test from "node:test";
 
 import {
   ADMIN_COOKIE_NAME,
+  ADMIN_PASSWORD_MAX_BYTES,
   adminCookieOptions,
   createAdminSession,
   hashAdminPassword,
@@ -42,12 +43,62 @@ test("uses a fresh random salt when one is not provided", async () => {
   assert.equal(await verifyAdminPassword("same password", second), true);
 });
 
-test("rejects empty passwords and undersized explicit salts", async () => {
+test("accepts passwords through the 1024-byte UTF-8 boundary", async () => {
+  assert.equal(ADMIN_PASSWORD_MAX_BYTES, 1024);
+
+  for (const password of ["a".repeat(1024), `${"가".repeat(341)}a`]) {
+    assert.equal(Buffer.byteLength(password, "utf8"), ADMIN_PASSWORD_MAX_BYTES);
+    const encoded = await hashAdminPassword(password, TEST_SALT);
+    assert.equal(await verifyAdminPassword(password, encoded), true);
+  }
+});
+
+test("rejects passwords beyond the 1024-byte UTF-8 boundary", async () => {
+  const encoded = await hashAdminPassword("bounded password", TEST_SALT);
+
+  for (const password of ["a".repeat(1025), `${"가".repeat(341)}ab`]) {
+    assert.equal(Buffer.byteLength(password, "utf8"), ADMIN_PASSWORD_MAX_BYTES + 1);
+    await assert.rejects(
+      () => hashAdminPassword(password, TEST_SALT),
+      {
+        name: "TypeError",
+        message: "Admin password is invalid",
+      },
+    );
+    assert.equal(await verifyAdminPassword(password, encoded), false);
+  }
+});
+
+test("fails closed for a million-code-unit verification password", async () => {
+  const encoded = await hashAdminPassword("bounded password", TEST_SALT);
+
+  assert.equal(await verifyAdminPassword("a".repeat(1_000_000), encoded), false);
+});
+
+test("rejects passwords containing lone UTF-16 surrogates", async () => {
+  const encoded = await hashAdminPassword("�", TEST_SALT);
+
+  for (const password of ["\uD800", "\uDC00", "before\uD800after", "before\uDC00after"]) {
+    await assert.rejects(
+      () => hashAdminPassword(password, TEST_SALT),
+      {
+        name: "TypeError",
+        message: "Admin password is invalid",
+      },
+    );
+    assert.equal(await verifyAdminPassword(password, encoded), false);
+  }
+});
+
+test("supports valid surrogate pairs and ordinary Korean passwords", async () => {
+  for (const password of ["관리자 암호", "관리자 \uD83D\uDD10 암호"]) {
+    const encoded = await hashAdminPassword(password, TEST_SALT);
+    assert.equal(await verifyAdminPassword(password, encoded), true);
+  }
+});
+
+test("rejects empty passwords", async () => {
   await assert.rejects(() => hashAdminPassword(""), /password/iu);
-  await assert.rejects(
-    () => hashAdminPassword("password", Buffer.alloc(15)),
-    /salt/iu,
-  );
   assert.equal(
     await verifyAdminPassword(
       "",
@@ -55,6 +106,37 @@ test("rejects empty passwords and undersized explicit salts", async () => {
     ),
     false,
   );
+});
+
+test("requires explicit password salts to be exactly 16 bytes", async () => {
+  for (const length of [15, 17, 400]) {
+    await assert.rejects(
+      () => hashAdminPassword("password", Buffer.alloc(length)),
+      {
+        name: "TypeError",
+        message: "Admin password salt must be exactly 16 bytes",
+      },
+    );
+  }
+});
+
+test("rejects encoded password hashes whose salts are not exactly 16 bytes", async () => {
+  for (const length of [15, 17, 400]) {
+    const saltBytes = Buffer.alloc(length);
+    const salt = saltBytes.toString("base64url");
+    const hash = scryptSync("password", saltBytes, 32, {
+      N: 16_384,
+      r: 8,
+      p: 1,
+    }).toString("base64url");
+    assert.equal(
+      await verifyAdminPassword(
+        "password",
+        `scrypt$16384$8$1$${salt}$${hash}`,
+      ),
+      false,
+    );
+  }
 });
 
 test("fails closed for malformed or unapproved password hashes", async () => {

@@ -9,13 +9,14 @@ const SCRYPT_N = 16_384;
 const SCRYPT_R = 8;
 const SCRYPT_P = 1;
 const SCRYPT_KEY_LENGTH = 32;
-const MIN_SALT_LENGTH = 16;
+const SALT_LENGTH = 16;
 const MAX_ENCODED_HASH_LENGTH = 512;
 const MAX_SESSION_TOKEN_LENGTH = 4_096;
 const SESSION_LIFETIME_SECONDS = 60 * 60 * 8;
 const BASE64URL_PATTERN = /^[A-Za-z0-9_-]+$/u;
 
 export const ADMIN_COOKIE_NAME = "eomeutteull_admin";
+export const ADMIN_PASSWORD_MAX_BYTES = 1_024;
 export const adminCookieOptions = {
   httpOnly: true,
   sameSite: "lax" as const,
@@ -65,15 +66,41 @@ function currentUnixSeconds(): number {
   return Math.floor(Date.now() / 1_000);
 }
 
+function hasWellFormedUnicode(value: string): boolean {
+  for (let index = 0; index < value.length; index += 1) {
+    const codeUnit = value.charCodeAt(index);
+    if (codeUnit >= 0xd800 && codeUnit <= 0xdbff) {
+      const nextCodeUnit = value.charCodeAt(index + 1);
+      if (!(nextCodeUnit >= 0xdc00 && nextCodeUnit <= 0xdfff)) {
+        return false;
+      }
+      index += 1;
+    } else if (codeUnit >= 0xdc00 && codeUnit <= 0xdfff) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function isPasswordWithinSizeLimit(password: unknown): password is string {
+  return (
+    typeof password === "string" &&
+    password.length > 0 &&
+    password.length <= ADMIN_PASSWORD_MAX_BYTES &&
+    hasWellFormedUnicode(password) &&
+    Buffer.byteLength(password, "utf8") <= ADMIN_PASSWORD_MAX_BYTES
+  );
+}
+
 export async function hashAdminPassword(
   password: string,
-  salt: Uint8Array = randomBytes(MIN_SALT_LENGTH),
+  salt: Uint8Array = randomBytes(SALT_LENGTH),
 ): Promise<string> {
-  if (typeof password !== "string" || password.length === 0) {
-    throw new TypeError("Admin password must be a non-empty string");
+  if (!isPasswordWithinSizeLimit(password)) {
+    throw new TypeError("Admin password is invalid");
   }
-  if (!(salt instanceof Uint8Array) || salt.byteLength < MIN_SALT_LENGTH) {
-    throw new TypeError("Admin password salt must be at least 16 bytes");
+  if (!(salt instanceof Uint8Array) || salt.byteLength !== SALT_LENGTH) {
+    throw new TypeError("Admin password salt must be exactly 16 bytes");
   }
 
   const saltBuffer = Buffer.from(salt);
@@ -93,8 +120,7 @@ export async function verifyAdminPassword(
   encodedHash: string,
 ): Promise<boolean> {
   if (
-    typeof password !== "string" ||
-    password.length === 0 ||
+    !isPasswordWithinSizeLimit(password) ||
     typeof encodedHash !== "string" ||
     encodedHash.length === 0 ||
     encodedHash.length > MAX_ENCODED_HASH_LENGTH
@@ -117,7 +143,7 @@ export async function verifyAdminPassword(
   const expectedHash = decodeCanonicalBase64url(parts[5]);
   if (
     salt === null ||
-    salt.length < MIN_SALT_LENGTH ||
+    salt.length !== SALT_LENGTH ||
     expectedHash === null ||
     expectedHash.length !== SCRYPT_KEY_LENGTH
   ) {
