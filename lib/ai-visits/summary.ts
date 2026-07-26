@@ -77,6 +77,8 @@ function isPurpose(value: unknown): value is Purpose {
 
 function hasValidContractFields(row: AiVisitRow): boolean {
   return (
+    row !== null &&
+    typeof row === "object" &&
     typeof row.createdAt === "string" &&
     typeof row.path === "string" &&
     typeof row.botId === "string" &&

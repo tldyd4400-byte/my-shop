@@ -270,6 +270,39 @@ test("skips non-string contract fields without throwing or corrupting invariants
   assert.deepEqual(summary.bots.map((bot) => bot.botId), ["alpha"]);
 });
 
+test("skips absent, sparse, and primitive rows while counting only valid rows", () => {
+  const now = new Date("2026-07-26T00:00:00.000Z");
+  const valid = row("2026-07-25T00:00:00.000Z", "alpha", "other", "/valid");
+  const rows = [
+    null,
+    undefined,
+    ,
+    false,
+    0,
+    "invalid",
+    Symbol("invalid-row"),
+    valid,
+  ];
+
+  assert.doesNotThrow(() => summarizeAiVisits(rows, now));
+  const summary = summarizeAiVisits(rows, now);
+
+  assert.equal(summary.total, 1);
+  assert.deepEqual(summary.byPurpose, {
+    search_indexing: 0,
+    training: 0,
+    realtime_citation: 0,
+    other: 1,
+  });
+  assert.deepEqual(summary.bots.map(({ botId, count, previousCount }) => ({
+    botId,
+    count,
+    previousCount,
+  })), [
+    { botId: "alpha", count: 1, previousCount: 0 },
+  ]);
+});
+
 test("returns a stable empty summary for an invalid now and does not mutate rows", () => {
   const rows = [row("2026-07-24T00:00:00.000Z", "alpha", "training", "/a")];
   const before = structuredClone(rows);
