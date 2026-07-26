@@ -4,7 +4,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const WINDOW_MS = 30 * DAY_MS;
 const MINIMUM_DATE_MS = -8_640_000_000_000_000;
 const EXPLICIT_TIMEZONE_TIMESTAMP =
-  /^(?:\d{4}|[+-]\d{6})-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})$/;
+  /^(\d{4}|[+-]\d{6})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?(Z|[+-]\d{2}:\d{2})$/;
 
 const PURPOSES: readonly Purpose[] = [
   "search_indexing",
@@ -86,8 +86,46 @@ function hasValidContractFields(row: AiVisitRow): boolean {
 }
 
 function parseExplicitTimezoneTimestamp(value: string): number {
-  if (!EXPLICIT_TIMEZONE_TIMESTAMP.test(value)) return Number.NaN;
-  return Date.parse(value);
+  const match = EXPLICIT_TIMEZONE_TIMESTAMP.exec(value);
+  if (!match) return Number.NaN;
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  const day = Number(match[3]);
+  const hour = Number(match[4]);
+  const minute = Number(match[5]);
+  const second = match[6] === undefined ? 0 : Number(match[6]);
+  const isLeapYear =
+    year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+  const daysInMonth = [
+    31,
+    isLeapYear ? 29 : 28,
+    31,
+    30,
+    31,
+    30,
+    31,
+    31,
+    30,
+    31,
+    30,
+    31,
+  ];
+
+  if (
+    month < 1 ||
+    month > 12 ||
+    day < 1 ||
+    day > daysInMonth[month - 1] ||
+    hour > 23 ||
+    minute > 59 ||
+    second > 59
+  ) {
+    return Number.NaN;
+  }
+
+  const timestampMs = Date.parse(value);
+  return Number.isFinite(timestampMs) ? timestampMs : Number.NaN;
 }
 
 function compareText(left: string, right: string): number {

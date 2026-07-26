@@ -154,6 +154,79 @@ test("skips invalid dates and unknown purposes without throwing or corrupting to
   assert.deepEqual(summary.bots.map((bot) => bot.botId), ["alpha"]);
 });
 
+test("skips a non-leap February 29 without corrupting totals or bots", () => {
+  const now = new Date("2026-03-02T00:00:00.000Z");
+  const rows = [
+    row("2026-02-29T00:00:00Z", "beta", "training", "/invalid-february"),
+    row("2026-02-28T00:00:00Z", "alpha", "other", "/valid"),
+  ];
+
+  const summary = summarizeAiVisits(rows, now);
+
+  assert.equal(summary.total, 1);
+  assert.equal(
+    Object.values(summary.byPurpose).reduce((sum, count) => sum + count, 0),
+    summary.total,
+  );
+  assert.equal(
+    summary.bots.reduce((sum, bot) => sum + bot.count, 0),
+    summary.total,
+  );
+  assert.deepEqual(summary.bots.map((bot) => bot.botId), ["alpha"]);
+});
+
+test("skips April 31 without corrupting totals or bots", () => {
+  const now = new Date("2026-05-02T00:00:00.000Z");
+  const rows = [
+    row("2026-04-31T00:00:00Z", "beta", "training", "/invalid-april"),
+    row("2026-04-30T00:00:00Z", "alpha", "other", "/valid"),
+  ];
+
+  const summary = summarizeAiVisits(rows, now);
+
+  assert.equal(summary.total, 1);
+  assert.equal(
+    Object.values(summary.byPurpose).reduce((sum, count) => sum + count, 0),
+    summary.total,
+  );
+  assert.equal(
+    summary.bots.reduce((sum, bot) => sum + bot.count, 0),
+    summary.total,
+  );
+  assert.deepEqual(summary.bots.map((bot) => bot.botId), ["alpha"]);
+});
+
+test("accepts a valid leap day with an explicit numeric timezone", () => {
+  const now = new Date("2024-03-01T00:00:00.000Z");
+  const rows = [
+    row("2024-02-29T12:34:56+09:00", "alpha", "other", "/leap-day"),
+  ];
+
+  const summary = summarizeAiVisits(rows, now);
+
+  assert.equal(summary.total, 1);
+  assert.deepEqual(summary.bots.map((bot) => bot.botId), ["alpha"]);
+  assert.equal(summary.bots[0].lastVisitedAt, "2024-02-29T12:34:56+09:00");
+});
+
+test("rejects invalid calendar and clock edges while accepting a numeric timezone", () => {
+  const now = new Date("2026-07-26T00:00:00.000Z");
+  const rows = [
+    row("2026-00-25T00:00:00Z", "beta", "training", "/month-zero"),
+    row("2026-13-25T00:00:00Z", "beta", "training", "/month-thirteen"),
+    row("2026-07-00T00:00:00Z", "beta", "training", "/day-zero"),
+    row("2026-07-24T24:00:00Z", "beta", "training", "/hour-twenty-four"),
+    row("2026-07-25T23:60:00Z", "beta", "training", "/minute-sixty"),
+    row("2026-07-25T23:59:60Z", "beta", "training", "/second-sixty"),
+    row("2026-07-25T23:00:00+04:00", "alpha", "other", "/explicit-zone"),
+  ];
+
+  const summary = summarizeAiVisits(rows, now);
+
+  assert.equal(summary.total, 1);
+  assert.deepEqual(summary.bots.map((bot) => bot.botId), ["alpha"]);
+});
+
 test("rejects timezone-less timestamps so aggregation is host-timezone independent", () => {
   const now = new Date("2026-07-26T00:00:00.000Z");
   const rows = [
