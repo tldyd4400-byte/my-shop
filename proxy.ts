@@ -30,6 +30,10 @@ export function planProxyAction({
     return { redirectPath, event: null };
   }
 
+  if (!(now instanceof Date) || !Number.isFinite(now.getTime())) {
+    return { redirectPath: null, event: null };
+  }
+
   if (!isCollectableRequest({ method, pathname })) {
     return { redirectPath: null, event: null };
   }
