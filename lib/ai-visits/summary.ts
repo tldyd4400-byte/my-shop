@@ -75,16 +75,33 @@ function isPurpose(value: unknown): value is Purpose {
   return PURPOSES.includes(value as Purpose);
 }
 
-function hasValidContractFields(row: AiVisitRow): boolean {
-  return (
-    row !== null &&
-    typeof row === "object" &&
-    typeof row.createdAt === "string" &&
-    typeof row.path === "string" &&
-    typeof row.botId === "string" &&
-    typeof row.botName === "string" &&
-    typeof row.vendor === "string"
-  );
+function snapshotAiVisitRow(row: unknown): AiVisitRow | null {
+  if (row === null || typeof row !== "object") return null;
+
+  try {
+    const candidate = row as Record<string, unknown>;
+    const createdAt = candidate.createdAt;
+    const path = candidate.path;
+    const botId = candidate.botId;
+    const botName = candidate.botName;
+    const vendor = candidate.vendor;
+    const purpose = candidate.purpose;
+
+    if (
+      typeof createdAt !== "string" ||
+      typeof path !== "string" ||
+      typeof botId !== "string" ||
+      typeof botName !== "string" ||
+      typeof vendor !== "string" ||
+      !isPurpose(purpose)
+    ) {
+      return null;
+    }
+
+    return { createdAt, path, botId, botName, vendor, purpose };
+  } catch {
+    return null;
+  }
 }
 
 function parseExplicitTimezoneTimestamp(value: string): number {
@@ -189,8 +206,9 @@ export function summarizeAiVisits(
   const bots = new Map<string, BotState>();
   let total = 0;
 
-  for (const row of rows) {
-    if (!hasValidContractFields(row) || !isPurpose(row.purpose)) continue;
+  for (const candidate of rows) {
+    const row = snapshotAiVisitRow(candidate);
+    if (!row) continue;
 
     const visitedMs = parseExplicitTimezoneTimestamp(row.createdAt);
     if (!Number.isFinite(visitedMs)) continue;

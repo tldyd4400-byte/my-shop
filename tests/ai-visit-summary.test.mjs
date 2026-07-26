@@ -303,6 +303,81 @@ test("skips absent, sparse, and primitive rows while counting only valid rows", 
   ]);
 });
 
+test("skips a row whose createdAt getter throws and counts the later valid row", () => {
+  const now = new Date("2026-07-26T00:00:00.000Z");
+  const malformed = row("2026-07-24T00:00:00.000Z", "beta", "training", "/malformed");
+  Object.defineProperty(malformed, "createdAt", {
+    enumerable: true,
+    get() {
+      throw new Error("createdAt getter exploded");
+    },
+  });
+  const valid = row("2026-07-25T00:00:00.000Z", "alpha", "other", "/valid");
+
+  const summary = summarizeAiVisits([malformed, valid], now);
+
+  assert.equal(summary.total, 1);
+  assert.deepEqual(summary.bots.map((bot) => bot.botId), ["alpha"]);
+});
+
+test("reads a valid createdAt accessor once so the row can count", () => {
+  const now = new Date("2026-07-26T00:00:00.000Z");
+  const accessorRow = row("2026-07-25T00:00:00.000Z", "alpha", "other", "/valid");
+  let reads = 0;
+  Object.defineProperty(accessorRow, "createdAt", {
+    enumerable: true,
+    get() {
+      reads += 1;
+      if (reads > 1) throw new Error("createdAt read twice");
+      return "2026-07-25T00:00:00.000Z";
+    },
+  });
+
+  const summary = summarizeAiVisits([accessorRow], now);
+
+  assert.equal(reads, 1);
+  assert.equal(summary.total, 1);
+  assert.equal(summary.bots[0].lastVisitedAt, "2026-07-25T00:00:00.000Z");
+});
+
+test("reads a valid purpose accessor once and counts it correctly", () => {
+  const now = new Date("2026-07-26T00:00:00.000Z");
+  const accessorRow = row("2026-07-25T00:00:00.000Z", "alpha", "other", "/valid");
+  let reads = 0;
+  Object.defineProperty(accessorRow, "purpose", {
+    enumerable: true,
+    get() {
+      reads += 1;
+      if (reads > 1) throw new Error("purpose read twice");
+      return "other";
+    },
+  });
+
+  const summary = summarizeAiVisits([accessorRow], now);
+
+  assert.equal(reads, 1);
+  assert.equal(summary.total, 1);
+  assert.equal(summary.byPurpose.other, 1);
+  assert.equal(summary.bots[0].purpose, "other");
+});
+
+test("skips a row whose path getter throws and counts the later valid row", () => {
+  const now = new Date("2026-07-26T00:00:00.000Z");
+  const malformed = row("2026-07-24T00:00:00.000Z", "beta", "training", "/malformed");
+  Object.defineProperty(malformed, "path", {
+    enumerable: true,
+    get() {
+      throw new Error("path getter exploded");
+    },
+  });
+  const valid = row("2026-07-25T00:00:00.000Z", "alpha", "other", "/valid");
+
+  const summary = summarizeAiVisits([malformed, valid], now);
+
+  assert.equal(summary.total, 1);
+  assert.deepEqual(summary.bots.map((bot) => bot.botId), ["alpha"]);
+});
+
 test("returns a stable empty summary for an invalid now and does not mutate rows", () => {
   const rows = [row("2026-07-24T00:00:00.000Z", "alpha", "training", "/a")];
   const before = structuredClone(rows);
