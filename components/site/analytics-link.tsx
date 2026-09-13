@@ -11,7 +11,8 @@ declare global {
 type AnalyticsEventName =
   | "naver_reservation_click"
   | "naver_map_click"
-  | "phone_click";
+  | "phone_click"
+  | "group_inquiry_click";
 
 type Props = AnchorHTMLAttributes<HTMLAnchorElement> & {
   eventName: AnalyticsEventName;

@@ -4,24 +4,25 @@ import { FaqList } from "@/components/site/faq-list";
 import { HeroMedia } from "@/components/site/hero-media";
 import { LocationPanel } from "@/components/site/location-panel";
 import { ProofStrip } from "@/components/site/proof-strip";
-import { FAQ_ITEMS, STORE } from "@/lib/content/store";
+import { FAQ_ITEMS, GROUP_FAQ_ITEMS, STORE } from "@/lib/content/store";
 import { createPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema, faqSchema } from "@/lib/seo/schema";
 
 export const metadata = createPageMetadata({
-  title: "어믜뜰 FAQ | 예약·주차·영업시간·포장",
+  title: "어믜뜰 FAQ | 예약·주차·단체·통대관",
   description:
-    "어믜뜰 청주봉명동본점의 영업시간, 월요일 휴무, 주차, 포장, 메뉴, 아이 동반과 네이버 예약 질문을 확인하세요.",
+    "어믜뜰의 영업시간, 주차, 메뉴, 아이 동반과 예약 안내. 최대 52명 단체 이용과 통대관 사전 협의 질문도 확인하세요.",
   path: "/faq",
   image: "/images/eomeuittul/interior.jpg",
 });
 
 export default function FaqPage() {
+  const allFaqs = [...FAQ_ITEMS, ...GROUP_FAQ_ITEMS];
   return (
     <main className="store-route faq-route">
       <JsonLd
         data={[
-          faqSchema(FAQ_ITEMS),
+          faqSchema(allFaqs),
           breadcrumbSchema([
             { name: "홈", path: "/" },
             { name: "FAQ", path: "/faq" },
@@ -83,6 +84,16 @@ export default function FaqPage() {
         </div>
       </section>
 
+      <section className="faq-section section-pad surface-paper">
+        <div className="shell split-section">
+          <div>
+            <p className="eyebrow">GROUP · PRIVATE HIRE</p>
+            <h2>모임과 회식, 이렇게 준비합니다</h2>
+            <p>최대 인원, 통대관 협의, 메뉴와 주차 안내입니다.</p>
+          </div>
+          <FaqList items={GROUP_FAQ_ITEMS} openAll />
+        </div>
+      </section>
       <LocationPanel />
     </main>
   );

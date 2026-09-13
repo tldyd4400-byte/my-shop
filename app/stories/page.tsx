@@ -11,7 +11,7 @@ import { breadcrumbSchema, collectionPageSchema } from "@/lib/seo/schema";
 const STORIES_PATH = "/stories";
 const STORIES_TITLE = "어믜뜰 이야기 | 청주 맛집·등갈비찜 가이드";
 const STORIES_DESCRIPTION =
-  "등갈비찜을 즐기는 법, 셀프바, 청주 봉명동 가족 외식 정보를 확인하세요.";
+  "등갈비찜을 즐기는 법, 셀프바, 청주 봉명동 가족 외식과 모임·회식 정보를 확인하세요.";
 
 export const metadata = createPageMetadata({
   title: STORIES_TITLE,
@@ -20,6 +20,8 @@ export const metadata = createPageMetadata({
 });
 
 export default function StoriesPage() {
+  const featuredStories = ["cheongju-group-dining", "how-to-enjoy-ribs"].flatMap((slug) => STORIES.filter((story) => story.slug === slug));
+  const moreStories = STORIES.filter((story) => !featuredStories.includes(story));
   return (
     <main className="stories-index">
       <JsonLd
@@ -45,7 +47,7 @@ export default function StoriesPage() {
             <br />한 상이 더 즐거워집니다
           </>
         }
-        description="등갈비찜을 맛있게 즐기는 법부터 가족 외식과 방문 정보까지 어믜뜰을 더 잘 경험할 수 있는 이야기를 전합니다."
+        description="등갈비찜을 맛있게 즐기는 법부터 가족 외식, 모임·회식과 방문 정보까지 어믜뜰을 더 잘 경험할 수 있는 이야기를 전합니다."
         image="/images/eomeuittul/hero-table.jpg"
         imageAlt="어믜뜰 등갈비찜 한 상"
       >
@@ -61,7 +63,7 @@ export default function StoriesPage() {
             <p>메뉴 선택과 방문 결정을 돕는 대표 이야기입니다.</p>
           </div>
           <div className="story-grid">
-            {STORIES.slice(0, 2).map((story) => (
+            {featuredStories.map((story) => (
               <StoryCard key={story.slug} story={story} />
             ))}
           </div>
@@ -75,7 +77,7 @@ export default function StoriesPage() {
             <p>재료 선택과 메뉴 취향을 자세히 안내합니다.</p>
           </div>
           <div className="story-grid">
-            {STORIES.slice(2).map((story) => (
+            {moreStories.map((story) => (
               <StoryCard key={story.slug} story={story} />
             ))}
           </div>

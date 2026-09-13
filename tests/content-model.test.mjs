@@ -110,8 +110,8 @@ test("central public content consistently identifies Monday as the closure", () 
   assert.doesNotMatch(publicContent, /일요일(?:은)? 정기휴무/);
 });
 
-test("stories export four records and getStory finds a story or returns undefined", () => {
-  assert.equal(STORIES.length, 4);
+test("stories export five records and getStory finds a story or returns undefined", () => {
+  assert.equal(STORIES.length, 5);
   const story = getStory("how-to-enjoy-ribs");
   assert.equal(story, STORIES[0]);
   assert.equal(story?.title, "처음 보는 등갈비찜, 이렇게 즐겨요");
@@ -123,6 +123,7 @@ test("stories export four records and getStory finds a story or returns undefine
       { title: "청주 봉명동 가족 외식 가이드", description: "좌석, 주차, 아이 동반과 예약 정보를 가족 외식 관점에서 정리합니다." },
       { title: "30여 종 셀프바를 즐기는 법", description: "채소와 버섯, 떡과 당면으로 나만의 한 상을 만드는 법을 소개합니다." },
       { title: "매운맛과 간장맛, 무엇을 고를까", description: "첫 방문자가 취향에 맞는 등갈비찜을 고를 수 있도록 비교합니다." },
+      { title: "청주 모임·회식 장소 가이드", description: "한 팀 최대 52명, 통대관까지 가능한 어믜뜰. 날짜·시간·인원 사전 협의부터 메뉴 선택과 무료주차까지 단체 이용 정보를 확인하세요." },
     ],
   );
   assert.deepEqual(STORIES.flatMap((story) => story.sections.map((section) => section.heading)), [
@@ -130,10 +131,16 @@ test("stories export four records and getStory finds a story or returns undefine
     "네 단계로 즐기기",
     "가족과 편안하게 머무는 자리",
     "방문 전에 확인할 정보",
+    "가족의 취향에 맞는 갈비찜",
+    "수제우유빙수로 식사 마무리",
     "취향대로 담는 재료",
     "구성은 달라질 수 있어요",
     "매콤한 한 상",
     "편안한 간장 한 상",
+    "한 팀 최대 52명까지 한자리에서",
+    "통대관은 네 단계로 편하게 협의합니다",
+    "여러 취향이 모여도 고르기 좋은 두 가지 갈비찜",
+    "차량이 많은 모임도 미리 동선을 확인하세요",
   ]);
 });
 

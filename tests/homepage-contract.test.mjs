@@ -40,6 +40,7 @@ test("home V2 keeps the approved section order", () => {
     'className="brand-story',
     "<ExperienceSteps",
     'className="menu-preview',
+    "<GroupDiningPanel",
     "<ReservationCta",
     'className="review-preview',
     'className="faq-section',
@@ -52,9 +53,9 @@ test("home V2 keeps the approved section order", () => {
 
   const visualBlocks =
     page.match(
-      /<(?:HeroMedia|ProofStrip|ExperienceSteps|ReservationCta|LocationPanel)\b|<section\b/g,
+      /<(?:HeroMedia|ProofStrip|ExperienceSteps|GroupDiningPanel|ReservationCta|LocationPanel)\b|<section\b/g,
     ) ?? [];
-  assert.equal(visualBlocks.length, 9);
+  assert.equal(visualBlocks.length, 10);
   for (const section of sections) {
     assert.equal(page.split(section).length - 1, 1, section);
   }

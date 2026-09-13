@@ -6,6 +6,7 @@ import { AnalyticsLink } from "@/components/site/analytics-link";
 import { ExperienceSteps } from "@/components/site/experience-steps";
 import { FaqList } from "@/components/site/faq-list";
 import { HeroMedia } from "@/components/site/hero-media";
+import { GroupDiningPanel } from "@/components/site/group-dining-panel";
 import { LocationPanel } from "@/components/site/location-panel";
 import { ProofStrip } from "@/components/site/proof-strip";
 import { ReservationCta } from "@/components/site/reservation-cta";
@@ -121,6 +122,7 @@ export default function HomePage() {
         </div>
       </section>
 
+      <GroupDiningPanel placement="home_group" />
       <ReservationCta placement="home_mid" />
 
       <section className="review-preview section-pad surface-paper">

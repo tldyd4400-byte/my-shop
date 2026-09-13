@@ -24,7 +24,13 @@ export function restaurantSchema() {
     telephone: STORE.phoneDisplay,
     image: [`${STORE.url}${STORE.image}`],
     sameAs: [STORE.placeUrl],
-    servesCuisine: ["Korean", "Braised ribs"],
+    servesCuisine: ["한식", "갈비찜", "등갈비찜"],
+    maximumAttendeeCapacity: STORE.maxGroupSize,
+    amenityFeature: [
+      { "@type": "LocationFeatureSpecification", name: "단체 이용", value: true },
+      { "@type": "LocationFeatureSpecification", name: "통대관", value: true, description: "날짜·시간·인원 사전 협의" },
+      { "@type": "LocationFeatureSpecification", name: "무료주차", value: true },
+    ],
     acceptsReservations: true,
     address: {
       "@type": "PostalAddress",

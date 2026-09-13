@@ -14,6 +14,8 @@ export type StoreInfo = {
   address: string;
   parking: string;
   seats: string;
+  maxGroupSize: number;
+  groupBooking: string;
   placeUrl: string;
   bookingUrl: string;
   directionsUrl: string;

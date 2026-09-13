@@ -13,6 +13,7 @@ import { tmpdir } from "node:os";
 import { basename, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
+import { GROUP_FAQ_ITEMS, STORE } from "../lib/content/store.ts";
 
 const rootPath = fileURLToPath(new URL("../", import.meta.url));
 const requiredPublicRoutes = ["/", "/menu", "/store", "/location", "/faq", "/reviews", "/stories"];
@@ -256,6 +257,7 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
     const sitemapPath = locateSitemap(appOutput);
     const sitemapPaths = parseSitemapPaths(readFileSync(sitemapPath, "utf8"));
     assert.ok(sitemapPaths.length > 0, "generated sitemap must contain public routes");
+    assert.ok(sitemapPaths.includes("/stories/cheongju-group-dining"));
     assert.equal(new Set(sitemapPaths).size, sitemapPaths.length, "generated sitemap routes must be unique");
     assert.equal(sitemapPaths.some((path) => path === "/admin" || path.startsWith("/admin/")), false, "sitemap must not contain admin routes");
     for (const route of requiredPublicRoutes) {
@@ -266,7 +268,25 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
       const candidates = routeArtifactCandidates(appOutput, route);
       const htmlPath = candidates.find(existsSync);
       assert.ok(htmlPath, `sitemap route ${route} has no generated HTML artifact; checked ${candidates.join(", ")}`);
-      const text = visibleText(readFileSync(htmlPath, "utf8"));
+      const html = readFileSync(htmlPath, "utf8");
+      const text = visibleText(html);
+      assert.equal((html.match(/<h1\b/gu) ?? []).length, 1, `${route} needs exactly one H1`);
+      if (route === "/stories/cheongju-group-dining" || route === "/faq") {
+        const schemas = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gu)].flatMap((match) => JSON.parse(match[1]));
+        const faq = schemas.find((item) => item["@type"] === "FAQPage");
+        assert.ok(faq, `${route} needs FAQ schema`);
+        for (const item of GROUP_FAQ_ITEMS) {
+          assert.ok(text.includes(item.question));
+          assert.ok(text.includes(item.answer));
+          assert.ok(faq.mainEntity.some((entry) => entry.name === item.question && entry.acceptedAnswer.text === item.answer));
+        }
+      }
+      if (route === "/stories/cheongju-group-dining") {
+        assert.ok(html.includes(`href="${STORE.phoneHref}"`));
+        assert.ok(text.includes("한 팀 최대 52명"));
+        assert.ok(text.includes("최종 확정"));
+        assert.ok(text.includes("사전 협의"));
+      }
       for (const [term, pattern] of forbidden) {
         assert.doesNotMatch(text, pattern, `${route} exposes ${term} in visible customer text`);
       }

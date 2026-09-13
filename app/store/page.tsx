@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { JsonLd } from "@/components/seo/json-ld";
 import { AnalyticsLink } from "@/components/site/analytics-link";
@@ -10,9 +11,9 @@ import { createPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema, restaurantSchema } from "@/lib/seo/schema";
 
 export const metadata = createPageMetadata({
-  title: "어믜뜰 매장 소개 | 청주 봉명동 가족 외식",
+  title: "어믜뜰 매장·단체석 | 청주 봉명동 모임 공간",
   description:
-    "누군가를 배부르게 먹이고 싶은 마음으로 차린 어믜뜰 청주봉명동본점의 한 상과 매장 공간을 소개합니다.",
+    "청주 봉명동 어믜뜰의 12테이블·52석과 단체 모임 공간을 소개합니다. 한 팀 최대 52명, 통대관 사전 협의와 무료주차 정보를 확인하세요.",
   path: "/store",
 });
 
@@ -119,8 +120,10 @@ export default function StorePage() {
             />
             <div>
               <p className="eyebrow">SPACE · 실제 매장 공간</p>
-              <h2>가족 외식부터 소규모 모임까지</h2>
+              <h2>가족 외식부터 최대 {STORE.maxGroupSize}명 단체 모임까지</h2>
               <p>{STORE.seats}</p>
+              <p>{STORE.groupBooking}</p>
+              <Link className="button button-secondary" href="/stories/cheongju-group-dining">단체 이용 안내</Link>
             </div>
           </article>
         </div>

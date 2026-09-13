@@ -99,8 +99,8 @@ test("story routes use central content, static generation, and approved SEO", ()
     assert.match(index, new RegExp(source));
   }
   assert.match(index, /path: STORIES_PATH/);
-  assert.match(index, /STORIES\.slice\(0, 2\)/);
-  assert.match(index, /STORIES\.slice\(2\)/);
+  assert.match(index, /featuredStories\.map/);
+  assert.match(index, /moreStories\.map/);
   assert.equal(index.split("<StoryCard").length - 1, 2);
   assert.equal(index.split("<JsonLd").length - 1, 1);
   assert.doesNotMatch(index, /restaurantSchema|faqSchema|AggregateRating/);
@@ -138,7 +138,7 @@ test("story routes use central content, static generation, and approved SEO", ()
   assert.equal(detail.split("<JsonLd").length - 1, 1);
   assert.doesNotMatch(
     detail,
-    /faqSchema|restaurantSchema|AggregateRating|SiteHeader|SiteFooter|MobileActionBar/,
+    /restaurantSchema|AggregateRating|SiteHeader|SiteFooter|MobileActionBar/,
   );
 
   assert.deepEqual(
@@ -148,6 +148,7 @@ test("story routes use central content, static generation, and approved SEO", ()
       { slug: "family-dining-guide" },
       { slug: "self-bar-guide" },
       { slug: "spicy-or-soy" },
+      { slug: "cheongju-group-dining" },
     ],
   );
 });
@@ -329,8 +330,8 @@ test("location and FAQ expose direct-answer information", () => {
   assert.match(faq, /메뉴·예약·아이 동반/);
   assert.match(faq, /items=\{FAQ_ITEMS\.slice\(0, 4\)\}/);
   assert.match(faq, /items=\{FAQ_ITEMS\.slice\(4\)\}/);
-  assert.equal(faq.split("openAll").length - 1, 2);
-  assert.match(faq, /faqSchema\(FAQ_ITEMS\)/);
+  assert.equal(faq.split("openAll").length - 1, 3);
+  assert.match(faq, /faqSchema\(allFaqs\)/);
   assert.match(faq, /breadcrumbSchema\(\[/);
   assert.match(faq, /interior\.jpg/);
   assert.doesNotMatch(faq, /restaurantSchema/);
@@ -404,7 +405,7 @@ test("store route uses approved media, central facts, and composition", () => {
   for (const image of ["hero-table.jpg", "identity-wall.jpg", "interior.jpg"]) {
     assert.equal(page.split(image).length - 1, 1, image);
   }
-  assert.match(page, /누군가를 배부르게 먹이고 싶은 마음/);
+  assert.match(page, /누군가를 배부르게[\s\S]*?먹이고 싶은 마음/);
   assert.match(page, /늘 자식 쪽으로 기울던 접시/);
   assert.match(page, /\{STORE\.seats\}/);
   assert.match(page, /STORE\.parking/);

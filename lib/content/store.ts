@@ -9,6 +9,8 @@ export const STORE: StoreInfo = {
   address: "충북 청주시 흥덕구 백봉로 213-1 1층",
   parking: "건물 뒤 무료 지상주차장 · 점심시간 및 17시 이후 도로 주차 가능",
   seats: "12테이블 · 52석 · 6인 단체석 2테이블",
+  maxGroupSize: 52,
+  groupBooking: "한 팀 최대 52명 · 통대관 가능 · 날짜·시간·인원 사전 협의",
   placeUrl: "https://map.naver.com/p/entry/place/2021816208",
   bookingUrl:
     "https://search.naver.com/search.naver?query=%EC%96%B4%EB%AF%9C%EB%9C%B0%20%EB%93%B1%EA%B0%88%EB%B9%84%EC%B0%9C%20%EC%B2%AD%EC%A3%BC%EB%B4%89%EB%AA%85%EB%8F%99%EB%B3%B8%EC%A0%90",
@@ -37,6 +39,21 @@ export const FAQ_ITEMS: readonly FaqItem[] = [
   { question: "아이와 함께 갈 수 있나요?", answer: "유아의자를 이용할 수 있습니다." },
   { question: "단체 이용이 가능한가요?", answer: "단체 이용이 가능하며 방문 전 전화 문의를 권장합니다." },
 ];
+
+export const GROUP_FAQ_ITEMS: readonly FaqItem[] = [
+  { question: "한 팀 몇 명까지 이용할 수 있나요?", answer: "한 팀 최대 52명까지 이용할 수 있습니다." },
+  { question: "매장을 통대관할 수 있나요?", answer: "최대 인원 이용 시 통대관으로 협의할 수 있습니다." },
+  { question: "최소 인원이나 최소 금액이 있나요?", answer: "정해진 최소 조건은 없으며 날짜·시간·인원을 사전에 협의합니다." },
+  { question: "회식 메뉴는 어떻게 선택하나요?", answer: "매운맛과 간장맛 중 취향에 맞게 선택할 수 있습니다. 자세한 구성은 예약 전에 매장과 확인해 주세요." },
+  { question: "단체 차량도 주차할 수 있나요?", answer: "건물 뒤 무료 지상주차장이 있으며 차량 수는 미리 상담해 주세요." },
+];
+
+export const GROUP_BOOKING_STEPS = [
+  { title: "날짜 확인", body: "희망 날짜와 시간을 알려주세요." },
+  { title: "인원 상담", body: "예상 인원과 좌석 구성을 맞춥니다." },
+  { title: "메뉴 선택", body: "매운맛과 간장맛을 함께 고릅니다." },
+  { title: "최종 확정", body: "통대관 여부와 준비 사항을 확정합니다." },
+] as const;
 
 export const REVIEW_ITEMS: readonly ReviewItem[] = [
   { title: "색다른 한 상", summary: "등갈비찜과 샤브샤브를 함께 즐기는 이색적인 조합이라는 반응이 있습니다.", sourceLabel: "네이버 방문자 리뷰 일부 요약", sourceUrl: STORE.placeUrl, checkedAt: "2026-07-19" },

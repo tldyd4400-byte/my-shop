@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { JsonLd } from "@/components/seo/json-ld";
 import { AnalyticsLink } from "@/components/site/analytics-link";
@@ -14,7 +15,7 @@ import { breadcrumbSchema, restaurantSchema } from "@/lib/seo/schema";
 export const metadata = createPageMetadata({
   title: "청주 갈비찜 메뉴 | 어믜뜰 청주봉명동본점",
   description:
-    "매운 등갈비찜과 간장 등갈비찜의 가격, 구성과 어믜뜰 식사 순서를 확인하세요.",
+    "청주에서 즐기는 매운 등갈비찜과 간장 등갈비찜의 가격, 구성, 셀프바와 단체 메뉴 선택 정보를 확인하세요.",
   path: "/menu",
 });
 
@@ -36,9 +37,9 @@ export default function MenuPage() {
         eyebrow="MENU · 청주갈비찜"
         title={
           <>
-            등갈비찜에서 시작해
+            청주에서 색다른
             <br />
-            나만의 한 상으로
+            갈비찜을 찾는다면
           </>
         }
         description="매운맛과 간장맛을 고르고 셀프바 재료를 더해 샤브처럼 즐겨보세요."
@@ -82,6 +83,18 @@ export default function MenuPage() {
               <p>{item.description}</p>
             </article>
           ))}
+        </div>
+      </section>
+
+      <section className="group-menu-link section-pad">
+        <div className="shell split-section">
+          <Image src="/images/eomeuittul/spicy-ribs.jpg" alt="어믜뜰 매운 등갈비찜" width={640} height={440} sizes="(max-width: 767px) calc(100vw - 48px), 50vw" />
+          <div>
+            <p className="eyebrow">MENU FOR EVERYONE</p>
+            <h2>함께 고르기 좋은 두 가지 갈비찜</h2>
+            <p>매운맛과 간장맛을 준비해 여러 취향이 모이는 회식 자리에서도 선택하기 좋습니다.</p>
+            <Link className="button button-primary" href="/stories/cheongju-group-dining">모임·회식 안내 보기</Link>
+          </div>
         </div>
       </section>
 

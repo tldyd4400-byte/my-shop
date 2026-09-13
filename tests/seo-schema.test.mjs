@@ -48,6 +48,9 @@ test("schema factories use central facts and avoid unverified ratings", () => {
   assert.equal(restaurant.name, STORE.fullName);
   assert.equal(restaurant.telephone, STORE.phoneDisplay);
   assert.deepEqual(restaurant.sameAs, [STORE.placeUrl]);
+  assert.equal(restaurant.maximumAttendeeCapacity, 52);
+  assert.deepEqual(restaurant.servesCuisine, ["한식", "갈비찜", "등갈비찜"]);
+  assert.deepEqual(restaurant.amenityFeature.map((item) => item.name), ["단체 이용", "통대관", "무료주차"]);
   assert.equal(restaurant.hasMenu.hasMenuSection.hasMenuItem.length, MENU_ITEMS.length);
   assert.equal(restaurant.hasMenu.hasMenuSection.hasMenuItem[0].offers.price, "19900");
   assert.equal(JSON.stringify(restaurant).includes("AggregateRating"), false);
@@ -83,7 +86,7 @@ test("collection page schema serializes the central story listing", () => {
   assert.equal(collection.mainEntity["@type"], "ItemList");
   assert.deepEqual(
     collection.mainEntity.itemListElement.map((item) => item.position),
-    [1, 2, 3, 4],
+    [1, 2, 3, 4, 5],
   );
   assert.equal(
     collection.mainEntity.itemListElement[0].url,
