@@ -149,8 +149,19 @@ test("story routes use central content, static generation, and approved SEO", ()
       { slug: "self-bar-guide" },
       { slug: "spicy-or-soy" },
       { slug: "cheongju-group-dining" },
+      { slug: "cheongju-galbijjim-guide" },
     ],
   );
+});
+
+test("galbijjim story exposes direct-answer FAQ and reservation actions", () => {
+  const detail = read("app/stories/[slug]/page.tsx");
+
+  assert.match(detail, /cheongju-galbijjim-guide/);
+  assert.match(detail, /GALBIJJIM_FAQ_ITEMS/);
+  assert.match(detail, /faqSchema\(faqs\)/);
+  assert.match(detail, /naver_reservation_click/);
+  assert.match(detail, /STORE\.bookingUrl/);
 });
 
 test("story layouts match the approved desktop and 390px boundaries", () => {

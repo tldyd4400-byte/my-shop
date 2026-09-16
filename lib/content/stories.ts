@@ -80,6 +80,23 @@ export const STORIES: readonly Story[] = [
       { heading: "차량이 많은 모임도 미리 동선을 확인하세요", body: "건물 뒤 무료 지상주차장을 이용할 수 있습니다. 단체 차량 수는 예약 전에 매장과 상담해 주세요.", image: "/images/eomeuittul/naver-map-location.png", imageAlt: "청주 봉명동 어믜뜰의 실제 위치 지도" },
     ],
   },
+  {
+    slug: "cheongju-galbijjim-guide",
+    title: "청주갈비찜 맛집을 찾는다면",
+    description: "청주갈비찜을 찾는 분들을 위해 봉명동 매운 등갈비찜과 간장 등갈비찜, 셀프바와 무료주차를 한 번에 정리했습니다.",
+    category: "청주갈비찜 가이드",
+    readingTime: "4분",
+    publishedAt: "2026-09-16",
+    modifiedAt: "2026-09-16",
+    image: "/images/eomeuittul/spicy-ribs.jpg",
+    imageAlt: "어믜뜰 매운 등갈비찜 한 상",
+    sections: [
+      { heading: "청주갈비찜을 찾는 분들이 먼저 확인할 것", body: "어믜뜰은 청주 봉명동에서 등갈비찜을 중심으로 한 상을 차려내는 식당입니다. 매운 등갈비찜과 간장 등갈비찜을 준비해 첫 방문자도 취향에 맞게 고를 수 있습니다.", image: "/images/eomeuittul/spicy-ribs.jpg", imageAlt: "청주 봉명동 어믜뜰 매운 등갈비찜" },
+      { heading: "매운 등갈비찜과 간장 등갈비찜", body: "칼칼한 국물과 함께 즐기고 싶다면 매운 등갈비찜을, 아이와 함께하거나 부드러운 맛을 원한다면 간장 등갈비찜을 선택할 수 있습니다.", image: "/images/eomeuittul/soy-ribs.jpg", imageAlt: "어믜뜰 간장 등갈비찜" },
+      { heading: "셀프바와 함께 완성하는 한 상", body: "채소, 버섯, 떡과 당면을 셀프바에서 골라 등갈비찜에 더해 샤브처럼 끓여 먹는 방식입니다. 익숙한 갈비찜에 새로운 식사 경험을 더합니다.", image: "/images/eomeuittul/step-2-selfbar.jpg", imageAlt: "채소와 버섯, 떡과 당면이 준비된 어믜뜰 셀프바" },
+      { heading: "가족외식과 모임까지 이어지는 이유", body: "건물 뒤 무료 지상주차장을 이용할 수 있고, 한 팀 최대 52명까지 단체 이용을 상담할 수 있습니다. 청주에서 가족외식이나 회식 장소를 함께 찾는 분들도 방문 전 예약 정보를 확인해 주세요.", image: "/images/eomeuittul/interior.jpg", imageAlt: "어믜뜰 매장 내부 좌석" },
+    ],
+  },
 ];
 
 export function getStory(slug: string): Story | undefined {

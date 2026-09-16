@@ -7,6 +7,7 @@ import test from "node:test";
 import {
   DINING_STEPS,
   FAQ_ITEMS,
+  GALBIJJIM_FAQ_ITEMS,
   MENU_ITEMS,
   REVIEW_ITEMS,
   STORE,
@@ -122,12 +123,17 @@ test("central public content consistently identifies Monday as the closure", () 
   assert.doesNotMatch(publicContent, /일요일(?:은)? 정기휴무/);
 });
 
-test("stories export five records and getStory finds a story or returns undefined", () => {
-  assert.equal(STORIES.length, 5);
+test("stories export six records and getStory finds a story or returns undefined", () => {
+  assert.equal(STORIES.length, 6);
   const story = getStory("how-to-enjoy-ribs");
   assert.equal(story, STORIES[0]);
   assert.equal(story?.title, "처음 보는 등갈비찜, 이렇게 즐겨요");
   assert.equal(getStory("missing-story"), undefined);
+  const galbijjimStory = getStory("cheongju-galbijjim-guide");
+  assert.equal(galbijjimStory?.title, "청주갈비찜 맛집을 찾는다면");
+  assert.match(galbijjimStory?.description ?? "", /청주갈비찜/);
+  assert.match(JSON.stringify(galbijjimStory), /매운 등갈비찜/);
+  assert.match(JSON.stringify(galbijjimStory), /간장 등갈비찜/);
   assert.deepEqual(
     STORIES.map(({ title, description }) => ({ title, description })),
     [
@@ -136,6 +142,7 @@ test("stories export five records and getStory finds a story or returns undefine
       { title: "30여 종 셀프바를 즐기는 법", description: "채소와 버섯, 떡과 당면으로 나만의 한 상을 만드는 법을 소개합니다." },
       { title: "매운맛과 간장맛, 무엇을 고를까", description: "첫 방문자가 취향에 맞는 등갈비찜을 고를 수 있도록 비교합니다." },
       { title: "청주 모임·회식 장소 가이드", description: "한 팀 최대 52명, 통대관까지 가능한 어믜뜰. 날짜·시간·인원 사전 협의부터 메뉴 선택과 무료주차까지 단체 이용 정보를 확인하세요." },
+      { title: "청주갈비찜 맛집을 찾는다면", description: "청주갈비찜을 찾는 분들을 위해 봉명동 매운 등갈비찜과 간장 등갈비찜, 셀프바와 무료주차를 한 번에 정리했습니다." },
     ],
   );
   assert.deepEqual(STORIES.flatMap((story) => story.sections.map((section) => section.heading)), [
@@ -153,6 +160,19 @@ test("stories export five records and getStory finds a story or returns undefine
     "통대관은 네 단계로 편하게 협의합니다",
     "여러 취향이 모여도 고르기 좋은 두 가지 갈비찜",
     "차량이 많은 모임도 미리 동선을 확인하세요",
+    "청주갈비찜을 찾는 분들이 먼저 확인할 것",
+    "매운 등갈비찜과 간장 등갈비찜",
+    "셀프바와 함께 완성하는 한 상",
+    "가족외식과 모임까지 이어지는 이유",
+  ]);
+});
+
+test("galbijjim FAQ answers direct search questions", () => {
+  assert.deepEqual(GALBIJJIM_FAQ_ITEMS, [
+    { question: "청주갈비찜으로 어떤 메뉴를 먹을 수 있나요?", answer: "매운 등갈비찜과 간장 등갈비찜을 선택할 수 있습니다." },
+    { question: "매운 음식을 못 먹어도 방문할 수 있나요?", answer: "간장 등갈비찜을 선택할 수 있어 아이와 함께하는 가족외식이나 여러 취향이 모인 자리에도 맞추기 좋습니다." },
+    { question: "청주 봉명동에서 주차가 가능한가요?", answer: "건물 뒤 무료 지상주차장을 이용할 수 있습니다." },
+    { question: "회식이나 단체 모임도 가능한가요?", answer: "한 팀 최대 52명까지 이용할 수 있으며 최대 인원 이용 시 통대관으로 협의합니다." },
   ]);
 });
 

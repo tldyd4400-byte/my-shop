@@ -86,7 +86,7 @@ test("collection page schema serializes the central story listing", () => {
   assert.equal(collection.mainEntity["@type"], "ItemList");
   assert.deepEqual(
     collection.mainEntity.itemListElement.map((item) => item.position),
-    [1, 2, 3, 4, 5],
+    [1, 2, 3, 4, 5, 6],
   );
   assert.equal(
     collection.mainEntity.itemListElement[0].url,

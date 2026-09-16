@@ -48,6 +48,13 @@ export const GROUP_FAQ_ITEMS: readonly FaqItem[] = [
   { question: "단체 차량도 주차할 수 있나요?", answer: "건물 뒤 무료 지상주차장이 있으며 차량 수는 미리 상담해 주세요." },
 ];
 
+export const GALBIJJIM_FAQ_ITEMS: readonly FaqItem[] = [
+  { question: "청주갈비찜으로 어떤 메뉴를 먹을 수 있나요?", answer: "매운 등갈비찜과 간장 등갈비찜을 선택할 수 있습니다." },
+  { question: "매운 음식을 못 먹어도 방문할 수 있나요?", answer: "간장 등갈비찜을 선택할 수 있어 아이와 함께하는 가족외식이나 여러 취향이 모인 자리에도 맞추기 좋습니다." },
+  { question: "청주 봉명동에서 주차가 가능한가요?", answer: "건물 뒤 무료 지상주차장을 이용할 수 있습니다." },
+  { question: "회식이나 단체 모임도 가능한가요?", answer: "한 팀 최대 52명까지 이용할 수 있으며 최대 인원 이용 시 통대관으로 협의합니다." },
+];
+
 export const GROUP_BOOKING_STEPS = [
   { title: "날짜 확인", body: "희망 날짜와 시간을 알려주세요." },
   { title: "인원 상담", body: "예상 인원과 좌석 구성을 맞춥니다." },

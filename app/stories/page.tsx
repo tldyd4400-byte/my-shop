@@ -11,7 +11,7 @@ import { breadcrumbSchema, collectionPageSchema } from "@/lib/seo/schema";
 const STORIES_PATH = "/stories";
 const STORIES_TITLE = "어믜뜰 이야기 | 청주 맛집·등갈비찜 가이드";
 const STORIES_DESCRIPTION =
-  "등갈비찜을 즐기는 법, 셀프바, 청주 봉명동 가족 외식과 모임·회식 정보를 확인하세요.";
+  "청주갈비찜을 고르는 법, 등갈비찜을 즐기는 법, 셀프바, 청주 봉명동 가족 외식과 모임·회식 정보를 확인하세요.";
 
 export const metadata = createPageMetadata({
   title: STORIES_TITLE,
@@ -20,7 +20,7 @@ export const metadata = createPageMetadata({
 });
 
 export default function StoriesPage() {
-  const featuredStories = ["cheongju-group-dining", "how-to-enjoy-ribs"].flatMap((slug) => STORIES.filter((story) => story.slug === slug));
+  const featuredStories = ["cheongju-galbijjim-guide", "cheongju-group-dining", "how-to-enjoy-ribs"].flatMap((slug) => STORIES.filter((story) => story.slug === slug));
   const moreStories = STORIES.filter((story) => !featuredStories.includes(story));
   return (
     <main className="stories-index">

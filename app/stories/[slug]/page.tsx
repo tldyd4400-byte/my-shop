@@ -11,7 +11,7 @@ import { ReservationCta } from "@/components/site/reservation-cta";
 import { StoryCard } from "@/components/site/story-card";
 import { StoryReadTracker } from "@/components/site/story-read-tracker";
 import { getStory, STORIES } from "@/lib/content/stories";
-import { FAQ_ITEMS, GROUP_FAQ_ITEMS, GROUP_BOOKING_STEPS, MENU_ITEMS, STORE } from "@/lib/content/store";
+import { FAQ_ITEMS, GALBIJJIM_FAQ_ITEMS, GROUP_FAQ_ITEMS, GROUP_BOOKING_STEPS, MENU_ITEMS, STORE } from "@/lib/content/store";
 import { createPageMetadata } from "@/lib/seo/metadata";
 import { articleSchema, breadcrumbSchema, faqSchema } from "@/lib/seo/schema";
 
@@ -19,6 +19,7 @@ type StoryPageProps = { params: Promise<{ slug: string }> };
 
 function storyFaqItems(slug: string) {
   if (slug === "cheongju-group-dining") return GROUP_FAQ_ITEMS;
+  if (slug === "cheongju-galbijjim-guide") return GALBIJJIM_FAQ_ITEMS;
   if (slug === "family-dining-guide") {
     return [FAQ_ITEMS[2], FAQ_ITEMS[5], FAQ_ITEMS[6], FAQ_ITEMS[7]];
   }
@@ -66,13 +67,15 @@ export default async function StoryPage({ params }: StoryPageProps) {
   const related = STORIES.filter((item) => item.slug !== story.slug).slice(0, 2);
   const faqs = storyFaqItems(story.slug);
   const isGroupStory = story.slug === "cheongju-group-dining";
+  const isGalbijjimStory = story.slug === "cheongju-galbijjim-guide";
+  const hasDirectAnswerFaq = isGroupStory || isGalbijjimStory;
 
   return (
     <main className="story-detail">
       <JsonLd
         data={[
           articleSchema(story),
-          ...(isGroupStory ? [faqSchema(faqs)] : []),
+          ...(hasDirectAnswerFaq ? [faqSchema(faqs)] : []),
           breadcrumbSchema([
             { name: "홈", path: "/" },
             { name: "이야기", path: "/stories" },
@@ -94,6 +97,9 @@ export default async function StoryPage({ params }: StoryPageProps) {
         </a>
         {isGroupStory ? (
           <AnalyticsLink className="button button-secondary" href={STORE.phoneHref} eventName="group_inquiry_click" placement="group_story_hero">전화로 일정 상담</AnalyticsLink>
+        ) : null}
+        {isGalbijjimStory ? (
+          <AnalyticsLink className="button button-secondary" href={STORE.bookingUrl} target="_blank" rel="noreferrer" eventName="naver_reservation_click" placement="galbijjim_story_hero">네이버에서 예약하기</AnalyticsLink>
         ) : null}
       </HeroMedia>
 
