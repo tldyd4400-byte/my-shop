@@ -13,7 +13,7 @@ export const STORE: StoreInfo = {
   groupBooking: "한 팀 최대 52명 · 통대관 가능 · 날짜·시간·인원 사전 협의",
   placeUrl: "https://map.naver.com/p/entry/place/2021816208",
   bookingUrl:
-    "https://search.naver.com/search.naver?query=%EC%96%B4%EB%AF%9C%EB%9C%B0%20%EB%93%B1%EA%B0%88%EB%B9%84%EC%B0%9C%20%EC%B2%AD%EC%A3%BC%EB%B4%89%EB%AA%85%EB%8F%99%EB%B3%B8%EC%A0%90",
+    "https://m.booking.naver.com/booking/6/bizes/1611967/items/7499930?area=bmp&theme=place",
   directionsUrl:
     "https://map.naver.com/p/search/%EC%B6%A9%EB%B6%81%20%EC%B2%AD%EC%A3%BC%EC%8B%9C%20%ED%9D%A5%EB%8D%95%EA%B5%AC%20%EB%B0%B1%EB%B4%89%EB%A1%9C%20213-1",
   image: "/images/eomeuittul/hero-table.jpg",

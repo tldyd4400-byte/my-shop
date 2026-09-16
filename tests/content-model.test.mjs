@@ -53,6 +53,18 @@ test("central content exports approved store facts", () => {
   ]);
 });
 
+test("reservation CTA links directly to the Naver booking item", () => {
+  const bookingUrl = new URL(STORE.bookingUrl);
+
+  assert.equal(bookingUrl.hostname, "m.booking.naver.com");
+  assert.equal(
+    bookingUrl.pathname,
+    "/booking/6/bizes/1611967/items/7499930",
+  );
+  assert.equal(bookingUrl.searchParams.get("theme"), "place");
+  assert.doesNotMatch(STORE.bookingUrl, /search\.naver\.com/);
+});
+
 test("central content exports approved menu, FAQ, review, and dining data", () => {
   assert.deepEqual(MENU_ITEMS, [
     {
