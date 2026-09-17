@@ -18,7 +18,7 @@ export type OnlineReview = OnlineReviewCandidate & {
 export type OnlineReviewSyncStatus = "running" | "success" | "failed";
 
 export type OnlineReviewSyncRun = {
-  id: number;
+  id: string;
   startedAt: string;
   finishedAt: string | null;
   status: OnlineReviewSyncStatus;

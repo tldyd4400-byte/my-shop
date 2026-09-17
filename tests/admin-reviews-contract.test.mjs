@@ -52,6 +52,9 @@ test("review dashboard exposes complete source evidence and moderation controls"
     "승인 대기",
     "홈페이지 공개 중",
     "마지막 자동 수집",
+    "수집일",
+    "수집 성공",
+    "수집 실패",
     "네이버 블로그",
     "원문 확인",
     "홈페이지 공개",
@@ -71,6 +74,9 @@ test("review dashboard exposes complete source evidence and moderation controls"
   assert.match(source, /href="\/admin\/ai-visits"/u);
   assert.match(source, /href="\/admin\/logout"/u);
   assert.match(source, /timeZone:\s*["']Asia\/Seoul["']/u);
+  assert.match(source, /review\.discoveredAt/u);
+  assert.match(source, /dashboard\.counts\.pending/u);
+  assert.match(source, /dashboard\.counts\.approved/u);
   assert.doesNotMatch(source, /cookies|process\.env|verifyAdminSession|database|REVIEWS_DATABASE_URL/u);
 });
 

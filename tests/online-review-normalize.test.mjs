@@ -69,6 +69,21 @@ test("rejects unsafe, unrelated, and malformed source URLs", () => {
   }
 });
 
+test("accepts a 2048-character canonical source URL and rejects longer URLs", () => {
+  const prefix = "https://blog.naver.com/example/";
+  const atLimit = `${prefix}${"a".repeat(2048 - prefix.length)}`;
+  const overLimit = `${atLimit}a`;
+
+  assert.equal(
+    normalizeNaverBlogItem(validItem({ link: atLimit }), discoveredAt)?.sourceUrl,
+    atLimit,
+  );
+  assert.equal(
+    normalizeNaverBlogItem(validItem({ link: overLimit }), discoveredAt),
+    null,
+  );
+});
+
 test("rejects impossible dates, invalid discovery timestamps, and malformed values", () => {
   for (const postdate of ["20260229", "20260431", "20261301", "2026091", "date"] ) {
     assert.equal(

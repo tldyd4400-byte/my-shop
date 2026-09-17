@@ -6,6 +6,7 @@ const TITLE_MAX_LENGTH = 500;
 const DESCRIPTION_MAX_LENGTH = 2_000;
 const BLOGGER_NAME_MAX_LENGTH = 200;
 const BLOGGER_URL_MAX_LENGTH = 2_048;
+export const NAVER_BLOG_POST_URL_MAX_LENGTH = 2_048;
 
 const NAMED_ENTITIES: Readonly<Record<string, string>> = {
   amp: "&",
@@ -51,7 +52,7 @@ function safeText(value: string, maxLength: number): string {
   return decoded.replace(/\s+/gu, " ").trim().slice(0, maxLength);
 }
 
-function normalizePostUrl(value: string): string | null {
+export function normalizeNaverBlogPostUrl(value: string): string | null {
   let url: URL;
   try {
     url = new URL(value);
@@ -73,7 +74,10 @@ function normalizePostUrl(value: string): string | null {
 
   url.search = "";
   url.hash = "";
-  return url.toString().replace(/\/$/u, "");
+  const normalized = url.toString().replace(/\/$/u, "");
+  return normalized.length <= NAVER_BLOG_POST_URL_MAX_LENGTH
+    ? normalized
+    : null;
 }
 
 function normalizeBloggerUrl(value: string): string | null {
@@ -156,7 +160,7 @@ export function normalizeNaverBlogItem(
     const title = safeText(titleValue, TITLE_MAX_LENGTH);
     const description = safeText(descriptionValue, DESCRIPTION_MAX_LENGTH);
     const bloggerName = safeText(bloggerNameValue, BLOGGER_NAME_MAX_LENGTH);
-    const sourceUrl = normalizePostUrl(linkValue);
+    const sourceUrl = normalizeNaverBlogPostUrl(linkValue);
     const bloggerUrl = normalizeBloggerUrl(bloggerUrlValue);
     const publishedOn = normalizePostDate(postDateValue);
     const discoveredAt = normalizeDiscoveredAt(discoveredAtValue);

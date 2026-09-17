@@ -65,6 +65,20 @@ test("insertPendingReviews inserts approved fields as pending and ignores duplic
   ]);
 });
 
+test("insertPendingReviews skips non-canonical source URLs before querying", async () => {
+  let queryCalls = 0;
+  const inserted = await insertPendingReviews(
+    [{ ...candidate, sourceUrl: "https://example.com/not-naver" }],
+    async () => {
+      queryCalls += 1;
+      return [];
+    },
+  );
+
+  assert.equal(inserted, 0);
+  assert.equal(queryCalls, 0);
+});
+
 test("loadApprovedOnlineReviews binds a bounded limit and maps only explicit fields", async () => {
   const calls = [];
   const rows = await loadApprovedOnlineReviews(6, async (text, params) => {
@@ -81,6 +95,17 @@ test("loadApprovedOnlineReviews binds a bounded limit and maps only explicit fie
         status: "approved",
         moderated_at: "2026-09-17T01:00:00.000Z",
         credential: "must-not-be-read",
+      },
+      {
+        source_url: "https://example.com/approved-but-unsafe",
+        title: candidate.title,
+        description: candidate.description,
+        blogger_name: candidate.bloggerName,
+        blogger_url: candidate.bloggerUrl,
+        published_on: candidate.publishedOn,
+        discovered_at: candidate.discoveredAt,
+        status: "approved",
+        moderated_at: null,
       },
       { source_url: "invalid" },
     ];
@@ -137,8 +162,9 @@ test("moderateOnlineReview allows exact states and updates moderation time safel
 test("loadOnlineReviewDashboard returns moderation groups and the latest safe run", async () => {
   const calls = [];
   const dashboard = await loadOnlineReviewDashboard(async (text) => {
-    calls.push(normalizeSql(text));
-    if (calls.length === 1) {
+    const sql = normalizeSql(text);
+    calls.push(sql);
+    if (/where status = 'pending'/.test(sql)) {
       return [
         {
           source_url: candidate.sourceUrl,
@@ -153,24 +179,43 @@ test("loadOnlineReviewDashboard returns moderation groups and the latest safe ru
         },
       ];
     }
-    return [
-      {
-        id: 7,
+    if (/where status in \('approved', 'rejected'\)/.test(sql)) return [];
+    if (/count\(\*\)::integer/.test(sql)) {
+      return [
+        { status: "pending", count: 201 },
+        { status: "approved", count: 312 },
+        { status: "rejected", count: 4 },
+      ];
+    }
+    if (/from online_review_sync_runs/.test(sql)) {
+      return [{
+        id: "7",
         started_at: "2026-09-17T00:00:00.000Z",
         finished_at: "2026-09-17T00:00:03.000Z",
         status: "success",
         discovered_count: 1,
         error_code: null,
-      },
-    ];
+      }];
+    }
+    throw new Error(`Unexpected query: ${sql}`);
   });
 
-  assert.equal(calls.length, 2);
+  assert.equal(calls.length, 4);
+  assert.match(calls[0], /where status = 'pending'/);
+  assert.doesNotMatch(calls[0], /limit 200/);
+  assert.match(calls[1], /where status in \('approved', 'rejected'\)/);
+  assert.match(calls[1], /limit 200/);
+  assert.match(calls[2], /count\(\*\)::integer/);
   assert.equal(dashboard.pending.length, 1);
   assert.equal(dashboard.approved.length, 0);
   assert.equal(dashboard.rejected.length, 0);
+  assert.deepEqual(dashboard.counts, {
+    pending: 201,
+    approved: 312,
+    rejected: 4,
+  });
   assert.deepEqual(dashboard.lastRun, {
-    id: 7,
+    id: "7",
     startedAt: "2026-09-17T00:00:00.000Z",
     finishedAt: "2026-09-17T00:00:03.000Z",
     status: "success",
@@ -183,11 +228,11 @@ test("sync run helpers insert running then finish with stable fields", async () 
   const calls = [];
   const query = async (text, params) => {
     calls.push({ text: normalizeSql(text), params });
-    return calls.length === 1 ? [{ id: 9 }] : [{ id: 9 }];
+    return calls.length === 1 ? [{ id: "9" }] : [{ id: "9" }];
   };
 
   const id = await startOnlineReviewSyncRun("2026-09-17T00:00:00.000Z", query);
-  assert.equal(id, 9);
+  assert.equal(id, "9");
   await finishOnlineReviewSyncRun(
     id,
     {
@@ -203,7 +248,7 @@ test("sync run helpers insert running then finish with stable fields", async () 
   assert.deepEqual(calls[0].params, ["2026-09-17T00:00:00.000Z", "running"]);
   assert.match(calls[1].text, /^update online_review_sync_runs/);
   assert.deepEqual(calls[1].params, [
-    9,
+    "9",
     "2026-09-17T00:00:05.000Z",
     "failed",
     2,

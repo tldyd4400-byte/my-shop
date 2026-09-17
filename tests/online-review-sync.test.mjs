@@ -111,7 +111,7 @@ test("syncOnlineReviews searches three queries, deduplicates, and records succes
     },
     startRun: async (startedAt) => {
       runs.push({ type: "start", startedAt });
-      return 11;
+      return "11";
     },
     insert: async (candidates) => {
       inserted.push(...candidates);
@@ -129,7 +129,7 @@ test("syncOnlineReviews searches three queries, deduplicates, and records succes
     { type: "start", startedAt: "2026-09-17T00:00:00.000Z" },
     {
       type: "finish",
-      id: 11,
+      id: "11",
       finish: {
         finishedAt: "2026-09-17T00:00:00.000Z",
         status: "success",
@@ -148,7 +148,7 @@ test("syncOnlineReviews keeps successful searches when one query fails", async (
       if (query === "어믜뜰 등갈비찜") throw new Error("private upstream body");
       return [apiItem({ link: `https://blog.naver.com/example/${query.length}` })];
     },
-    startRun: async () => 12,
+    startRun: async () => "12",
     insert: async (candidates) => candidates.length,
     finishRun: async (_id, finish) => finishes.push(finish),
   });
@@ -165,7 +165,7 @@ test("syncOnlineReviews records a contained insert failure then rejects stably",
     syncOnlineReviews({
       now: () => new Date("2026-09-17T00:00:00.000Z"),
       search: async () => [apiItem()],
-      startRun: async () => 13,
+      startRun: async () => "13",
       insert: async () => {
         throw new Error("postgres://private-credential");
       },

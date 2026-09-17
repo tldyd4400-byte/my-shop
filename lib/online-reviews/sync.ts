@@ -21,7 +21,7 @@ type FinishRun = typeof finishOnlineReviewSyncRun;
 export type OnlineReviewSyncDependencies = {
   now?: () => Date;
   search?: (query: string) => Promise<unknown[]>;
-  startRun?: (startedAt: string) => Promise<number>;
+  startRun?: (startedAt: string) => Promise<string>;
   insert?: (candidates: readonly OnlineReviewCandidate[]) => Promise<number>;
   finishRun?: FinishRun;
 };

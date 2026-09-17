@@ -1,5 +1,6 @@
 import { query as databaseQuery } from "./database.ts";
 import type { ReviewQueryExecutor } from "./database.ts";
+import { normalizeNaverBlogPostUrl } from "./normalize.ts";
 import type {
   OnlineReview,
   OnlineReviewCandidate,
@@ -12,6 +13,7 @@ export type OnlineReviewDashboard = {
   pending: OnlineReview[];
   approved: OnlineReview[];
   rejected: OnlineReview[];
+  counts: Record<OnlineReviewStatus, number>;
   lastRun: OnlineReviewSyncRun | null;
 };
 
@@ -47,11 +49,25 @@ const LOAD_APPROVED_REVIEWS_SQL = `
   limit $1
 `;
 
-const LOAD_DASHBOARD_REVIEWS_SQL = `
+const LOAD_DASHBOARD_PENDING_REVIEWS_SQL = `
   select ${REVIEW_COLUMNS}
   from online_reviews
+  where status = 'pending'
+  order by discovered_at desc
+`;
+
+const LOAD_DASHBOARD_RESOLVED_REVIEWS_SQL = `
+  select ${REVIEW_COLUMNS}
+  from online_reviews
+  where status in ('approved', 'rejected')
   order by discovered_at desc
   limit 200
+`;
+
+const LOAD_DASHBOARD_COUNTS_SQL = `
+  select status, count(*)::integer as count
+  from online_reviews
+  group by status
 `;
 
 const LOAD_LATEST_SYNC_RUN_SQL = `
@@ -147,8 +163,14 @@ function mapReviewRow(value: Record<string, unknown>): OnlineReview | null {
     const moderatedAtValue = value.moderated_at;
     const moderatedAt = normalizeTimestamp(moderatedAtValue);
 
+    const normalizedSourceUrl =
+      typeof sourceUrl === "string"
+        ? normalizeNaverBlogPostUrl(sourceUrl)
+        : null;
+
     if (
       typeof sourceUrl !== "string" ||
+      normalizedSourceUrl !== sourceUrl ||
       typeof title !== "string" ||
       typeof description !== "string" ||
       typeof bloggerName !== "string" ||
@@ -177,9 +199,29 @@ function mapReviewRow(value: Record<string, unknown>): OnlineReview | null {
   }
 }
 
+function normalizeSyncRunId(value: unknown): string | null {
+  const postgresBigIntMax = "9223372036854775807";
+  const candidate =
+    typeof value === "number" && Number.isSafeInteger(value)
+      ? String(value)
+      : value;
+  if (typeof candidate !== "string" || !/^[1-9]\d*$/u.test(candidate)) {
+    return null;
+  }
+
+  if (
+    candidate.length > postgresBigIntMax.length ||
+    (candidate.length === postgresBigIntMax.length &&
+      candidate > postgresBigIntMax)
+  ) {
+    return null;
+  }
+  return candidate;
+}
+
 function mapSyncRunRow(value: Record<string, unknown>): OnlineReviewSyncRun | null {
   try {
-    const id = value.id;
+    const id = normalizeSyncRunId(value.id);
     const startedAt = normalizeTimestamp(value.started_at);
     const finishedAtValue = value.finished_at;
     const finishedAt = normalizeTimestamp(finishedAtValue);
@@ -188,8 +230,7 @@ function mapSyncRunRow(value: Record<string, unknown>): OnlineReviewSyncRun | nu
     const errorCode = value.error_code;
 
     if (
-      typeof id !== "number" ||
-      !Number.isSafeInteger(id) ||
+      id === null ||
       startedAt === null ||
       (finishedAtValue !== null && finishedAt === null) ||
       !isSyncStatus(status) ||
@@ -215,20 +256,31 @@ function mapSyncRunRow(value: Record<string, unknown>): OnlineReviewSyncRun | nu
 }
 
 function isValidReviewUrl(value: string): boolean {
-  try {
-    const url = new URL(value);
-    return (
-      url.protocol === "https:" &&
-      url.hostname === "blog.naver.com" &&
-      url.username === "" &&
-      url.password === "" &&
-      url.search === "" &&
-      url.hash === "" &&
-      url.pathname.split("/").filter(Boolean).length >= 2
-    );
-  } catch {
-    return false;
+  return normalizeNaverBlogPostUrl(value) === value;
+}
+
+function mapDashboardCounts(
+  value: unknown,
+): Record<OnlineReviewStatus, number> {
+  const counts: Record<OnlineReviewStatus, number> = {
+    pending: 0,
+    approved: 0,
+    rejected: 0,
+  };
+
+  for (const row of rows(value)) {
+    const status = row.status;
+    const count = row.count;
+    if (
+      isReviewStatus(status) &&
+      typeof count === "number" &&
+      Number.isSafeInteger(count) &&
+      count >= 0
+    ) {
+      counts[status] = count;
+    }
   }
+  return counts;
 }
 
 export async function insertPendingReviews(
@@ -237,6 +289,7 @@ export async function insertPendingReviews(
 ): Promise<number> {
   let inserted = 0;
   for (const candidate of candidates) {
+    if (!isValidReviewUrl(candidate.sourceUrl)) continue;
     const result = await query(INSERT_PENDING_REVIEW_SQL, [
       candidate.sourceUrl,
       candidate.title,
@@ -281,19 +334,28 @@ export async function moderateOnlineReview(
 export async function loadOnlineReviewDashboard(
   query: ReviewQueryExecutor = databaseQuery,
 ): Promise<OnlineReviewDashboard> {
-  const [reviewResult, runResult] = await Promise.all([
-    query(LOAD_DASHBOARD_REVIEWS_SQL, []),
+  const [pendingResult, resolvedResult, countResult, runResult] = await Promise.all([
+    query(LOAD_DASHBOARD_PENDING_REVIEWS_SQL, []),
+    query(LOAD_DASHBOARD_RESOLVED_REVIEWS_SQL, []),
+    query(LOAD_DASHBOARD_COUNTS_SQL, []),
     query(LOAD_LATEST_SYNC_RUN_SQL, []),
   ]);
-  const reviews = rows(reviewResult)
+  const pending = rows(pendingResult)
     .map(mapReviewRow)
-    .filter((review): review is OnlineReview => review !== null);
+    .filter((review): review is OnlineReview => review?.status === "pending");
+  const resolved = rows(resolvedResult)
+    .map(mapReviewRow)
+    .filter(
+      (review): review is OnlineReview =>
+        review?.status === "approved" || review?.status === "rejected",
+    );
   const lastRun = rows(runResult).map(mapSyncRunRow).find(Boolean) ?? null;
 
   return {
-    pending: reviews.filter((review) => review.status === "pending"),
-    approved: reviews.filter((review) => review.status === "approved"),
-    rejected: reviews.filter((review) => review.status === "rejected"),
+    pending,
+    approved: resolved.filter((review) => review.status === "approved"),
+    rejected: resolved.filter((review) => review.status === "rejected"),
+    counts: mapDashboardCounts(countResult),
     lastRun,
   };
 }
@@ -301,17 +363,17 @@ export async function loadOnlineReviewDashboard(
 export async function startOnlineReviewSyncRun(
   startedAt: string,
   query: ReviewQueryExecutor = databaseQuery,
-): Promise<number> {
+): Promise<string> {
   const result = rows(await query(START_SYNC_RUN_SQL, [startedAt, "running"]));
-  const id = result[0]?.id;
-  if (typeof id !== "number" || !Number.isSafeInteger(id)) {
+  const id = normalizeSyncRunId(result[0]?.id);
+  if (id === null) {
     throw new Error("Review sync run could not start");
   }
   return id;
 }
 
 export async function finishOnlineReviewSyncRun(
-  id: number,
+  id: string,
   result: {
     finishedAt: string;
     status: "success" | "failed";
@@ -321,8 +383,7 @@ export async function finishOnlineReviewSyncRun(
   query: ReviewQueryExecutor = databaseQuery,
 ): Promise<void> {
   if (
-    !Number.isSafeInteger(id) ||
-    id < 1 ||
+    normalizeSyncRunId(id) === null ||
     !FINISHED_SYNC_STATUSES.includes(result.status) ||
     !Number.isSafeInteger(result.discoveredCount) ||
     result.discoveredCount < 0

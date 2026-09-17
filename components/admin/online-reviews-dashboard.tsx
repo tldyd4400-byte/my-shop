@@ -47,10 +47,13 @@ function ReviewCard({ review }: Readonly<{ review: OnlineReview }>) {
     <article className={styles.reviewCard}>
       <div className={styles.reviewCardMeta}>
         <strong>{STATUS_LABELS[review.status]} · 네이버 블로그</strong>
-        <time dateTime={review.publishedOn}>
-          {dateFormatter.format(new Date(`${review.publishedOn}T00:00:00+09:00`))}
+        <time dateTime={review.discoveredAt}>
+          수집일 {dateTimeFormatter.format(new Date(review.discoveredAt))}
         </time>
       </div>
+      <p>
+        게시일 {dateFormatter.format(new Date(`${review.publishedOn}T00:00:00+09:00`))}
+      </p>
       <h3>{review.title}</h3>
       <p>{review.description}</p>
       <p className={styles.reviewBlogger}>{review.bloggerName}</p>
@@ -104,7 +107,13 @@ function ReviewSection({
 
 function lastRunLabel(dashboard: OnlineReviewDashboard): string {
   if (dashboard.lastRun === null) return "아직 실행 전";
-  return dateTimeFormatter.format(new Date(dashboard.lastRun.startedAt));
+  const statusLabel =
+    dashboard.lastRun.status === "success"
+      ? "수집 성공"
+      : dashboard.lastRun.status === "failed"
+        ? "수집 실패"
+        : "수집 진행 중";
+  return `${statusLabel} · ${dateTimeFormatter.format(new Date(dashboard.lastRun.startedAt))}`;
 }
 
 export function OnlineReviewsDashboard({
@@ -137,11 +146,11 @@ export function OnlineReviewsDashboard({
         <div className={styles.reviewSummaryGrid}>
           <article className={styles.kpiCard}>
             <h3>승인 대기</h3>
-            <p>{dashboard.pending.length}건</p>
+            <p>{dashboard.counts.pending}건</p>
           </article>
           <article className={styles.kpiCard}>
             <h3>홈페이지 공개 중</h3>
-            <p>{dashboard.approved.length}건</p>
+            <p>{dashboard.counts.approved}건</p>
           </article>
           <article className={styles.kpiCard}>
             <h3>마지막 자동 수집</h3>
