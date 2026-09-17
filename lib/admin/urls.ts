@@ -1,4 +1,10 @@
 const ADMIN_LANDING_PATH = "/admin/ai-visits" as const;
+const ADMIN_REVIEWS_PATH = "/admin/reviews" as const;
+type AdminPath = typeof ADMIN_LANDING_PATH | typeof ADMIN_REVIEWS_PATH;
+const APPROVED_NEXT_PATHS = new Set<AdminPath>([
+  ADMIN_LANDING_PATH,
+  ADMIN_REVIEWS_PATH,
+]);
 const MAX_PATH_LENGTH = 2_048;
 const CONTROL_CHARACTER_PATTERN = /[\u0000-\u001f\u007f-\u009f]/u;
 const APPROVED_DECODED_VARIANTS = new Set([
@@ -6,8 +12,13 @@ const APPROVED_DECODED_VARIANTS = new Set([
   "/admin/ai-visit",
 ]);
 
-export function sanitizeAdminNext(value: unknown): typeof ADMIN_LANDING_PATH {
-  void value;
+export function sanitizeAdminNext(value: unknown): AdminPath {
+  if (
+    typeof value === "string" &&
+    APPROVED_NEXT_PATHS.has(value as AdminPath)
+  ) {
+    return value as AdminPath;
+  }
   return ADMIN_LANDING_PATH;
 }
 

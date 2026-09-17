@@ -269,13 +269,16 @@ test("exports the exact admin cookie contract", () => {
   });
 });
 
-test("sanitizes every next destination to the sole admin landing page", () => {
+test("sanitizes exact admin destinations and defaults every unsafe value", () => {
+  assert.equal(sanitizeAdminNext("/admin/ai-visits"), "/admin/ai-visits");
+  assert.equal(sanitizeAdminNext("/admin/reviews"), "/admin/reviews");
+
   for (const value of [
     undefined,
     null,
     "",
-    "/admin/ai-visits",
     "/admin/settings",
+    "/admin/reviews/extra",
     "https://evil.example",
     "//evil.example",
     "/public",
