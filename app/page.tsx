@@ -8,6 +8,7 @@ import { FaqList } from "@/components/site/faq-list";
 import { HeroMedia } from "@/components/site/hero-media";
 import { GroupDiningPanel } from "@/components/site/group-dining-panel";
 import { LocationPanel } from "@/components/site/location-panel";
+import { OnlineReviewCards } from "@/components/site/online-review-cards";
 import { ProofStrip } from "@/components/site/proof-strip";
 import { ReservationCta } from "@/components/site/reservation-cta";
 import {
@@ -16,6 +17,7 @@ import {
   REVIEW_ITEMS,
   STORE,
 } from "@/lib/content/store";
+import { loadPublicOnlineReviews } from "@/lib/online-reviews/public";
 import { createPageMetadata } from "@/lib/seo/metadata";
 import {
   faqSchema,
@@ -30,8 +32,11 @@ export const metadata = createPageMetadata({
   path: "/",
 });
 
-export default function HomePage() {
+export const revalidate = 3600;
+
+export default async function HomePage() {
   const homeFaqs = FAQ_ITEMS.slice(0, 4);
+  const onlineReviews = await loadPublicOnlineReviews(3);
 
   return (
     <main>
@@ -128,22 +133,26 @@ export default function HomePage() {
       <section className="review-preview section-pad surface-paper">
         <div className="shell">
           <h2>손님이 먼저 알아본 어믜뜰</h2>
-          <div className="review-grid">
-            {REVIEW_ITEMS.map((review) => (
-              <article key={review.title}>
-                <h3>{review.title}</h3>
-                <p>{review.summary}</p>
-                <p className="review-source">{review.sourceLabel}</p>
-                <a
-                  href={review.sourceUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  원문 보기
-                </a>
-              </article>
-            ))}
-          </div>
+          {onlineReviews.length > 0 ? (
+            <OnlineReviewCards reviews={onlineReviews} />
+          ) : (
+            <div className="review-grid">
+              {REVIEW_ITEMS.map((review) => (
+                <article key={review.title}>
+                  <h3>{review.title}</h3>
+                  <p>{review.summary}</p>
+                  <p className="review-source">{review.sourceLabel}</p>
+                  <a
+                    href={review.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    원문 보기
+                  </a>
+                </article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
