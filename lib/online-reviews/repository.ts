@@ -56,10 +56,17 @@ const LOAD_DASHBOARD_PENDING_REVIEWS_SQL = `
   order by discovered_at desc
 `;
 
-const LOAD_DASHBOARD_RESOLVED_REVIEWS_SQL = `
+const LOAD_DASHBOARD_APPROVED_REVIEWS_SQL = `
   select ${REVIEW_COLUMNS}
   from online_reviews
-  where status in ('approved', 'rejected')
+  where status = 'approved'
+  order by discovered_at desc
+`;
+
+const LOAD_DASHBOARD_REJECTED_REVIEWS_SQL = `
+  select ${REVIEW_COLUMNS}
+  from online_reviews
+  where status = 'rejected'
   order by discovered_at desc
   limit 200
 `;
@@ -334,27 +341,29 @@ export async function moderateOnlineReview(
 export async function loadOnlineReviewDashboard(
   query: ReviewQueryExecutor = databaseQuery,
 ): Promise<OnlineReviewDashboard> {
-  const [pendingResult, resolvedResult, countResult, runResult] = await Promise.all([
-    query(LOAD_DASHBOARD_PENDING_REVIEWS_SQL, []),
-    query(LOAD_DASHBOARD_RESOLVED_REVIEWS_SQL, []),
-    query(LOAD_DASHBOARD_COUNTS_SQL, []),
-    query(LOAD_LATEST_SYNC_RUN_SQL, []),
-  ]);
+  const [pendingResult, approvedResult, rejectedResult, countResult, runResult] =
+    await Promise.all([
+      query(LOAD_DASHBOARD_PENDING_REVIEWS_SQL, []),
+      query(LOAD_DASHBOARD_APPROVED_REVIEWS_SQL, []),
+      query(LOAD_DASHBOARD_REJECTED_REVIEWS_SQL, []),
+      query(LOAD_DASHBOARD_COUNTS_SQL, []),
+      query(LOAD_LATEST_SYNC_RUN_SQL, []),
+    ]);
   const pending = rows(pendingResult)
     .map(mapReviewRow)
     .filter((review): review is OnlineReview => review?.status === "pending");
-  const resolved = rows(resolvedResult)
+  const approved = rows(approvedResult)
     .map(mapReviewRow)
-    .filter(
-      (review): review is OnlineReview =>
-        review?.status === "approved" || review?.status === "rejected",
-    );
+    .filter((review): review is OnlineReview => review?.status === "approved");
+  const rejected = rows(rejectedResult)
+    .map(mapReviewRow)
+    .filter((review): review is OnlineReview => review?.status === "rejected");
   const lastRun = rows(runResult).map(mapSyncRunRow).find(Boolean) ?? null;
 
   return {
     pending,
-    approved: resolved.filter((review) => review.status === "approved"),
-    rejected: resolved.filter((review) => review.status === "rejected"),
+    approved,
+    rejected,
     counts: mapDashboardCounts(countResult),
     lastRun,
   };

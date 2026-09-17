@@ -179,7 +179,20 @@ test("loadOnlineReviewDashboard returns moderation groups and the latest safe ru
         },
       ];
     }
-    if (/where status in \('approved', 'rejected'\)/.test(sql)) return [];
+    if (/where status = 'approved'/.test(sql)) {
+      return [{
+        source_url: candidate.sourceUrl,
+        title: candidate.title,
+        description: candidate.description,
+        blogger_name: candidate.bloggerName,
+        blogger_url: candidate.bloggerUrl,
+        published_on: candidate.publishedOn,
+        discovered_at: candidate.discoveredAt,
+        status: "approved",
+        moderated_at: "2026-09-17T01:00:00.000Z",
+      }];
+    }
+    if (/where status = 'rejected'/.test(sql)) return [];
     if (/count\(\*\)::integer/.test(sql)) {
       return [
         { status: "pending", count: 201 },
@@ -200,14 +213,16 @@ test("loadOnlineReviewDashboard returns moderation groups and the latest safe ru
     throw new Error(`Unexpected query: ${sql}`);
   });
 
-  assert.equal(calls.length, 4);
+  assert.equal(calls.length, 5);
   assert.match(calls[0], /where status = 'pending'/);
   assert.doesNotMatch(calls[0], /limit 200/);
-  assert.match(calls[1], /where status in \('approved', 'rejected'\)/);
-  assert.match(calls[1], /limit 200/);
-  assert.match(calls[2], /count\(\*\)::integer/);
+  assert.match(calls[1], /where status = 'approved'/);
+  assert.doesNotMatch(calls[1], /limit 200/);
+  assert.match(calls[2], /where status = 'rejected'/);
+  assert.match(calls[2], /limit 200/);
+  assert.match(calls[3], /count\(\*\)::integer/);
   assert.equal(dashboard.pending.length, 1);
-  assert.equal(dashboard.approved.length, 0);
+  assert.equal(dashboard.approved.length, 1);
   assert.equal(dashboard.rejected.length, 0);
   assert.deepEqual(dashboard.counts, {
     pending: 201,
