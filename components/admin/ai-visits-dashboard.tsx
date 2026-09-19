@@ -60,9 +60,14 @@ export function AiVisitsDashboard({ summary }: Readonly<{ summary: AiVisitSummar
           <h1 id="ai-visits-title">AI 어시스턴트별 방문</h1>
           <p className={styles.intro}>최근 30일 · 직전 30일 대비</p>
         </div>
-        <Link className={styles.logoutLink} href="/admin/logout">
-          로그아웃
-        </Link>
+        <nav className={styles.adminNav} aria-label="관리자 메뉴">
+          <Link className={styles.logoutLink} href="/admin/reviews">
+            후기 승인 관리
+          </Link>
+          <Link className={styles.logoutLink} href="/admin/logout">
+            로그아웃
+          </Link>
+        </nav>
       </header>
 
       <section aria-labelledby="visit-summary-title">

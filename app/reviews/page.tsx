@@ -3,9 +3,11 @@ import Image from "next/image";
 import { JsonLd } from "@/components/seo/json-ld";
 import { HeroMedia } from "@/components/site/hero-media";
 import { LocationPanel } from "@/components/site/location-panel";
+import { OnlineReviewCards } from "@/components/site/online-review-cards";
 import { ProofStrip } from "@/components/site/proof-strip";
 import { ReservationCta } from "@/components/site/reservation-cta";
 import { REVIEW_ITEMS, STORE } from "@/lib/content/store";
+import { loadPublicOnlineReviews } from "@/lib/online-reviews/public";
 import { createPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema } from "@/lib/seo/schema";
 
@@ -19,7 +21,11 @@ export const metadata = createPageMetadata({
   image: "/images/eomeuittul/soy-ribs.jpg",
 });
 
-export default function ReviewsPage() {
+export const revalidate = 3600;
+
+export default async function ReviewsPage() {
+  const onlineReviews = await loadPublicOnlineReviews(6);
+
   return (
     <main className={`store-route ${styles.reviewsRoute}`}>
       <JsonLd
@@ -96,6 +102,22 @@ export default function ReviewsPage() {
           </div>
         </div>
       </section>
+
+      {onlineReviews.length > 0 ? (
+        <section className={`${styles.reviewsSection} section-pad`}>
+          <div className="shell">
+            <div className={styles.evidenceHeader}>
+              <p className="eyebrow">RECENT ONLINE REVIEWS · 관리자 승인 후기</p>
+              <h2>최근 온라인 후기</h2>
+              <p>
+                네이버 블로그 검색 결과 중 관리자가 원문을 확인하고 승인한
+                어믜뜰 관련 글입니다.
+              </p>
+            </div>
+            <OnlineReviewCards reviews={onlineReviews} />
+          </div>
+        </section>
+      ) : null}
 
       <section className={`${styles.supportSection} section-pad`}>
         <div className="shell route-stories">
