@@ -1,0 +1,20 @@
+import { timingSafeEqual } from "node:crypto";
+
+export function isAuthorizedCronRequest(
+  authorization: string | null,
+  secret: string | undefined,
+): boolean {
+  if (
+    typeof authorization !== "string" ||
+    typeof secret !== "string" ||
+    secret.length === 0
+  ) {
+    return false;
+  }
+
+  const expected = Buffer.from(`Bearer ${secret}`, "utf8");
+  const received = Buffer.from(authorization, "utf8");
+  return (
+    expected.length === received.length && timingSafeEqual(expected, received)
+  );
+}
