@@ -1,4 +1,5 @@
 import type { Story } from "./types";
+import { STORE } from "./store.ts";
 
 export const STORIES: readonly Story[] = [
   {
@@ -23,13 +24,13 @@ export const STORIES: readonly Story[] = [
     category: "방문 가이드",
     readingTime: "4분",
     publishedAt: "2026-07-19",
-    modifiedAt: "2026-09-13",
+    modifiedAt: "2026-10-23",
     image: "/images/eomeuittul/facade.jpg",
     imageAlt: "어믜뜰 청주봉명동본점 외관",
     sections: [
       { heading: "가족과 편안하게 머무는 자리", body: "12테이블과 52석, 유아의자와 단체석을 갖추고 있습니다.", image: "/images/eomeuittul/interior.jpg", imageAlt: "어믜뜰 실제 매장 내부" },
-      { heading: "방문 전에 확인할 정보", body: "건물 뒤 무료 지상주차장을 이용할 수 있으며 월요일은 정기휴무입니다." },
-      { heading: "가족의 취향에 맞는 갈비찜", body: "매운맛이 부담스럽거나 아이와 함께라면 달콤짭짤한 간장 등갈비찜을 선택할 수 있습니다. 매운 등갈비찜도 준비되어 있어 가족의 취향에 맞게 고를 수 있습니다.", image: "/images/eomeuittul/soy-ribs.jpg", imageAlt: "가족과 함께 즐기는 어믜뜰 간장 등갈비찜" },
+      { heading: "방문 전에 확인할 정보", body: `건물 뒤 무료 지상주차장을 이용할 수 있으며 월요일은 정기휴무입니다. ${STORE.holidayClosure}에도 쉽니다.` },
+      { heading: "아이와 휠체어 이용자도 편안하게", body: "간장등갈비찜과 어린이밥, 유아의자를 이용할 수 있습니다. 휠체어 이용 가능 출입구와 좌석, 화장실을 갖추고 있습니다. 매운 등갈비찜도 준비되어 있어 가족의 취향에 맞게 고를 수 있습니다.", image: "/images/eomeuittul/soy-ribs.jpg", imageAlt: "가족외식으로 즐기는 어믜뜰 간장등갈비찜" },
       { heading: "수제우유빙수로 식사 마무리", body: "등갈비찜과 셀프바 재료로 한 상을 즐긴 뒤 수제우유빙수로 마무리할 수 있습니다.", image: "/images/eomeuittul/step-4-bingsu.png", imageAlt: "어믜뜰 수제우유빙수" },
     ],
   },
@@ -70,14 +71,14 @@ export const STORIES: readonly Story[] = [
     category: "단체 방문 가이드",
     readingTime: "4분",
     publishedAt: "2026-09-13",
-    modifiedAt: "2026-09-13",
+    modifiedAt: "2026-10-23",
     image: "/images/eomeuittul/interior.jpg",
     imageAlt: "한 팀 최대 52명이 이용할 수 있는 어믜뜰 매장 내부",
     sections: [
-      { heading: "한 팀 최대 52명까지 한자리에서", body: "어믜뜰은 청주 봉명동에 위치한 등갈비찜 식당으로, 12테이블과 총 52석을 갖추고 있습니다. 한 팀 최대 52명까지 이용할 수 있어 회사 회식과 단체 모임을 준비할 수 있습니다.", image: "/images/eomeuittul/interior.jpg", imageAlt: "어믜뜰 매장 전체 좌석" },
+      { heading: "회식과 단체모임을 한자리에서", body: `어믜뜰은 청주 봉명동에 위치한 등갈비찜 식당으로, 12테이블과 총 52석을 갖추고 있습니다. 2명부터 한 팀 최대 ${STORE.maxGroupSize}명까지 이용할 수 있습니다. ${STORE.privateHire}가 가능하며 날짜·시간·인원을 방문 전에 알려주세요. ${STORE.corkage}. 주류 주문은 필수가 아닙니다.`, image: "/images/eomeuittul/interior.jpg", imageAlt: "최대 52명이 이용할 수 있는 어믜뜰 내부 좌석" },
       { heading: "통대관은 네 단계로 편하게 협의합니다", body: "최대 인원 이용 시 매장 통대관으로 협의할 수 있습니다. 정해진 최소 인원이나 최소 금액 없이 날짜·시간·인원을 매장과 사전에 협의합니다." },
       { heading: "여러 취향이 모여도 고르기 좋은 두 가지 갈비찜", body: "매운맛과 간장맛을 준비해 여러 취향이 모이는 회식 자리에서도 선택하기 좋습니다. 셀프바에서 원하는 재료를 더해 샤브처럼 함께 끓여 드세요." },
-      { heading: "차량이 많은 모임도 미리 동선을 확인하세요", body: "건물 뒤 무료 지상주차장을 이용할 수 있습니다. 단체 차량 수는 예약 전에 매장과 상담해 주세요.", image: "/images/eomeuittul/naver-map-location.png", imageAlt: "청주 봉명동 어믜뜰의 실제 위치 지도" },
+      { heading: "차량이 많은 모임도 미리 동선을 확인하세요", body: `건물 뒤 무료 지상주차장을 이용할 수 있습니다. 단체 차량 수는 예약 전에 매장과 상담해 주세요. ${STORE.regularClosure}과 ${STORE.holidayClosure}은 휴무이므로 모임 날짜를 정할 때 확인해 주세요.`, image: "/images/eomeuittul/naver-map-location.png", imageAlt: "청주 봉명동 어믜뜰의 실제 위치 지도" },
     ],
   },
   {

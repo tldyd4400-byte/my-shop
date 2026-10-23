@@ -96,14 +96,17 @@ export default async function StoryPage({ params }: StoryPageProps) {
           이야기 읽기
         </a>
         {isGroupStory ? (
-          <AnalyticsLink className="button button-secondary" href={STORE.phoneHref} eventName="group_inquiry_click" placement="group_story_hero">전화로 일정 상담</AnalyticsLink>
+          <>
+            <AnalyticsLink className="button button-secondary" href={STORE.phoneHref} eventName="group_inquiry_click" placement="group_story_hero">전화로 일정 상담</AnalyticsLink>
+            <AnalyticsLink className="button button-primary" href={STORE.bookingUrl} target="_blank" rel="noreferrer" eventName="naver_reservation_click" placement="group_story_hero">네이버에서 예약하기</AnalyticsLink>
+          </>
         ) : null}
         {isGalbijjimStory ? (
           <AnalyticsLink className="button button-secondary" href={STORE.bookingUrl} target="_blank" rel="noreferrer" eventName="naver_reservation_click" placement="galbijjim_story_hero">네이버에서 예약하기</AnalyticsLink>
         ) : null}
       </HeroMedia>
 
-      {isGroupStory ? <ProofStrip items={[`한 팀 최대 ${STORE.maxGroupSize}명`, "최대 인원 통대관 협의", "날짜·시간·인원 사전 협의", "건물 뒤 무료주차"]} /> : null}
+      {isGroupStory ? <ProofStrip items={[`한 팀 최대 ${STORE.maxGroupSize}명`, STORE.privateHire, "날짜·시간·인원 사전 협의", "건물 뒤 무료주차"]} /> : null}
 
       <article id="article" className={`article-body section-pad${isGroupStory ? " group-article" : ""}`}>
         <div className="shell">
@@ -142,11 +145,12 @@ export default async function StoryPage({ params }: StoryPageProps) {
                 ) : null}
                 {isGroupStory && section === story.sections[2] ? (
                   <div className="menu-grid group-menu-grid">
-                    {MENU_ITEMS.map((item) => (
+                    {MENU_ITEMS.filter((item) => item.category === "set").map((item) => (
                       <article key={item.slug}>
-                        <Image src={item.image} alt={item.imageAlt} width={640} height={420} sizes="(max-width: 767px) calc(100vw - 84px), 45vw" />
+                        {item.image ? <Image src={item.image} alt={item.imageAlt ?? ""} width={640} height={420} sizes="(max-width: 767px) calc(100vw - 84px), 45vw" /> : null}
                         <h3>{item.name}</h3><strong>{item.price}</strong>
                         <p>{item.includes}</p><p>{item.description}</p>
+                        {item.minimumOrder ? <p>{item.minimumOrder}인 이상 주문</p> : null}
                       </article>
                     ))}
                   </div>
@@ -179,7 +183,8 @@ export default async function StoryPage({ params }: StoryPageProps) {
             <div>
               <p className="eyebrow">PLAN YOUR GATHERING</p>
               <h2>날짜·시간·인원을 알려주시면 모임에 맞춰 안내해 드립니다</h2>
-              <p>한 팀 최대 {STORE.maxGroupSize}명 · 최대 인원 통대관 협의</p>
+              <p>한 팀 최대 {STORE.maxGroupSize}명 · {STORE.privateHire}</p>
+              <p>{STORE.corkage} · 주류 주문은 필수가 아닙니다.</p>
             </div>
             <div className="group-dining-actions">
               <AnalyticsLink className="button button-secondary" href={STORE.phoneHref} eventName="group_inquiry_click" placement="group_story_bottom">전화로 일정 상담</AnalyticsLink>

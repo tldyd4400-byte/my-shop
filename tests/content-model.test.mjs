@@ -216,13 +216,13 @@ test("stories export six records and getStory finds a story or returns undefined
     "네 단계로 즐기기",
     "가족과 편안하게 머무는 자리",
     "방문 전에 확인할 정보",
-    "가족의 취향에 맞는 갈비찜",
+    "아이와 휠체어 이용자도 편안하게",
     "수제우유빙수로 식사 마무리",
     "취향대로 담는 재료",
     "구성은 달라질 수 있어요",
     "매콤한 한 상",
     "편안한 간장 한 상",
-    "한 팀 최대 52명까지 한자리에서",
+    "회식과 단체모임을 한자리에서",
     "통대관은 네 단계로 편하게 협의합니다",
     "여러 취향이 모여도 고르기 좋은 두 가지 갈비찜",
     "차량이 많은 모임도 미리 동선을 확인하세요",
@@ -231,6 +231,22 @@ test("stories export six records and getStory finds a story or returns undefined
     "셀프바와 함께 완성하는 한 상",
     "가족외식과 모임까지 이어지는 이유",
   ]);
+});
+
+test("group and family guides include the verified 2026-10-23 visit facts", () => {
+  const groupStory = getStory("cheongju-group-dining");
+  assert.equal(groupStory?.modifiedAt, "2026-10-23");
+  const groupContent = JSON.stringify(groupStory);
+  for (const fact of ["2명부터 한 팀 최대 52명", STORE.privateHire, STORE.corkage, "주류 주문은 필수가 아닙니다", STORE.holidayClosure]) {
+    assert.ok(groupContent.includes(fact), fact);
+  }
+
+  const familyStory = getStory("family-dining-guide");
+  assert.equal(familyStory?.modifiedAt, "2026-10-23");
+  const familyContent = JSON.stringify(familyStory);
+  for (const fact of ["간장등갈비찜", "어린이밥", "유아의자", "휠체어", STORE.holidayClosure]) {
+    assert.ok(familyContent.includes(fact), fact);
+  }
 });
 
 test("galbijjim FAQ answers direct search questions", () => {

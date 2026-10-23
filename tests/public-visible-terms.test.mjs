@@ -13,7 +13,7 @@ import { tmpdir } from "node:os";
 import { basename, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
-import { GROUP_FAQ_ITEMS, STORE } from "../lib/content/store.ts";
+import { GROUP_FAQ_ITEMS, MENU_ITEMS, STORE } from "../lib/content/store.ts";
 
 const rootPath = fileURLToPath(new URL("../", import.meta.url));
 const requiredPublicRoutes = ["/", "/menu", "/store", "/location", "/faq", "/reviews", "/stories"];
@@ -286,6 +286,30 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
         assert.ok(text.includes("한 팀 최대 52명"));
         assert.ok(text.includes("최종 확정"));
         assert.ok(text.includes("사전 협의"));
+        assert.ok(text.includes("콜키지 무료"));
+        assert.ok(text.includes("주류 주문은 필수가 아닙니다"));
+        assert.ok(text.includes("네이버에서 예약하기"));
+        assert.ok(text.includes("설·추석 당일"));
+        assert.ok(text.includes("2026-10-23 수정"));
+        const heroActions = html.match(/<div class="hero-actions">([\s\S]*?)<\/div>/u)?.[1];
+        assert.ok(heroActions, "group story needs visible hero actions");
+        assert.ok(heroActions.includes(`href="${STORE.phoneHref}"`));
+        assert.ok(heroActions.includes(`href="${STORE.bookingUrl.replaceAll("&", "&amp;")}"`));
+        const groupMenu = html.match(/<div class="menu-grid group-menu-grid">([\s\S]*?)<\/div>/u)?.[1];
+        assert.ok(groupMenu, "group story needs representative menu cards");
+        assert.equal((groupMenu.match(/<article\b/gu) ?? []).length, 2);
+        const menuText = visibleText(groupMenu);
+        for (const item of MENU_ITEMS.filter((item) => item.category === "set")) {
+          assert.ok(menuText.includes(item.name));
+          assert.ok(menuText.includes(item.price));
+          assert.ok(menuText.includes(`${item.minimumOrder}인 이상 주문`));
+        }
+        assert.equal((menuText.match(/2인 이상 주문/gu) ?? []).length, 2);
+      }
+      if (route === "/stories/family-dining-guide") {
+        for (const fact of ["어린이밥", "유아의자", "휠체어", "출입구", "좌석", "화장실", "설·추석 당일", "2026-10-23 수정"]) {
+          assert.ok(text.includes(fact), fact);
+        }
       }
       for (const [term, pattern] of forbidden) {
         assert.doesNotMatch(text, pattern, `${route} exposes ${term} in visible customer text`);
