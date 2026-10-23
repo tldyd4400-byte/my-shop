@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
+import { MENU_ITEMS } from "../lib/content/store.ts";
 
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -8,7 +9,7 @@ const read = (path) =>
 const readBinary = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url));
 
-test("home V2 exposes approved media, proof, trust, and conversion sections", () => {
+test("home V4 exposes approved media, proof, trust, and conversion sections", () => {
   const page = read("app/page.tsx");
 
   for (const component of [
@@ -19,6 +20,8 @@ test("home V2 exposes approved media, proof, trust, and conversion sections", ()
     "LocationPanel",
     "FaqList",
     "JsonLd",
+    "MenuCategoryGrid",
+    "VisitFacts",
   ]) {
     assert.match(page, new RegExp(component));
   }
@@ -29,9 +32,22 @@ test("home V2 exposes approved media, proof, trust, and conversion sections", ()
     /<HeroMedia[\s\S]*?image="\/images\/eomeuittul\/hero-poster\.webp"/,
   );
   assert.match(page, /청주 봉명동 맛집 어믜뜰/);
+
+  const resolvedCopy = page.replace("${MENU_ITEMS.length}", String(MENU_ITEMS.length));
+  for (const phrase of [
+    "회식도 가족외식도",
+    "함께 끓여 더 즐거운 한 상",
+    "52명 모임 상담",
+    "전체 메뉴 보기",
+    "메뉴 17개 최신 가격",
+    "매장 뒤 무료 주차",
+  ]) assert.match(resolvedCopy, new RegExp(phrase));
+  assert.match(page, /placement="home_group"/);
+  assert.match(page, /STORE\.bookingUrl/);
+  assert.match(page, /STORE\.phoneHref/);
 });
 
-test("home V2 keeps the approved section order", () => {
+test("home V4 keeps the approved section order", () => {
   const page = read("app/page.tsx");
 
   const sections = [
@@ -44,6 +60,7 @@ test("home V2 keeps the approved section order", () => {
     "<ReservationCta",
     'className="review-preview',
     'className="faq-section',
+    "<VisitFacts",
     "<LocationPanel",
   ];
 
@@ -53,18 +70,18 @@ test("home V2 keeps the approved section order", () => {
 
   const visualBlocks =
     page.match(
-      /<(?:HeroMedia|ProofStrip|ExperienceSteps|GroupDiningPanel|ReservationCta|LocationPanel)\b|<section\b/g,
+      /<(?:HeroMedia|ProofStrip|ExperienceSteps|GroupDiningPanel|ReservationCta|VisitFacts|LocationPanel)\b|<section\b/g,
     ) ?? [];
-  assert.equal(visualBlocks.length, 10);
+  assert.equal(visualBlocks.length, 11);
   for (const section of sections) {
     assert.equal(page.split(section).length - 1, 1, section);
   }
 });
 
-test("home V2 uses central content and matches visible FAQ items to JSON-LD", () => {
+test("home V4 uses central content and matches visible FAQ items to JSON-LD", () => {
   const page = read("app/page.tsx");
 
-  for (const source of ["FAQ_ITEMS", "MENU_ITEMS", "REVIEW_ITEMS", "STORE"]) {
+  for (const source of ["FAQ_ITEMS", "MENU_ITEMS", "REVIEW_ITEMS", "REVIEW_SNAPSHOT", "STORE"]) {
     assert.match(page, new RegExp(source));
   }
 
@@ -73,7 +90,7 @@ test("home V2 uses central content and matches visible FAQ items to JSON-LD", ()
   assert.match(page, /<FaqList items=\{homeFaqs\}/);
   assert.doesNotMatch(
     page,
-    /AggregateRating|rating:|review-rating|평점|낙지파전|등갈비 1인분 추가|예약 (?:완료|확정)/,
+    /AggregateRating|rating:|review-rating|낙지파전|등갈비 1인분 추가|예약 (?:완료|확정)/,
   );
   assert.doesNotMatch(
     page,
@@ -81,7 +98,7 @@ test("home V2 uses central content and matches visible FAQ items to JSON-LD", ()
   );
 });
 
-test("home V2 uses Next Link internally and leaves shared chrome to the root", () => {
+test("home V4 uses Next Link internally and leaves shared chrome to the root", () => {
   const page = read("app/page.tsx");
 
   assert.match(page, /import Link from "next\/link"/);
@@ -98,7 +115,7 @@ test("home V2 uses Next Link internally and leaves shared chrome to the root", (
   assert.doesNotMatch(page, /SiteHeader|SiteFooter|MobileActionBar/);
 });
 
-test("home V2 preserves the 390px stack and 48px interactive targets", () => {
+test("home V4 preserves the 390px stack and 48px interactive targets", () => {
   const styles = read("app/globals.css");
 
   assert.match(styles, /@media \(max-width: 767px\)/);
@@ -109,6 +126,75 @@ test("home V2 preserves the 390px stack and 48px interactive targets", () => {
   assert.match(styles, /\.button\s*{[\s\S]*?min-height:\s*54px/);
   assert.match(styles, /\.faq-list summary\s*{[\s\S]*?min-height:\s*48px/);
   assert.match(styles, /\.review-grid a\s*{[\s\S]*?min-height:\s*48px/);
+  assert.match(styles, /\.menu-category-grid\s*{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /@media \(max-width: 767px\)\s*{[^}]*\.menu-category-grid,[\s\S]*?\.visit-facts-grid\s*{\s*grid-template-columns:\s*1fr/);
+  assert.match(styles, /\.button-tertiary\s*{[^}]*color:\s*var\(--ink\)/);
+});
+
+test("home V4 prioritizes tracked reservation and group inquiry before menu browsing", () => {
+  const page = read("app/page.tsx");
+  const hero = page.match(/<HeroMedia[\s\S]*?<\/HeroMedia>/)?.[0] ?? "";
+  const actions = hero.match(/<(?:AnalyticsLink|Link)\b[\s\S]*?<\/(?:AnalyticsLink|Link)>/g) ?? [];
+  assert.equal(actions.length, 3);
+  assert.match(actions[0], /href=\{STORE\.bookingUrl\}/);
+  assert.match(actions[0], /eventName="naver_reservation_click"/);
+  assert.match(actions[0], /target="_blank"[\s\S]*?rel="noreferrer"/);
+  assert.match(actions[1], /href=\{STORE\.phoneHref\}/);
+  assert.match(actions[1], /eventName="group_inquiry_click"/);
+  for (const action of actions.slice(0, 2)) assert.match(action, /placement="home_hero"/);
+  assert.match(actions[2], /className="button button-tertiary" href="\/menu"/);
+});
+
+test("home V4 labels its verified rating with source and checked date", () => {
+  const page = read("app/page.tsx");
+  assert.match(page, /네이버 평점 \$\{REVIEW_SNAPSHOT\.rating\} \/ 5/);
+  assert.match(page, /REVIEW_SNAPSHOT\.checkedAt\.replaceAll\("-", "\."\)\} 확인/);
+  assert.match(page, /메뉴 \$\{MENU_ITEMS\.length\}개 최신 가격/);
+  assert.match(page, /2~\$\{STORE\.maxGroupSize\}명 단체석 · 통대관 협의/);
+});
+
+test("home V4 menu preview groups central categories with optional four-item summaries", () => {
+  assert.equal(existsSync(new URL("../components/site/menu-category-grid.tsx", import.meta.url)), true);
+  const grid = read("components/site/menu-category-grid.tsx");
+  assert.match(read("app/page.tsx"), /<MenuCategoryGrid compact \/>/);
+  assert.match(grid, /compact = false/);
+  assert.match(grid, /MENU_CATEGORIES\.map/);
+  assert.match(grid, /MENU_ITEMS\.filter\(\(item\) => item\.category === category\.id\)/);
+  assert.match(grid, /compact \? items\.slice\(0, 4\) : items/);
+  for (const field of ["category.label", "category.description", "item.name", "item.description", "item.price", "item.minimumOrder"]) {
+    assert.ok(grid.includes(field), field);
+  }
+  assert.match(grid, /인 이상 주문/);
+});
+
+test("home V4 visit facts expose hours, closures, parking, and accessible family facilities", () => {
+  assert.equal(existsSync(new URL("../components/site/visit-facts.tsx", import.meta.url)), true);
+  const facts = read("components/site/visit-facts.tsx");
+  assert.match(facts, /aria-labelledby="visit-facts-title"/);
+  assert.match(facts, /id="visit-facts-title"/);
+  assert.match(facts, /화~금/);
+  assert.match(facts, /11:00~22:00 · 15:30~16:30 브레이크타임/);
+  assert.match(facts, /토·일·공휴일/);
+  assert.match(facts, /브레이크타임 없음/);
+  for (const field of ["lastOrder", "regularClosure", "holidayClosure", "parking", "familyFacilities", "accessibility"]) {
+    assert.ok(facts.includes(`STORE.${field}`), field);
+  }
+});
+
+test("home V4 group panel includes private hire, corkage, and both tracked contact choices", () => {
+  const panel = read("components/site/group-dining-panel.tsx");
+  for (const field of ["privateHire", "corkage", "bookingUrl", "phoneHref"]) {
+    assert.ok(panel.includes(`STORE.${field}`), field);
+  }
+  assert.match(panel, /주류 주문 필수 아님/);
+  assert.match(panel, /eventName="naver_reservation_click" placement=\{placement\}/);
+  assert.match(panel, /eventName="group_inquiry_click" placement=\{placement\}/);
+});
+
+test("home V4 preserves approved online-review loading and static fallback", () => {
+  const page = read("app/page.tsx");
+  assert.match(page, /await loadPublicOnlineReviews\(3\)/);
+  assert.match(page, /onlineReviews\.length > 0 \? \([\s\S]*?<OnlineReviewCards reviews=\{onlineReviews\} \/>[\s\S]*?\) : \([\s\S]*?REVIEW_ITEMS\.map/);
 });
 
 test("layout uses central Korean metadata and document language", () => {
