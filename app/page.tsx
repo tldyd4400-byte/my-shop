@@ -38,6 +38,7 @@ export const metadata = createPageMetadata({
 export const revalidate = 3600;
 
 export default async function HomePage() {
+  const signatureSet = MENU_ITEMS.find((item) => item.slug === "spicy-set")!;
   const homeFaqs = FAQ_ITEMS.slice(0, 4);
   const onlineReviews = await loadPublicOnlineReviews(3);
 
@@ -56,7 +57,7 @@ export default async function HomePage() {
             함께 끓여 더 즐거운 한 상
           </>
         }
-        description="매운·간장 등갈비찜 세트 1인 19,900원 · 2인 이상 · 최대 52명 단체 이용과 통대관 상담 · 무료 주차"
+        description={`매운·간장 등갈비찜 세트 1인 ${signatureSet.price} · ${signatureSet.minimumOrder}인 이상 · 최대 ${STORE.maxGroupSize}명 단체 이용과 통대관 상담 · 무료 주차`}
         image="/images/eomeuittul/hero-poster.webp"
         imageAlt="등갈비찜과 메밀전, 채소가 함께 차려진 어믜뜰 한 상"
         video="/media/eomeuittul/hero-brand-720p.mp4"
@@ -77,7 +78,7 @@ export default async function HomePage() {
           eventName="group_inquiry_click"
           placement="home_hero"
         >
-          52명 모임 상담
+          {STORE.maxGroupSize}명 모임 상담
         </AnalyticsLink>
         <Link className="button button-tertiary" href="/menu">
           전체 메뉴 보기

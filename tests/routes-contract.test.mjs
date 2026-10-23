@@ -447,14 +447,20 @@ test("menu route uses approved central content and composition", () => {
   assert.match(page, /셀프바에서 채소를 자유롭게 선택할 수 있습니다/);
   assert.match(page, /완전 비건 식사가 필요하다면[\s\S]*?매장에 먼저 확인해 주세요/);
   for (const fact of [
-    "매운·간장 세트 19,900원",
-    "대표 세트 2인 이상",
     "수제우유빙수 후식 무료",
     "반조리 포장 할인",
   ]) assert.ok(page.includes(fact), fact);
   assert.match(page, /step-2-selfbar\.jpg/);
   assert.match(page, /placement="menu_hero"/);
   assert.match(page, /placement="menu_bottom"/);
+});
+
+test("menu proof derives its set price and minimum order from central menu data", () => {
+  const page = read("app/menu/page.tsx");
+  assert.match(page, /const signatureSet = MENU_ITEMS\.find\(\(item\) => item\.slug === "spicy-set"\)!/);
+  assert.match(page, /`매운·간장 세트 \$\{signatureSet\.price\}`/);
+  assert.match(page, /`대표 세트 \$\{signatureSet\.minimumOrder\}인 이상`/);
+  assert.doesNotMatch(page, /19,900원|대표 세트 2인 이상/);
 });
 
 test("store route uses approved media, central facts, and composition", () => {

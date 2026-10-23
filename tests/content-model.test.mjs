@@ -8,6 +8,7 @@ import {
   DINING_STEPS,
   FAQ_ITEMS,
   GALBIJJIM_FAQ_ITEMS,
+  GROUP_FAQ_ITEMS,
   MENU_CATEGORIES,
   MENU_ITEMS,
   REVIEW_ITEMS,
@@ -158,7 +159,6 @@ test("central content exports approved FAQ, review, and dining data", () => {
     { question: "네이버 예약 혜택이 있나요?", answer: "네이버 예약 페이지에서 현재 제공되는 최신 혜택을 확인해 주세요." },
     { question: "아이와 함께 갈 수 있나요?", answer: "유아의자를 이용할 수 있습니다." },
     { question: "단체 이용이 가능한가요?", answer: "단체 이용이 가능하며 방문 전 전화 문의를 권장합니다." },
-    { question: "한 팀 몇 명까지 이용할 수 있나요?", answer: "한 팀 최대 52명까지 이용할 수 있으며 최대 인원 이용 시 통대관으로 협의합니다." },
     { question: "콜키지 비용이 있나요?", answer: "외부 주류를 가져올 수 있으며 콜키지는 무료입니다. 주류 주문은 필수가 아닙니다." },
     { question: "휠체어로 이용할 수 있나요?", answer: "휠체어 이용 가능 출입구와 좌석, 화장실이 있습니다." },
     { question: "포장 메뉴는 할인되나요?", answer: "반조리 단품은 1인 14,000원, 반조리 세트는 1인 19,000원으로 준비되어 있습니다. 단품은 2인 이상 주문입니다." },
@@ -180,6 +180,17 @@ test("central content exports approved FAQ, review, and dining data", () => {
       { number: "04", title: "빙수로 마무리", body: "매콤한 한 상 뒤 수제우유빙수로 마무리합니다.", alt: "어믜뜰 수제우유빙수" },
     ],
   );
+});
+
+test("complete FAQ route content has unique questions and one canonical maximum-group answer", () => {
+  const allFaqs = [...FAQ_ITEMS, ...GROUP_FAQ_ITEMS];
+  const questions = allFaqs.map((item) => item.question);
+  assert.equal(new Set(questions).size, questions.length, "duplicate questions in /faq content");
+  const groupSizeAnswers = allFaqs.filter((item) => item.question === "한 팀 몇 명까지 이용할 수 있나요?");
+  assert.deepEqual(groupSizeAnswers, [{
+    question: "한 팀 몇 명까지 이용할 수 있나요?",
+    answer: "한 팀 최대 52명까지 이용할 수 있으며 최대 인원 이용 시 통대관으로 협의합니다.",
+  }]);
 });
 
 test("central public content consistently identifies Monday as the closure", () => {

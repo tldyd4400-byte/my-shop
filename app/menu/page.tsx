@@ -9,7 +9,7 @@ import { MenuCategoryGrid } from "@/components/site/menu-category-grid";
 import { MenuViewTracker } from "@/components/site/menu-view-tracker";
 import { ProofStrip } from "@/components/site/proof-strip";
 import { ReservationCta } from "@/components/site/reservation-cta";
-import { STORE } from "@/lib/content/store";
+import { MENU_ITEMS, STORE } from "@/lib/content/store";
 import { createPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema, restaurantSchema } from "@/lib/seo/schema";
 
@@ -21,6 +21,8 @@ export const metadata = createPageMetadata({
 });
 
 export default function MenuPage() {
+  const signatureSet = MENU_ITEMS.find((item) => item.slug === "spicy-set")!;
+
   return (
     <main>
       <JsonLd
@@ -61,8 +63,8 @@ export default function MenuPage() {
 
       <ProofStrip
         items={[
-          "매운·간장 세트 19,900원",
-          "대표 세트 2인 이상",
+          `매운·간장 세트 ${signatureSet.price}`,
+          `대표 세트 ${signatureSet.minimumOrder}인 이상`,
           "수제우유빙수 후식 무료",
           "반조리 포장 할인",
         ]}

@@ -13,7 +13,7 @@ import { tmpdir } from "node:os";
 import { basename, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
-import { GROUP_FAQ_ITEMS, MENU_ITEMS, STORE } from "../lib/content/store.ts";
+import { FAQ_ITEMS, GROUP_FAQ_ITEMS, MENU_ITEMS, STORE } from "../lib/content/store.ts";
 
 const rootPath = fileURLToPath(new URL("../", import.meta.url));
 const requiredPublicRoutes = ["/", "/menu", "/store", "/location", "/faq", "/reviews", "/stories"];
@@ -271,10 +271,32 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
       const html = readFileSync(htmlPath, "utf8");
       const text = visibleText(html);
       assert.equal((html.match(/<h1\b/gu) ?? []).length, 1, `${route} needs exactly one H1`);
+      if (route === "/") {
+        for (const fact of [
+          "매운·간장 등갈비찜 세트 1인 19,900원 · 2인 이상 · 최대 52명 단체 이용과 통대관 상담 · 무료 주차",
+          "52명 모임 상담",
+          "메뉴 17개 최신 가격",
+          "11:00~22:00 · 15:30~16:30 브레이크타임",
+          "11:00~22:00 · 브레이크타임 없음",
+        ]) assert.ok(text.includes(fact), `home preserves approved copy: ${fact}`);
+      }
+      if (route === "/menu") {
+        for (const fact of ["매운·간장 세트 19,900원", "대표 세트 2인 이상"]) {
+          assert.ok(text.includes(fact), `menu preserves approved copy: ${fact}`);
+        }
+      }
       if (route === "/stories/cheongju-group-dining" || route === "/faq") {
         const schemas = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gu)].flatMap((match) => JSON.parse(match[1]));
         const faq = schemas.find((item) => item["@type"] === "FAQPage");
         assert.ok(faq, `${route} needs FAQ schema`);
+        if (route === "/faq") {
+          const questions = [...FAQ_ITEMS, ...GROUP_FAQ_ITEMS].map((item) => item.question);
+          assert.equal(new Set(questions).size, questions.length, "/faq content questions must be unique");
+          assert.deepEqual(faq.mainEntity.map((item) => item.name), questions);
+          const renderedQuestions = [...html.matchAll(/<summary\b[^>]*>([\s\S]*?)<\/summary>/gu)]
+            .map((match) => visibleText(match[1]));
+          assert.deepEqual(renderedQuestions, questions, "/faq UI and schema must publish the same questions once");
+        }
         for (const item of GROUP_FAQ_ITEMS) {
           assert.ok(text.includes(item.question));
           assert.ok(text.includes(item.answer));

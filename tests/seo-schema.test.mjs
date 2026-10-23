@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, STORE } from "../lib/content/store.ts";
+import { FAQ_ITEMS, GROUP_FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, STORE } from "../lib/content/store.ts";
 import { STORIES } from "../lib/content/stories.ts";
 import { createPageMetadata } from "../lib/seo/metadata.ts";
 import {
@@ -16,6 +16,18 @@ import {
 
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+
+test("FAQ route publishes its complete visible question set exactly once in schema", () => {
+  const page = read("app/faq/page.tsx");
+  assert.match(page, /const allFaqs = \[\.\.\.FAQ_ITEMS, \.\.\.GROUP_FAQ_ITEMS\]/);
+  assert.match(page, /items=\{FAQ_ITEMS\.slice\(0, 4\)\}/);
+  assert.match(page, /items=\{FAQ_ITEMS\.slice\(4\)\}/);
+  assert.match(page, /items=\{GROUP_FAQ_ITEMS\}/);
+  assert.match(page, /faqSchema\(allFaqs\)/);
+  const questions = faqSchema([...FAQ_ITEMS, ...GROUP_FAQ_ITEMS]).mainEntity.map((item) => item.name);
+  assert.equal(new Set(questions).size, questions.length, "duplicate questions in /faq schema");
+  assert.equal(questions.filter((question) => question === "한 팀 몇 명까지 이용할 수 있나요?").length, 1);
+});
 
 test("createPageMetadata returns canonical Korean Open Graph metadata", () => {
   const metadata = createPageMetadata({

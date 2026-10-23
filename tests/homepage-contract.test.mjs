@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
 import test from "node:test";
-import { MENU_ITEMS } from "../lib/content/store.ts";
+import { MENU_ITEMS, STORE } from "../lib/content/store.ts";
 
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -33,7 +33,9 @@ test("home V4 exposes approved media, proof, trust, and conversion sections", ()
   );
   assert.match(page, /청주 봉명동 맛집 어믜뜰/);
 
-  const resolvedCopy = page.replace("${MENU_ITEMS.length}", String(MENU_ITEMS.length));
+  const resolvedCopy = page
+    .replace("${MENU_ITEMS.length}", String(MENU_ITEMS.length))
+    .replaceAll("{STORE.maxGroupSize}", String(STORE.maxGroupSize));
   for (const phrase of [
     "회식도 가족외식도",
     "함께 끓여 더 즐거운 한 상",
@@ -173,12 +175,23 @@ test("home V4 visit facts expose hours, closures, parking, and accessible family
   assert.match(facts, /aria-labelledby="visit-facts-title"/);
   assert.match(facts, /id="visit-facts-title"/);
   assert.match(facts, /화~금/);
-  assert.match(facts, /11:00~22:00 · 15:30~16:30 브레이크타임/);
+  assert.match(facts, /const \[weekdayLunch, weekdayDinner, weekend\] = STORE\.openingPeriods/);
+  assert.match(facts, /\$\{weekdayLunch\.opens\}~\$\{weekdayDinner\.closes\} · \$\{weekdayLunch\.closes\}~\$\{weekdayDinner\.opens\} 브레이크타임/);
+  assert.match(facts, /\$\{weekend\.opens\}~\$\{weekend\.closes\} · 브레이크타임 없음/);
+  assert.doesNotMatch(facts, /11:00|22:00|15:30|16:30/);
   assert.match(facts, /토·일·공휴일/);
   assert.match(facts, /브레이크타임 없음/);
   for (const field of ["lastOrder", "regularClosure", "holidayClosure", "parking", "familyFacilities", "accessibility"]) {
     assert.ok(facts.includes(`STORE.${field}`), field);
   }
+});
+
+test("home hero derives price, minimum order, and capacity from the central model", () => {
+  const page = read("app/page.tsx");
+  assert.match(page, /const signatureSet = MENU_ITEMS\.find\(\(item\) => item\.slug === "spicy-set"\)!/);
+  assert.match(page, /description=\{`매운·간장 등갈비찜 세트 1인 \$\{signatureSet\.price\} · \$\{signatureSet\.minimumOrder\}인 이상 · 최대 \$\{STORE\.maxGroupSize\}명 단체 이용과 통대관 상담 · 무료 주차`\}/);
+  assert.match(page, /\{STORE\.maxGroupSize\}명 모임 상담/);
+  assert.doesNotMatch(page, /19,900원|2인 이상|52명 모임 상담/);
 });
 
 test("home V4 group panel includes private hire, corkage, and both tracked contact choices", () => {
