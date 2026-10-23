@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { FAQ_ITEMS, MENU_ITEMS, STORE } from "../lib/content/store.ts";
+import { FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, STORE } from "../lib/content/store.ts";
 import { STORIES } from "../lib/content/stories.ts";
 import { createPageMetadata } from "../lib/seo/metadata.ts";
 import {
@@ -50,10 +50,51 @@ test("schema factories use central facts and avoid unverified ratings", () => {
   assert.deepEqual(restaurant.sameAs, [STORE.placeUrl]);
   assert.equal(restaurant.maximumAttendeeCapacity, 52);
   assert.deepEqual(restaurant.servesCuisine, ["한식", "갈비찜", "등갈비찜"]);
-  assert.deepEqual(restaurant.amenityFeature.map((item) => item.name), ["단체 이용", "통대관", "무료주차"]);
-  assert.equal(restaurant.hasMenu.hasMenuSection.hasMenuItem.length, MENU_ITEMS.length);
-  assert.equal(restaurant.hasMenu.hasMenuSection.hasMenuItem[0].offers.price, "19900");
+  assert.deepEqual(
+    restaurant.amenityFeature.map((item) => item.name),
+    ["단체 이용", "통대관", "무료주차", "유아의자", "휠체어 이용 가능"],
+  );
+  assert.equal(restaurant.hasMenu.hasMenuSection.length, MENU_CATEGORIES.length);
+  assert.equal(
+    restaurant.hasMenu.hasMenuSection.flatMap((section) => section.hasMenuItem).length,
+    MENU_ITEMS.length,
+  );
+  assert.equal(restaurant.hasMenu.hasMenuSection[0].hasMenuItem[0].offers.price, "19900");
   assert.equal(JSON.stringify(restaurant).includes("AggregateRating"), false);
+});
+
+test("restaurant menu sections preserve category content and numeric KRW prices", () => {
+  const restaurant = restaurantSchema();
+
+  assert.deepEqual(
+    restaurant.hasMenu.hasMenuSection,
+    MENU_CATEGORIES.map((category) => ({
+      "@type": "MenuSection",
+      name: category.label,
+      description: category.description,
+      hasMenuItem: MENU_ITEMS.filter((item) => item.category === category.id).map((item) => ({
+        "@type": "MenuItem",
+        name: item.name,
+        description: item.description,
+        offers: {
+          "@type": "Offer",
+          price: String(item.priceAmount),
+          priceCurrency: "KRW",
+        },
+      })),
+    })),
+  );
+});
+
+test("restaurant amenities publish central private-hire and accessibility facts", () => {
+  const { amenityFeature } = restaurantSchema();
+
+  assert.equal(amenityFeature.find((item) => item.name === "통대관").description, STORE.privateHire);
+  assert.equal(
+    amenityFeature.find((item) => item.name === "휠체어 이용 가능")?.description,
+    STORE.accessibility.join(" · "),
+  );
+  assert.ok(amenityFeature.every((item) => item["@type"] === "LocationFeatureSpecification" && item.value === true));
 });
 
 test("breadcrumb, FAQ, and article schemas serialize supplied central content", () => {

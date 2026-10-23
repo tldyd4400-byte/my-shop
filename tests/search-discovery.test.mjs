@@ -24,6 +24,7 @@ test("sitemap publishes every static and story URL", () => {
   assert.match(sitemap, /`\$\{STORE\.url\}\$\{path\}`/);
   assert.match(sitemap, /`\$\{STORE\.url\}\/stories\/\$\{story\.slug\}`/);
   assert.match(sitemap, /story\.modifiedAt/);
+  assert.match(sitemap, /2026-10-23T00:00:00\+09:00/);
 });
 
 test("discovery sources no longer depend on migrated legacy content", () => {
