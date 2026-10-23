@@ -38,7 +38,7 @@ test("createPageMetadata returns canonical Korean Open Graph metadata", () => {
   });
 });
 
-test("schema factories use central facts and avoid unverified ratings", () => {
+test("schema factories use central facts without publishing the display-only rating snapshot", () => {
   const website = websiteSchema();
   const restaurant = restaurantSchema();
 
@@ -61,6 +61,7 @@ test("schema factories use central facts and avoid unverified ratings", () => {
   );
   assert.equal(restaurant.hasMenu.hasMenuSection[0].hasMenuItem[0].offers.price, "19900");
   assert.equal(JSON.stringify(restaurant).includes("AggregateRating"), false);
+  assert.doesNotMatch(JSON.stringify(restaurant), /aggregateRating|ratingValue|reviewCount/);
 });
 
 test("restaurant menu sections preserve category content and numeric KRW prices", () => {
@@ -157,6 +158,6 @@ test("SEO helpers contain only approved schema types and JsonLd escapes HTML del
   ]) {
     assert.match(schema, new RegExp(type));
   }
-  assert.doesNotMatch(schema, /AggregateRating/);
+  assert.doesNotMatch(schema, /AggregateRating|aggregateRating|ratingValue|reviewCount|REVIEW_SNAPSHOT/);
   assert.match(jsonLd, /JSON\.stringify\(data\)\.replace\(\/<\/g, "\\\\u003c"\)/);
 });

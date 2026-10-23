@@ -240,12 +240,13 @@ test("light-surface eyebrows and dual-color focus indicators meet contrast", () 
   );
 });
 
-test("reviews route presents checked source summaries without ratings", () => {
+test("reviews route shows the verified dated rating snapshot without rating schema", () => {
   const page = read("app/reviews/page.tsx");
   const styles = read("app/reviews/reviews.module.css");
 
   for (const source of [
     "REVIEW_ITEMS",
+    "REVIEW_SNAPSHOT",
     "STORE",
     "HeroMedia",
     "ProofStrip",
@@ -261,20 +262,25 @@ test("reviews route presents checked source summaries without ratings", () => {
   assert.match(page, /image="\/images\/eomeuittul\/soy-ribs\.jpg"/);
   assert.match(page, /breadcrumbSchema\(\[/);
   assert.equal(page.split("<JsonLd").length - 1, 1);
-  assert.doesNotMatch(page, /restaurantSchema|AggregateRating/);
+  assert.doesNotMatch(page, /restaurantSchema|AggregateRating|rating:|reviewCount/);
+  assert.doesNotMatch(read("lib/seo/schema.ts"), /AggregateRating|reviewCount/);
   assert.match(
     page,
     /href=\{STORE\.placeUrl\}[\s\S]*?target="_blank"[\s\S]*?rel="noreferrer"/,
   );
 
-  for (const proof of [
-    "네이버 원문 링크",
-    "2026.07.19 확인",
-    "후기 일부만 발췌",
-    "반복 반응 중심 요약",
-  ]) {
-    assert.match(page, new RegExp(proof));
-  }
+  assert.match(page, /네이버 평점 \$\{REVIEW_SNAPSHOT\.rating\} \/ 5/);
+  assert.match(page, /\$\{REVIEW_SNAPSHOT\.participants\}명 참여/);
+  assert.match(page, /REVIEW_SNAPSHOT\.checkedAt\.replaceAll\("-", "\."\)\} 확인/);
+  assert.match(page, /네이버 원문 링크/);
+  const snapshot = page.match(/<aside className=\{styles\.ratingSnapshot\}[\s\S]*?<\/aside>/)?.[0] ?? "";
+  assert.match(snapshot, /aria-label="확인일 기준 네이버 평점"/);
+  assert.match(snapshot, /<strong>\{REVIEW_SNAPSHOT\.rating\} \/ 5<\/strong>/);
+  assert.match(snapshot, /\{REVIEW_SNAPSHOT\.participants\}명 참여/);
+  assert.match(snapshot, /<time dateTime=\{REVIEW_SNAPSHOT\.checkedAt\}>/);
+  assert.match(snapshot, /href=\{REVIEW_SNAPSHOT\.sourceUrl\}[\s\S]*?target="_blank"[\s\S]*?rel="noreferrer"/);
+  assert.match(snapshot, /네이버에서 최신 정보 보기/);
+  assert.doesNotMatch(page, /2026\.07\.19/);
 
   assert.match(page, /REVIEW_ITEMS\.map\(\(review\) =>/);
   assert.match(page, /review\.sourceLabel/);
@@ -286,13 +292,14 @@ test("reviews route presents checked source summaries without ratings", () => {
     /href=\{review\.sourceUrl\}[\s\S]*?target="_blank"[\s\S]*?rel="noreferrer"/,
   );
   assert.match(page, /전체 실시간 후기 데이터가 아닌/);
+  assert.match(page, /확인일 기준 관리자 화면 스냅샷/);
   assert.match(page, /step-2-selfbar\.jpg/);
   assert.equal(page.split("soy-ribs.jpg").length - 1, 3);
   assert.match(page, /<ReservationCta placement="reviews_bottom" \/>/);
   assert.match(page, /<LocationPanel \/>/);
   assert.doesNotMatch(
     page,
-    /평점|별점|reviewCount|리뷰 수|[“”]|예약 완료|효과|효능/,
+    /별점|reviewCount|리뷰 수|[“”]|예약 완료|효과|효능/,
   );
   assert.doesNotMatch(page, /SiteHeader|SiteFooter|MobileActionBar/);
 
@@ -302,6 +309,10 @@ test("reviews route presents checked source summaries without ratings", () => {
     /@media \(max-width: 767px\)[\s\S]*?\.reviewGrid\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
   );
   assert.match(styles, /\.sourceLink\s*\{[\s\S]*?min-height:\s*48px/);
+  assert.match(styles, /\.ratingSnapshot\s*\{[^}]*display:\s*flex;[^}]*flex-wrap:\s*wrap/);
+  assert.match(styles, /\.ratingSnapshot strong\s*\{[^}]*font-size:\s*32px/);
+  assert.match(styles, /\.ratingSnapshot a\s*\{[^}]*min-height:\s*48px/);
+  assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.ratingSnapshot\s*\{[^}]*align-items:\s*flex-start;[^}]*flex-direction:\s*column/);
 });
 
 test("central review evidence has three safe, dated source records", () => {
@@ -504,7 +515,7 @@ test("routes avoid unverified claims and leave chrome to the root layout", () =>
 
   assert.doesNotMatch(
     source,
-    /AggregateRating|rating:|reviewCount|평점|낙지파전|등갈비 1인분 추가|일요일 (?:휴무|정기휴무)|예약 완료|리치 결과 보장|사진을 제공하면|이 영역에 바로 교체|바 형태|카운터석/,
+    /AggregateRating|rating:|reviewCount|낙지파전|등갈비 1인분 추가|일요일 (?:휴무|정기휴무)|예약 완료|리치 결과 보장|사진을 제공하면|이 영역에 바로 교체|바 형태|카운터석/,
   );
   assert.doesNotMatch(source, /SiteHeader|SiteFooter|MobileActionBar/);
 });

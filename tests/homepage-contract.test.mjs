@@ -90,7 +90,7 @@ test("home V4 uses central content and matches visible FAQ items to JSON-LD", ()
   assert.match(page, /<FaqList items=\{homeFaqs\}/);
   assert.doesNotMatch(
     page,
-    /AggregateRating|rating:|review-rating|낙지파전|등갈비 1인분 추가|예약 (?:완료|확정)/,
+    /AggregateRating|rating:|reviewCount|review-rating|낙지파전|등갈비 1인분 추가|예약 (?:완료|확정)/,
   );
   assert.doesNotMatch(
     page,
