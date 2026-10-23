@@ -5,10 +5,11 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { AnalyticsLink } from "@/components/site/analytics-link";
 import { ExperienceSteps } from "@/components/site/experience-steps";
 import { HeroMedia } from "@/components/site/hero-media";
+import { MenuCategoryGrid } from "@/components/site/menu-category-grid";
 import { MenuViewTracker } from "@/components/site/menu-view-tracker";
 import { ProofStrip } from "@/components/site/proof-strip";
 import { ReservationCta } from "@/components/site/reservation-cta";
-import { MENU_ITEMS, STORE } from "@/lib/content/store";
+import { STORE } from "@/lib/content/store";
 import { createPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema, restaurantSchema } from "@/lib/seo/schema";
 
@@ -60,29 +61,17 @@ export default function MenuPage() {
 
       <ProofStrip
         items={[
-          "매운맛 · 간장맛",
-          `세트 ${MENU_ITEMS[0].price}`,
-          MENU_ITEMS[0].includes,
-          "30여 종 셀프바",
+          "매운·간장 세트 19,900원",
+          "대표 세트 2인 이상",
+          "수제우유빙수 후식 무료",
+          "반조리 포장 할인",
         ]}
       />
 
       <section className="menu-page section-pad">
-        <div className="shell menu-grid">
-          {MENU_ITEMS.map((item) => (
-            <article key={item.slug}>
-              <Image
-                src={item.image}
-                alt={item.imageAlt}
-                width={640}
-                height={420}
-              />
-              <h2>{item.name}</h2>
-              <strong>{item.price}</strong>
-              <p>{item.includes}</p>
-              <p>{item.description}</p>
-            </article>
-          ))}
+        <div className="shell">
+          <h2>전체 메뉴와 포장 할인</h2>
+          <MenuCategoryGrid />
         </div>
       </section>
 
@@ -110,6 +99,9 @@ export default function MenuPage() {
             <p className="eyebrow">30여 종 채소 · 버섯 · 떡 · 당면</p>
             <h2>취향대로 담아 나만의 한 상</h2>
             <p>재료 구성은 매장 상황에 따라 달라질 수 있습니다.</p>
+            <p className="notice-copy">
+              셀프바에서 채소를 자유롭게 선택할 수 있습니다. 완전 비건 식사가 필요하다면 육수·소스 등 동물성 재료 포함 여부를 매장에 먼저 확인해 주세요.
+            </p>
           </div>
         </div>
       </section>

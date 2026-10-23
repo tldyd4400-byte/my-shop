@@ -406,8 +406,9 @@ test("location panel derives opening periods and closure from STORE", () => {
   const store = source("lib/content/store.ts");
 
   assert.match(location, /STORE\.openingPeriods\.map/);
-  assert.match(location, /STORE\.openingPeriods\.flatMap/);
-  assert.match(location, /!openDays\.has/);
+  assert.match(location, /STORE\.regularClosure/);
+  assert.match(location, /STORE\.holidayClosure/);
+  assert.match(location, /STORE\.lastOrder/);
   assert.match(location, /정기휴무/);
   assert.doesNotMatch(location, /일요일\s*정기휴무/);
   assert.doesNotMatch(location, /11:00~22:00/);

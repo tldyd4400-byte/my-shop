@@ -325,6 +325,16 @@ test("location and FAQ expose direct-answer information", () => {
   assert.match(location, /naver-map-location\.png/);
   assert.match(location, /eventName="phone_click"/);
   assert.match(location, /eventName="naver_map_click"/);
+  assert.match(location, /<VisitFacts \/>/);
+  assert.match(location, /설·추석 당일/);
+  assert.match(location, /휠체어/);
+  assert.match(location, /STORE\.accessibility\.join\(" · "\)/);
+  for (const fact of [
+    "화~금 11:00~22:00",
+    "평일 15:30~16:30 브레이크타임",
+    "월요일 · 설/추석 당일 휴무",
+    "건물 뒤 무료 지상주차장",
+  ]) assert.ok(location.includes(fact), fact);
 
   for (const source of [
     "FAQ_ITEMS",
@@ -346,6 +356,22 @@ test("location and FAQ expose direct-answer information", () => {
   assert.match(faq, /breadcrumbSchema\(\[/);
   assert.match(faq, /interior\.jpg/);
   assert.doesNotMatch(faq, /restaurantSchema/);
+});
+
+test("FAQ route highlights current group-size and corkage answers", () => {
+  const page = read("app/faq/page.tsx");
+
+  assert.match(page, /콜키지/);
+  assert.match(page, /52명/);
+});
+
+test("location panel reads current closure and last-order facts from STORE", () => {
+  const panel = read("components/site/location-panel.tsx");
+
+  for (const fact of ["regularClosure", "holidayClosure", "lastOrder"]) {
+    assert.ok(panel.includes(`STORE.${fact}`), fact);
+  }
+  assert.match(panel, /공휴일.*브레이크타임 없음/);
 });
 
 test("FAQ list can explicitly expose every answer without changing its default", () => {
@@ -375,7 +401,7 @@ test("menu route uses approved central content and composition", () => {
   const page = read("app/menu/page.tsx");
 
   for (const source of [
-    "MENU_ITEMS",
+    "MenuCategoryGrid",
     "STORE",
     "HeroMedia",
     "ProofStrip",
@@ -389,8 +415,17 @@ test("menu route uses approved central content and composition", () => {
   assert.match(page, /path: "\/menu"/);
   assert.match(page, /restaurantSchema\(\)/);
   assert.match(page, /breadcrumbSchema\(\[/);
-  assert.match(page, /item\.price/);
-  assert.match(page, /item\.includes/);
+  assert.match(page, /<MenuCategoryGrid \/>/);
+  assert.doesNotMatch(page, /MENU_ITEMS\.map/);
+  assert.match(page, /육수·소스 등 동물성 재료 포함 여부/);
+  assert.match(page, /셀프바에서 채소를 자유롭게 선택할 수 있습니다/);
+  assert.match(page, /완전 비건 식사가 필요하다면[\s\S]*?매장에 먼저 확인해 주세요/);
+  for (const fact of [
+    "매운·간장 세트 19,900원",
+    "대표 세트 2인 이상",
+    "수제우유빙수 후식 무료",
+    "반조리 포장 할인",
+  ]) assert.ok(page.includes(fact), fact);
   assert.match(page, /step-2-selfbar\.jpg/);
   assert.match(page, /placement="menu_hero"/);
   assert.match(page, /placement="menu_bottom"/);
@@ -454,7 +489,7 @@ test("routes avoid unverified claims and leave chrome to the root layout", () =>
 
   assert.doesNotMatch(
     source,
-    /AggregateRating|rating:|reviewCount|평점|낙지파전|등갈비 1인분 추가|일요일 (?:휴무|정기휴무)|예약 완료|리치 결과 보장|사진을 제공하면|이 영역에 바로 교체/,
+    /AggregateRating|rating:|reviewCount|평점|낙지파전|등갈비 1인분 추가|일요일 (?:휴무|정기휴무)|예약 완료|리치 결과 보장|사진을 제공하면|이 영역에 바로 교체|바 형태|카운터석/,
   );
   assert.doesNotMatch(source, /SiteHeader|SiteFooter|MobileActionBar/);
 });
