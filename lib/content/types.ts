@@ -16,6 +16,13 @@ export type StoreInfo = {
   seats: string;
   maxGroupSize: number;
   groupBooking: string;
+  privateHire: string;
+  corkage: string;
+  lastOrder: string;
+  regularClosure: string;
+  holidayClosure: string;
+  accessibility: readonly string[];
+  familyFacilities: readonly string[];
   placeUrl: string;
   bookingUrl: string;
   directionsUrl: string;
@@ -23,14 +30,34 @@ export type StoreInfo = {
   openingPeriods: readonly OpeningPeriod[];
 };
 
+export type MenuCategoryId = "set" | "side" | "extra" | "takeout";
+
+export type MenuCategory = {
+  id: MenuCategoryId;
+  label: string;
+  description: string;
+};
+
 export type MenuItem = {
-  slug: "spicy" | "soy";
+  slug: string;
+  category: MenuCategoryId;
   name: string;
   price: string;
+  priceAmount: number;
   description: string;
   includes: string;
+  minimumOrder?: number;
+  badge?: string;
   image: string;
   imageAlt: string;
+};
+
+export type ReviewSnapshot = {
+  rating: number;
+  participants: number;
+  checkedAt: string;
+  sourceLabel: string;
+  sourceUrl: string;
 };
 
 export type FaqItem = { question: string; answer: string };

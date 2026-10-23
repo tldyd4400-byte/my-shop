@@ -1,4 +1,4 @@
-import type { DiningStep, FaqItem, MenuItem, ReviewItem, StoreInfo } from "./types";
+import type { DiningStep, FaqItem, MenuCategory, MenuItem, ReviewItem, ReviewSnapshot, StoreInfo } from "./types";
 
 export const STORE: StoreInfo = {
   name: "어믜뜰",
@@ -11,6 +11,13 @@ export const STORE: StoreInfo = {
   seats: "12테이블 · 52석 · 6인 단체석 2테이블",
   maxGroupSize: 52,
   groupBooking: "한 팀 최대 52명 · 통대관 가능 · 날짜·시간·인원 사전 협의",
+  privateHire: "최대 인원 이용 시 통대관 협의",
+  corkage: "외부 주류 반입 가능 · 콜키지 무료",
+  lastOrder: "21:00",
+  regularClosure: "매주 월요일",
+  holidayClosure: "설·추석 당일",
+  accessibility: ["휠체어 이용 가능 출입구", "휠체어 이용 가능 좌석", "휠체어 이용 가능 화장실"],
+  familyFacilities: ["유아의자", "어린이밥"],
   placeUrl: "https://map.naver.com/p/entry/place/2021816208",
   bookingUrl:
     "https://m.booking.naver.com/booking/6/bizes/1611967/items/7499930?area=bmp&theme=place",
@@ -24,10 +31,50 @@ export const STORE: StoreInfo = {
   ],
 };
 
-export const MENU_ITEMS: readonly MenuItem[] = [
-  { slug: "spicy", name: "매운 등갈비찜 세트", price: "19,900원", description: "매콤한 육수에 재료를 더해 샤브처럼 끓여 먹는 대표 메뉴", includes: "임궁밥 · 메밀전 포함", image: "/images/eomeuittul/spicy-ribs.jpg", imageAlt: "붉은 육수와 채소를 함께 담은 어믜뜰 매운 등갈비찜" },
-  { slug: "soy", name: "간장 등갈비찜 세트", price: "19,900원", description: "달콤짭짤한 간장 양념으로 남녀노소 편안하게 즐기는 메뉴", includes: "임궁밥 · 메밀전 포함", image: "/images/eomeuittul/soy-ribs.jpg", imageAlt: "채소와 함께 담은 어믜뜰 간장 등갈비찜" },
+export const MENU_CATEGORIES: readonly MenuCategory[] = [
+  { id: "set", label: "대표 세트", description: "매운맛과 간장맛 중 선택 · 2인 이상 주문" },
+  { id: "side", label: "곁들임", description: "등갈비찜과 함께 즐기는 식사와 사이드" },
+  { id: "extra", label: "추가 메뉴", description: "더 푸짐하게 즐기는 등갈비와 우삼겹" },
+  { id: "takeout", label: "포장 할인", description: "집과 캠핑에서도 끓여 먹는 반조리 메뉴" },
 ];
+
+const menuItem = (
+  item: Omit<MenuItem, "includes" | "image" | "imageAlt"> &
+    Partial<Pick<MenuItem, "includes" | "image" | "imageAlt">>,
+): MenuItem => ({
+  includes: "",
+  image: STORE.image,
+  imageAlt: `${item.name} 메뉴 안내`,
+  ...item,
+});
+
+export const MENU_ITEMS: readonly MenuItem[] = [
+  menuItem({ slug: "spicy-set", category: "set", name: "매운등갈비찜 세트 1인", price: "19,900원", priceAmount: 19900, description: "매콤한 육수에 채소를 더해 샤브처럼 끓여 먹는 대표 메뉴", includes: "등갈비찜 · 셀프바 · 수제우유빙수", minimumOrder: 2, badge: "대표", image: "/images/eomeuittul/spicy-ribs.jpg", imageAlt: "어믜뜰 매운등갈비찜 세트" }),
+  menuItem({ slug: "soy-set", category: "set", name: "간장등갈비찜 세트 1인", price: "19,900원", priceAmount: 19900, description: "달콤짭짤하고 맵지 않아 아이와 부모님도 편하게 즐기는 메뉴", includes: "등갈비찜 · 셀프바 · 수제우유빙수", minimumOrder: 2, image: "/images/eomeuittul/soy-ribs.jpg", imageAlt: "어믜뜰 간장등갈비찜 세트" }),
+  menuItem({ slug: "milk-bingsu", category: "side", name: "특별한 수제우유빙수", price: "무료", priceAmount: 0, description: "식사 후 제공되는 특별한 후식", badge: "후식 서비스", image: "/images/eomeuittul/step-4-bingsu.png", imageAlt: "어믜뜰 수제우유빙수" }),
+  menuItem({ slug: "imgung-rice", category: "side", name: "임궁밥", price: "4,900원", priceAmount: 4900, description: "곤드레와 궁채나물로 만든 나물밥", image: "/images/eomeuittul/imgung-rice.jpg", imageAlt: "곤드레와 궁채나물로 만든 임궁밥" }),
+  menuItem({ slug: "buckwheat-pancake", category: "side", name: "메밀전", price: "4,900원", priceAmount: 4900, description: "등갈비찜과 곁들이기 좋은 고소한 메밀전", image: "/images/eomeuittul/buckwheat-pancake.jpg", imageAlt: "어믜뜰 메밀전" }),
+  menuItem({ slug: "beef-pancake", category: "side", name: "육전", price: "12,000원", priceAmount: 12000, description: "부드러운 소고기에 계란옷을 입혀 구운 육전" }),
+  menuItem({ slug: "green-onion-roll", category: "side", name: "바삭대파전병", price: "3,000원", priceAmount: 3000, description: "바삭하게 즐기는 대파전병" }),
+  menuItem({ slug: "flat-dumpling", category: "side", name: "납작만두", price: "2,000원", priceAmount: 2000, description: "노릇하게 구운 바삭하고 쫄깃한 납작만두" }),
+  menuItem({ slug: "kids-rice", category: "side", name: "어린이밥", price: "3,500원", priceAmount: 3500, description: "간장등갈비로 구성한 어린이 메뉴" }),
+  menuItem({ slug: "steamed-egg", category: "side", name: "계란찜", price: "2,000원", priceAmount: 2000, description: "매운맛을 부드럽게 잡아주는 계란찜" }),
+  menuItem({ slug: "extra-soy-ribs", category: "extra", name: "간장등갈비 추가", price: "15,000원", priceAmount: 15000, description: "달콤짭짤한 간장등갈비 추가" }),
+  menuItem({ slug: "extra-spicy-ribs", category: "extra", name: "매운등갈비 추가", price: "15,000원", priceAmount: 15000, description: "매콤한 등갈비 추가" }),
+  menuItem({ slug: "extra-beef", category: "extra", name: "우삼겹 100g 추가", price: "4,900원", priceAmount: 4900, description: "국물과 함께 즐기는 고소한 우삼겹" }),
+  menuItem({ slug: "takeout-spicy-single", category: "takeout", name: "포장 반조리 매운등갈비찜 단품 1인", price: "14,000원", priceAmount: 14000, description: "집이나 캠핑에서 끓여 먹는 반조리 단품", minimumOrder: 2, badge: "포장 할인" }),
+  menuItem({ slug: "takeout-soy-single", category: "takeout", name: "포장 반조리 간장등갈비찜 단품 1인", price: "14,000원", priceAmount: 14000, description: "집이나 캠핑에서 끓여 먹는 반조리 단품", minimumOrder: 2, badge: "포장 할인" }),
+  menuItem({ slug: "takeout-spicy-set", category: "takeout", name: "포장 반조리 매운등갈비찜 세트 1인", price: "19,000원", priceAmount: 19000, description: "셀프바 구성까지 함께 즐기는 반조리 세트", badge: "포장 할인" }),
+  menuItem({ slug: "takeout-soy-set", category: "takeout", name: "포장 반조리 간장등갈비찜 세트 1인", price: "19,000원", priceAmount: 19000, description: "셀프바 구성까지 함께 즐기는 반조리 세트", badge: "포장 할인" }),
+];
+
+export const REVIEW_SNAPSHOT: ReviewSnapshot = {
+  rating: 4.94,
+  participants: 362,
+  checkedAt: "2026-10-23",
+  sourceLabel: "네이버 스마트플레이스 관리자 화면",
+  sourceUrl: STORE.placeUrl,
+};
 
 export const FAQ_ITEMS: readonly FaqItem[] = [
   { question: "월요일에도 영업하나요?", answer: "매주 월요일은 정기휴무입니다." },
