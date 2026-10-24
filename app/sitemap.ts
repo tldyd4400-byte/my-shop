@@ -10,7 +10,7 @@ const STATIC_PAGES = [
   { path: "/location", modifiedAt: "2026-10-23" },
   { path: "/faq", modifiedAt: "2026-10-23" },
   { path: "/reviews", modifiedAt: "2026-10-24" },
-  { path: "/stories", modifiedAt: "2026-10-24" },
+  { path: "/stories", modifiedAt: "2026-10-23" },
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {

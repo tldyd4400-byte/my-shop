@@ -16,11 +16,21 @@ test("robots allows public crawling and advertises the canonical sitemap", () =>
 test("sitemap publishes per-page static dates and story modification dates", () => {
   const sitemap = read("app/sitemap.ts");
 
-  for (const path of ["", "/menu", "/store", "/location", "/faq", "/reviews", "/stories"]) {
-    assert.match(sitemap, new RegExp(`path: "${path.replaceAll("/", "\\/")}"`));
-  }
-  assert.match(sitemap, /const STATIC_PAGES/);
-  assert.match(sitemap, /modifiedAt: "2026-10-24"/);
+  const staticPages = sitemap.match(/const STATIC_PAGES = \[([\s\S]*?)\] as const;/)?.[1];
+  assert.ok(staticPages, "sitemap defines its static page entries");
+
+  const entries = [...staticPages.matchAll(/\{\s*path: "([^"]*)",\s*modifiedAt: "([^"]*)"\s*\}/g)]
+    .map(([, path, modifiedAt]) => [path, modifiedAt]);
+  assert.deepEqual(entries, [
+    ["", "2026-10-24"],
+    ["/menu", "2026-10-23"],
+    ["/store", "2026-10-23"],
+    ["/location", "2026-10-23"],
+    ["/faq", "2026-10-23"],
+    ["/reviews", "2026-10-24"],
+    ["/stories", "2026-10-23"],
+  ]);
+  assert.equal(new Set(entries.map(([path]) => path)).size, entries.length, "static paths are unique");
   assert.match(sitemap, /new Date\(`\$\{page\.modifiedAt\}T00:00:00\+09:00`\)/);
   assert.match(sitemap, /STORIES\.map/);
   assert.match(sitemap, /story\.modifiedAt/);
