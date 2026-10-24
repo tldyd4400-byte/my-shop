@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { FAQ_ITEMS, GROUP_FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, STORE } from "../lib/content/store.ts";
+import { FAQ_ITEMS, GROUP_FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, REVIEW_FAQ_ITEMS, STORE } from "../lib/content/store.ts";
 import { STORIES } from "../lib/content/stories.ts";
 import { createPageMetadata } from "../lib/seo/metadata.ts";
 import {
@@ -16,6 +16,13 @@ import {
 
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+
+test("reviews route renders and serializes the same central FAQ set", () => {
+  const page = read("app/reviews/page.tsx");
+  assert.match(page, /<FaqList items=\{REVIEW_FAQ_ITEMS\} openAll \/>/);
+  assert.match(page, /faqSchema\(REVIEW_FAQ_ITEMS\)/);
+  assert.equal(faqSchema(REVIEW_FAQ_ITEMS).mainEntity.length, REVIEW_FAQ_ITEMS.length);
+});
 
 test("FAQ route publishes its complete visible question set exactly once in schema", () => {
   const page = read("app/faq/page.tsx");

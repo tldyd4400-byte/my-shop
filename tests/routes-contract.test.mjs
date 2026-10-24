@@ -240,6 +240,35 @@ test("light-surface eyebrows and dual-color focus indicators meet contrast", () 
   );
 });
 
+test("reviews route shows current evidence, direct answers, and contextual links", () => {
+  const page = read("app/reviews/page.tsx");
+  const styles = read("app/reviews/reviews.module.css");
+
+  assert.match(page, /title: "청주갈비찜 후기·가족외식·회식 \| 어믜뜰"/);
+  assert.match(page, /REVIEW_FAQ_ITEMS/);
+  assert.match(page, /faqSchema\(REVIEW_FAQ_ITEMS\)/);
+  assert.match(page, /<FaqList items=\{REVIEW_FAQ_ITEMS\} openAll \/>/);
+  assert.equal(page.split("<JsonLd").length - 1, 1);
+  assert.match(page, /REVIEW_SNAPSHOT\.ratingCount/);
+  assert.match(page, /REVIEW_SNAPSHOT\.participants/);
+  assert.match(page, /REVIEW_SNAPSHOT\.visitorReviewCount/);
+  assert.match(page, /REVIEW_SNAPSHOT\.blogReviewCount/);
+  assert.match(page, /REVIEW_SNAPSHOT\.totalDisplayedReviewCount/);
+  assert.match(page, /서로 다른 네이버 분류이므로 합산하지 않습니다/);
+  for (const href of [
+    "/menu",
+    "/stories/cheongju-group-dining",
+    "/stories/cheongju-galbijjim-guide",
+  ]) {
+    assert.match(page, new RegExp(`href="${href}"`));
+  }
+  assert.match(page, /await loadPublicOnlineReviews\(6\)/);
+  assert.doesNotMatch(page, /AggregateRating|aggregateRating|ratingValue|reviewCount/);
+  assert.match(styles, /\.answerSection/);
+  assert.match(styles, /\.relatedLinks/);
+  assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.relatedLinks/);
+});
+
 test("reviews route shows the verified dated rating snapshot without rating schema", () => {
   const page = read("app/reviews/page.tsx");
   const styles = read("app/reviews/reviews.module.css");
@@ -257,7 +286,7 @@ test("reviews route shows the verified dated rating snapshot without rating sche
     assert.match(page, new RegExp(source));
   }
 
-  assert.match(page, /title: "어믜뜰 방문자 후기 \| 청주 봉명동 등갈비찜"/);
+  assert.match(page, /title: "청주갈비찜 후기·가족외식·회식 \| 어믜뜰"/);
   assert.match(page, /path: "\/reviews"/);
   assert.match(page, /image="\/images\/eomeuittul\/soy-ribs\.jpg"/);
   assert.match(page, /breadcrumbSchema\(\[/);
@@ -266,15 +295,15 @@ test("reviews route shows the verified dated rating snapshot without rating sche
   assert.doesNotMatch(read("lib/seo/schema.ts"), /AggregateRating|reviewCount/);
   assert.match(
     page,
-    /href=\{STORE\.placeUrl\}[\s\S]*?target="_blank"[\s\S]*?rel="noreferrer"/,
+    /href=\{STORE\.reviewUrl\}[\s\S]*?target="_blank"[\s\S]*?rel="noreferrer"/,
   );
 
   assert.match(page, /네이버 평점 \$\{REVIEW_SNAPSHOT\.rating\} \/ 5/);
   assert.match(page, /\$\{REVIEW_SNAPSHOT\.participants\}명 참여/);
   assert.match(page, /REVIEW_SNAPSHOT\.checkedAt\.replaceAll\("-", "\."\)\} 확인/);
-  assert.match(page, /네이버 원문 링크/);
+  assert.match(page, /방문자 리뷰 \$\{REVIEW_SNAPSHOT\.visitorReviewCount\}개 · 블로그 리뷰 \$\{REVIEW_SNAPSHOT\.blogReviewCount\}개/);
   const snapshot = page.match(/<aside className=\{styles\.ratingSnapshot\}[\s\S]*?<\/aside>/)?.[0] ?? "";
-  assert.match(snapshot, /aria-label="확인일 기준 네이버 평점"/);
+  assert.match(snapshot, /aria-label="확인일 기준 네이버 리뷰 스냅샷"/);
   assert.match(snapshot, /<strong>\{REVIEW_SNAPSHOT\.rating\} \/ 5<\/strong>/);
   assert.match(snapshot, /\{REVIEW_SNAPSHOT\.participants\}명 참여/);
   assert.match(snapshot, /<time dateTime=\{REVIEW_SNAPSHOT\.checkedAt\}>/);
@@ -292,7 +321,7 @@ test("reviews route shows the verified dated rating snapshot without rating sche
     /href=\{review\.sourceUrl\}[\s\S]*?target="_blank"[\s\S]*?rel="noreferrer"/,
   );
   assert.match(page, /전체 실시간 후기 데이터가 아닌/);
-  assert.match(page, /확인일 기준 관리자 화면 스냅샷/);
+  assert.match(page, /확인일 기준 네이버 플레이스 공개 화면 스냅샷/);
   assert.match(page, /step-2-selfbar\.jpg/);
   assert.equal(page.split("soy-ribs.jpg").length - 1, 3);
   assert.match(page, /<ReservationCta placement="reviews_bottom" \/>/);
@@ -315,7 +344,7 @@ test("reviews route shows the verified dated rating snapshot without rating sche
   assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.ratingSnapshot\s*\{[^}]*align-items:\s*flex-start;[^}]*flex-direction:\s*column/);
 });
 
-test("central review evidence has three safe, dated source records", () => {
+test("central review evidence has three safe, current source records", () => {
   assert.equal(REVIEW_ITEMS.length, 3);
 
   for (const review of REVIEW_ITEMS) {
@@ -323,10 +352,9 @@ test("central review evidence has three safe, dated source records", () => {
     assert.equal(new URL(review.sourceUrl).protocol, "https:");
     assert.equal(review.checkedAt, "2026-10-24");
     assert.equal(review.sourceLabel, "네이버 방문자 반응 요약");
-    assert.match(review.summary, /언급됩니다\.$/);
     assert.doesNotMatch(
       `${review.title} ${review.summary}`,
-      /평점|별점|reviewCount|[“”]/,
+      /평점|별점|reviewCount|[“”]|1위|최고|무조건/,
     );
   }
 });

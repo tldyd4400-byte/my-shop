@@ -1,22 +1,29 @@
 import Image from "next/image";
+import Link from "next/link";
 
 import { JsonLd } from "@/components/seo/json-ld";
+import { FaqList } from "@/components/site/faq-list";
 import { HeroMedia } from "@/components/site/hero-media";
 import { LocationPanel } from "@/components/site/location-panel";
 import { OnlineReviewCards } from "@/components/site/online-review-cards";
 import { ProofStrip } from "@/components/site/proof-strip";
 import { ReservationCta } from "@/components/site/reservation-cta";
-import { REVIEW_ITEMS, REVIEW_SNAPSHOT, STORE } from "@/lib/content/store";
+import {
+  REVIEW_FAQ_ITEMS,
+  REVIEW_ITEMS,
+  REVIEW_SNAPSHOT,
+  STORE,
+} from "@/lib/content/store";
 import { loadPublicOnlineReviews } from "@/lib/online-reviews/public";
 import { createPageMetadata } from "@/lib/seo/metadata";
-import { breadcrumbSchema } from "@/lib/seo/schema";
+import { breadcrumbSchema, faqSchema } from "@/lib/seo/schema";
 
 import styles from "./reviews.module.css";
 
 export const metadata = createPageMetadata({
-  title: "어믜뜰 방문자 후기 | 청주 봉명동 등갈비찜",
+  title: "청주갈비찜 후기·가족외식·회식 | 어믜뜰",
   description:
-    "네이버 방문자 후기 일부에서 확인한 어믜뜰의 색다른 한 상, 부드러운 등갈비와 골라 먹는 재미를 원문 링크와 확인일로 살펴보세요.",
+    "2026년 10월 24일 네이버 플레이스에서 확인한 어믜뜰 평점과 방문자 반응을 바탕으로 청주갈비찜, 가족외식, 회식 이용 정보를 안내합니다.",
   path: "/reviews",
   image: "/images/eomeuittul/soy-ribs.jpg",
 });
@@ -29,10 +36,13 @@ export default async function ReviewsPage() {
   return (
     <main className={`store-route ${styles.reviewsRoute}`}>
       <JsonLd
-        data={breadcrumbSchema([
-          { name: "홈", path: "/" },
-          { name: "방문자 후기", path: "/reviews" },
-        ])}
+        data={[
+          breadcrumbSchema([
+            { name: "홈", path: "/" },
+            { name: "방문자 후기", path: "/reviews" },
+          ]),
+          faqSchema(REVIEW_FAQ_ITEMS),
+        ]}
       />
 
       <HeroMedia
@@ -44,13 +54,13 @@ export default async function ReviewsPage() {
             어믜뜰의 특별함
           </>
         }
-        description="색다른 메뉴, 부드러운 등갈비, 골라 먹는 재미. 방문자 후기 일부에서 반복된 반응을 원문과 함께 확인하세요."
+        description="청주갈비찜의 맛과 고기 품질, 셀프바 식사 경험, 가족외식과 회식 공간에 관한 최근 방문자 반응을 확인하세요."
         image="/images/eomeuittul/soy-ribs.jpg"
         imageAlt={`${STORE.name} 간장 등갈비찜과 채소 한 상`}
       >
         <a
           className="button button-primary"
-          href={STORE.placeUrl}
+          href={STORE.reviewUrl}
           target="_blank"
           rel="noreferrer"
         >
@@ -61,9 +71,9 @@ export default async function ReviewsPage() {
       <ProofStrip
         items={[
           `네이버 평점 ${REVIEW_SNAPSHOT.rating} / 5`,
-          `${REVIEW_SNAPSHOT.participants}명 참여`,
+          `${REVIEW_SNAPSHOT.ratingCount}개 평점 · ${REVIEW_SNAPSHOT.participants}명 참여`,
+          `방문자 리뷰 ${REVIEW_SNAPSHOT.visitorReviewCount}개 · 블로그 리뷰 ${REVIEW_SNAPSHOT.blogReviewCount}개`,
           `${REVIEW_SNAPSHOT.checkedAt.replaceAll("-", ".")} 확인`,
-          "네이버 원문 링크",
         ]}
       />
 
@@ -73,12 +83,16 @@ export default async function ReviewsPage() {
             <p className="eyebrow">NAVER VISITOR REVIEWS</p>
             <h2>손님이 먼저 알아본 어믜뜰</h2>
             <p>
-              아래 평점은 전체 실시간 후기 데이터가 아닌 확인일 기준 관리자 화면 스냅샷입니다.
+              아래 평점은 전체 실시간 후기 데이터가 아닌 확인일 기준 네이버 플레이스 공개 화면 스냅샷입니다.
               후기 카드는 네이버 방문자 후기 일부에서 반복된 반응을 요약했습니다.
             </p>
-            <aside className={styles.ratingSnapshot} aria-label="확인일 기준 네이버 평점">
+            <aside className={styles.ratingSnapshot} aria-label="확인일 기준 네이버 리뷰 스냅샷">
               <strong>{REVIEW_SNAPSHOT.rating} / 5</strong>
+              <span>{REVIEW_SNAPSHOT.ratingCount}개 평점</span>
               <span>{REVIEW_SNAPSHOT.participants}명 참여</span>
+              <span>방문자 리뷰 {REVIEW_SNAPSHOT.visitorReviewCount}개</span>
+              <span>블로그 리뷰 {REVIEW_SNAPSHOT.blogReviewCount}개</span>
+              <span>상단 전체 표시 {REVIEW_SNAPSHOT.totalDisplayedReviewCount}개</span>
               <time dateTime={REVIEW_SNAPSHOT.checkedAt}>
                 {REVIEW_SNAPSHOT.checkedAt.replaceAll("-", ".")} 확인
               </time>
@@ -86,6 +100,9 @@ export default async function ReviewsPage() {
                 네이버에서 최신 정보 보기
               </a>
             </aside>
+            <p className={styles.snapshotNote}>
+              방문자·블로그·상단 전체 표시는 서로 다른 네이버 분류이므로 합산하지 않습니다.
+            </p>
           </div>
 
           <div className={styles.reviewGrid}>
@@ -110,6 +127,22 @@ export default async function ReviewsPage() {
               </article>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className={`${styles.answerSection} section-pad`} aria-labelledby="review-answers-title">
+        <div className="shell">
+          <div className={styles.evidenceHeader}>
+            <p className="eyebrow">QUICK ANSWERS · 방문 전 확인</p>
+            <h2 id="review-answers-title">청주갈비찜·가족외식·회식, 바로 답해드려요</h2>
+            <p>최근 후기에서 궁금해진 내용을 매장의 확인된 메뉴·좌석·주차·예약 정보로 답합니다.</p>
+          </div>
+          <FaqList items={REVIEW_FAQ_ITEMS} openAll />
+          <nav className={styles.relatedLinks} aria-label="후기 관련 정보">
+            <Link href="/menu">전체 메뉴와 가격 보기</Link>
+            <Link href="/stories/cheongju-group-dining">청주 모임·회식 안내</Link>
+            <Link href="/stories/cheongju-galbijjim-guide">청주갈비찜 선택 가이드</Link>
+          </nav>
         </div>
       </section>
 
