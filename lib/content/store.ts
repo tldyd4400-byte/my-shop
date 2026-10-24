@@ -19,6 +19,7 @@ export const STORE: StoreInfo = {
   accessibility: ["휠체어 이용 가능 출입구", "휠체어 이용 가능 좌석", "휠체어 이용 가능 화장실"],
   familyFacilities: ["유아의자", "어린이밥"],
   placeUrl: "https://map.naver.com/p/entry/place/2021816208",
+  reviewUrl: "https://pcmap.place.naver.com/restaurant/2021816208/review/visitor",
   bookingUrl:
     "https://m.booking.naver.com/booking/6/bizes/1611967/items/7499930?area=bmp&theme=place",
   directionsUrl:
@@ -70,11 +71,34 @@ export const MENU_ITEMS: readonly MenuItem[] = [
 
 export const REVIEW_SNAPSHOT: ReviewSnapshot = {
   rating: 4.94,
-  participants: 362,
-  checkedAt: "2026-10-23",
-  sourceLabel: "네이버 스마트플레이스 관리자 화면",
-  sourceUrl: STORE.placeUrl,
+  ratingCount: 401,
+  participants: 367,
+  visitorReviewCount: 423,
+  blogReviewCount: 203,
+  totalDisplayedReviewCount: 631,
+  checkedAt: "2026-10-24",
+  sourceLabel: "네이버 플레이스 공개 리뷰 화면",
+  sourceUrl: STORE.reviewUrl,
 };
+
+export const REVIEW_FAQ_ITEMS: readonly FaqItem[] = [
+  {
+    question: "어믜뜰 후기에서 가장 많이 언급되는 장점은 무엇인가요?",
+    answer: "2026년 10월 24일 확인한 네이버 방문자 반응에서는 음식의 맛과 고기 품질이 가장 많이 언급됐고, 친절한 응대와 넉넉한 양, 넓은 매장도 반복적으로 언급됐습니다.",
+  },
+  {
+    question: "가족외식이나 회식에 적합한가요?",
+    answer: "어믜뜰은 유아의자와 어린이밥을 갖추고 있으며 한 팀 최대 52명까지 이용할 수 있어 가족외식과 회식 모두 사전 상담이 가능합니다.",
+  },
+  {
+    question: "매운 음식을 못 먹어도 이용할 수 있나요?",
+    answer: "매운 등갈비찜 대신 달콤짭짤한 간장 등갈비찜을 선택할 수 있습니다.",
+  },
+  {
+    question: "주차와 예약, 최대 인원은 어떻게 되나요?",
+    answer: "건물 뒤 무료 지상주차장을 이용할 수 있고 네이버 예약이 가능하며, 한 팀 최대 52명과 최대 인원 통대관은 날짜·시간·인원을 사전에 상담해 주세요.",
+  },
+];
 
 export const FAQ_ITEMS: readonly FaqItem[] = [
   { question: "월요일에도 영업하나요?", answer: "매주 월요일은 정기휴무입니다." },
@@ -113,9 +137,27 @@ export const GROUP_BOOKING_STEPS = [
 ] as const;
 
 export const REVIEW_ITEMS: readonly ReviewItem[] = [
-  { title: "색다른 한 상", summary: "등갈비찜과 샤브샤브를 함께 즐기는 이색적인 조합이라는 반응이 있습니다.", sourceLabel: "네이버 방문자 리뷰 일부 요약", sourceUrl: STORE.placeUrl, checkedAt: "2026-07-19" },
-  { title: "부드러운 등갈비", summary: "등갈비가 부드러워 가족과 함께 먹기 좋았다는 반응이 있습니다.", sourceLabel: "네이버 방문자 리뷰 일부 요약", sourceUrl: STORE.placeUrl, checkedAt: "2026-07-19" },
-  { title: "골라 먹는 재미", summary: "채소를 자유롭게 더하고 메밀전과 함께 먹는 방식이 재미있다는 반응이 있습니다.", sourceLabel: "네이버 방문자 리뷰 일부 요약", sourceUrl: STORE.placeUrl, checkedAt: "2026-07-19" },
+  {
+    title: "부드러운 등갈비와 만족스러운 맛",
+    summary: "최근 확인한 방문자 후기와 반응 집계에서 음식의 맛과 고기 품질이 반복적으로 언급됩니다.",
+    sourceLabel: "네이버 방문자 반응 요약",
+    sourceUrl: STORE.reviewUrl,
+    checkedAt: "2026-10-24",
+  },
+  {
+    title: "샤브식 등갈비와 다양한 셀프바",
+    summary: "채소와 사리를 취향대로 더해 끓이고 메밀전, 임궁밥, 수제우유빙수까지 이어지는 식사 경험이 언급됩니다.",
+    sourceLabel: "네이버 방문자 반응 요약",
+    sourceUrl: STORE.reviewUrl,
+    checkedAt: "2026-10-24",
+  },
+  {
+    title: "가족외식과 회식에 편한 공간",
+    summary: "넓고 깔끔한 공간, 단체 이용과 가족 방문, 친절한 응대가 반복적으로 언급됩니다.",
+    sourceLabel: "네이버 방문자 반응 요약",
+    sourceUrl: STORE.reviewUrl,
+    checkedAt: "2026-10-24",
+  },
 ];
 
 export const DINING_STEPS: readonly DiningStep[] = [

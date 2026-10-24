@@ -319,11 +319,11 @@ test("central review evidence has three safe, dated source records", () => {
   assert.equal(REVIEW_ITEMS.length, 3);
 
   for (const review of REVIEW_ITEMS) {
-    assert.equal(review.sourceUrl, STORE.placeUrl);
+    assert.equal(review.sourceUrl, STORE.reviewUrl);
     assert.equal(new URL(review.sourceUrl).protocol, "https:");
-    assert.equal(review.checkedAt, "2026-07-19");
-    assert.match(review.sourceLabel, /일부 요약/);
-    assert.match(review.summary, /반응이 있습니다\.$/);
+    assert.equal(review.checkedAt, "2026-10-24");
+    assert.equal(review.sourceLabel, "네이버 방문자 반응 요약");
+    assert.match(review.summary, /언급됩니다\.$/);
     assert.doesNotMatch(
       `${review.title} ${review.summary}`,
       /평점|별점|reviewCount|[“”]/,

@@ -24,6 +24,7 @@ export type StoreInfo = {
   accessibility: readonly string[];
   familyFacilities: readonly string[];
   placeUrl: string;
+  reviewUrl: string;
   bookingUrl: string;
   directionsUrl: string;
   image: string;
@@ -54,7 +55,11 @@ export type MenuItem = {
 
 export type ReviewSnapshot = {
   rating: number;
+  ratingCount: number;
   participants: number;
+  visitorReviewCount: number;
+  blogReviewCount: number;
+  totalDisplayedReviewCount: number;
   checkedAt: string;
   sourceLabel: string;
   sourceUrl: string;
