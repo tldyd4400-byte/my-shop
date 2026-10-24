@@ -314,7 +314,7 @@ test("stories export six records and getStory finds a story or returns undefined
 
 test("group and family guides include the verified 2026-10-23 visit facts", () => {
   const groupStory = getStory("cheongju-group-dining");
-  assert.equal(groupStory?.modifiedAt, "2026-10-23");
+  assert.equal(groupStory?.modifiedAt, "2026-10-24");
   const groupContent = JSON.stringify(groupStory);
   for (const fact of ["2명부터 한 팀 최대 52명", STORE.privateHire, STORE.corkage, "주류 주문은 필수가 아닙니다", STORE.holidayClosure]) {
     assert.ok(groupContent.includes(fact), fact);
@@ -326,6 +326,11 @@ test("group and family guides include the verified 2026-10-23 visit facts", () =
   for (const fact of ["간장등갈비찜", "어린이밥", "유아의자", "휠체어", STORE.holidayClosure]) {
     assert.ok(familyContent.includes(fact), fact);
   }
+});
+
+test("priority local-search guides carry the current content modification date", () => {
+  assert.equal(getStory("cheongju-group-dining")?.modifiedAt, "2026-10-24");
+  assert.equal(getStory("cheongju-galbijjim-guide")?.modifiedAt, "2026-10-24");
 });
 
 test("galbijjim FAQ answers direct search questions", () => {
