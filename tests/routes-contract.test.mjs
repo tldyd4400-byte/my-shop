@@ -154,6 +154,21 @@ test("story routes use central content, static generation, and approved SEO", ()
   );
 });
 
+test("group story limits menu cards to sets and keeps tracked booking and phone actions", () => {
+  const detail = read("app/stories/[slug]/page.tsx");
+
+  assert.match(detail, /MENU_ITEMS\.filter\(\(item\) => item\.category === "set"\)\.map/);
+  assert.doesNotMatch(detail, /MENU_ITEMS\.map/);
+  assert.match(detail, /item\.image \? <Image/);
+  assert.match(detail, /item\.minimumOrder \? <p>\{item\.minimumOrder\}인 이상 주문<\/p>/);
+  for (const placement of ["group_story_hero", "group_story_bottom"]) {
+    assert.match(detail, new RegExp(`href=\\{STORE\\.phoneHref\\}[^>]*eventName="group_inquiry_click" placement="${placement}"`));
+    assert.match(detail, new RegExp(`href=\\{STORE\\.bookingUrl\\}[^>]*eventName="naver_reservation_click" placement="${placement}"`));
+  }
+  assert.match(detail, /STORE\.privateHire/);
+  assert.match(detail, /STORE\.corkage/);
+});
+
 test("galbijjim story exposes direct-answer FAQ and reservation actions", () => {
   const detail = read("app/stories/[slug]/page.tsx");
 
@@ -225,12 +240,13 @@ test("light-surface eyebrows and dual-color focus indicators meet contrast", () 
   );
 });
 
-test("reviews route presents checked source summaries without ratings", () => {
+test("reviews route shows the verified dated rating snapshot without rating schema", () => {
   const page = read("app/reviews/page.tsx");
   const styles = read("app/reviews/reviews.module.css");
 
   for (const source of [
     "REVIEW_ITEMS",
+    "REVIEW_SNAPSHOT",
     "STORE",
     "HeroMedia",
     "ProofStrip",
@@ -246,20 +262,25 @@ test("reviews route presents checked source summaries without ratings", () => {
   assert.match(page, /image="\/images\/eomeuittul\/soy-ribs\.jpg"/);
   assert.match(page, /breadcrumbSchema\(\[/);
   assert.equal(page.split("<JsonLd").length - 1, 1);
-  assert.doesNotMatch(page, /restaurantSchema|AggregateRating/);
+  assert.doesNotMatch(page, /restaurantSchema|AggregateRating|rating:|reviewCount/);
+  assert.doesNotMatch(read("lib/seo/schema.ts"), /AggregateRating|reviewCount/);
   assert.match(
     page,
     /href=\{STORE\.placeUrl\}[\s\S]*?target="_blank"[\s\S]*?rel="noreferrer"/,
   );
 
-  for (const proof of [
-    "네이버 원문 링크",
-    "2026.07.19 확인",
-    "후기 일부만 발췌",
-    "반복 반응 중심 요약",
-  ]) {
-    assert.match(page, new RegExp(proof));
-  }
+  assert.match(page, /네이버 평점 \$\{REVIEW_SNAPSHOT\.rating\} \/ 5/);
+  assert.match(page, /\$\{REVIEW_SNAPSHOT\.participants\}명 참여/);
+  assert.match(page, /REVIEW_SNAPSHOT\.checkedAt\.replaceAll\("-", "\."\)\} 확인/);
+  assert.match(page, /네이버 원문 링크/);
+  const snapshot = page.match(/<aside className=\{styles\.ratingSnapshot\}[\s\S]*?<\/aside>/)?.[0] ?? "";
+  assert.match(snapshot, /aria-label="확인일 기준 네이버 평점"/);
+  assert.match(snapshot, /<strong>\{REVIEW_SNAPSHOT\.rating\} \/ 5<\/strong>/);
+  assert.match(snapshot, /\{REVIEW_SNAPSHOT\.participants\}명 참여/);
+  assert.match(snapshot, /<time dateTime=\{REVIEW_SNAPSHOT\.checkedAt\}>/);
+  assert.match(snapshot, /href=\{REVIEW_SNAPSHOT\.sourceUrl\}[\s\S]*?target="_blank"[\s\S]*?rel="noreferrer"/);
+  assert.match(snapshot, /네이버에서 최신 정보 보기/);
+  assert.doesNotMatch(page, /2026\.07\.19/);
 
   assert.match(page, /REVIEW_ITEMS\.map\(\(review\) =>/);
   assert.match(page, /review\.sourceLabel/);
@@ -271,13 +292,14 @@ test("reviews route presents checked source summaries without ratings", () => {
     /href=\{review\.sourceUrl\}[\s\S]*?target="_blank"[\s\S]*?rel="noreferrer"/,
   );
   assert.match(page, /전체 실시간 후기 데이터가 아닌/);
+  assert.match(page, /확인일 기준 관리자 화면 스냅샷/);
   assert.match(page, /step-2-selfbar\.jpg/);
   assert.equal(page.split("soy-ribs.jpg").length - 1, 3);
   assert.match(page, /<ReservationCta placement="reviews_bottom" \/>/);
   assert.match(page, /<LocationPanel \/>/);
   assert.doesNotMatch(
     page,
-    /평점|별점|reviewCount|리뷰 수|[“”]|예약 완료|효과|효능/,
+    /별점|reviewCount|리뷰 수|[“”]|예약 완료|효과|효능/,
   );
   assert.doesNotMatch(page, /SiteHeader|SiteFooter|MobileActionBar/);
 
@@ -287,6 +309,10 @@ test("reviews route presents checked source summaries without ratings", () => {
     /@media \(max-width: 767px\)[\s\S]*?\.reviewGrid\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
   );
   assert.match(styles, /\.sourceLink\s*\{[\s\S]*?min-height:\s*48px/);
+  assert.match(styles, /\.ratingSnapshot\s*\{[^}]*display:\s*flex;[^}]*flex-wrap:\s*wrap/);
+  assert.match(styles, /\.ratingSnapshot strong\s*\{[^}]*font-size:\s*32px/);
+  assert.match(styles, /\.ratingSnapshot a\s*\{[^}]*min-height:\s*48px/);
+  assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.ratingSnapshot\s*\{[^}]*align-items:\s*flex-start;[^}]*flex-direction:\s*column/);
 });
 
 test("central review evidence has three safe, dated source records", () => {
@@ -325,6 +351,16 @@ test("location and FAQ expose direct-answer information", () => {
   assert.match(location, /naver-map-location\.png/);
   assert.match(location, /eventName="phone_click"/);
   assert.match(location, /eventName="naver_map_click"/);
+  assert.match(location, /<VisitFacts \/>/);
+  assert.match(location, /설·추석 당일/);
+  assert.match(location, /휠체어/);
+  assert.match(location, /STORE\.accessibility\.join\(" · "\)/);
+  for (const fact of [
+    "화~금 11:00~22:00",
+    "평일 15:30~16:30 브레이크타임",
+    "월요일 · 설/추석 당일 휴무",
+    "건물 뒤 무료 지상주차장",
+  ]) assert.ok(location.includes(fact), fact);
 
   for (const source of [
     "FAQ_ITEMS",
@@ -346,6 +382,22 @@ test("location and FAQ expose direct-answer information", () => {
   assert.match(faq, /breadcrumbSchema\(\[/);
   assert.match(faq, /interior\.jpg/);
   assert.doesNotMatch(faq, /restaurantSchema/);
+});
+
+test("FAQ route highlights current group-size and corkage answers", () => {
+  const page = read("app/faq/page.tsx");
+
+  assert.match(page, /콜키지/);
+  assert.match(page, /52명/);
+});
+
+test("location panel reads current closure and last-order facts from STORE", () => {
+  const panel = read("components/site/location-panel.tsx");
+
+  for (const fact of ["regularClosure", "holidayClosure", "lastOrder"]) {
+    assert.ok(panel.includes(`STORE.${fact}`), fact);
+  }
+  assert.match(panel, /공휴일.*브레이크타임 없음/);
 });
 
 test("FAQ list can explicitly expose every answer without changing its default", () => {
@@ -375,7 +427,7 @@ test("menu route uses approved central content and composition", () => {
   const page = read("app/menu/page.tsx");
 
   for (const source of [
-    "MENU_ITEMS",
+    "MenuCategoryGrid",
     "STORE",
     "HeroMedia",
     "ProofStrip",
@@ -389,11 +441,26 @@ test("menu route uses approved central content and composition", () => {
   assert.match(page, /path: "\/menu"/);
   assert.match(page, /restaurantSchema\(\)/);
   assert.match(page, /breadcrumbSchema\(\[/);
-  assert.match(page, /item\.price/);
-  assert.match(page, /item\.includes/);
+  assert.match(page, /<MenuCategoryGrid \/>/);
+  assert.doesNotMatch(page, /MENU_ITEMS\.map/);
+  assert.match(page, /육수·소스 등 동물성 재료 포함 여부/);
+  assert.match(page, /셀프바에서 채소를 자유롭게 선택할 수 있습니다/);
+  assert.match(page, /완전 비건 식사가 필요하다면[\s\S]*?매장에 먼저 확인해 주세요/);
+  for (const fact of [
+    "수제우유빙수 후식 무료",
+    "반조리 포장 할인",
+  ]) assert.ok(page.includes(fact), fact);
   assert.match(page, /step-2-selfbar\.jpg/);
   assert.match(page, /placement="menu_hero"/);
   assert.match(page, /placement="menu_bottom"/);
+});
+
+test("menu proof derives its set price and minimum order from central menu data", () => {
+  const page = read("app/menu/page.tsx");
+  assert.match(page, /const signatureSet = MENU_ITEMS\.find\(\(item\) => item\.slug === "spicy-set"\)!/);
+  assert.match(page, /`매운·간장 세트 \$\{signatureSet\.price\}`/);
+  assert.match(page, /`대표 세트 \$\{signatureSet\.minimumOrder\}인 이상`/);
+  assert.doesNotMatch(page, /19,900원|대표 세트 2인 이상/);
 });
 
 test("store route uses approved media, central facts, and composition", () => {
@@ -454,7 +521,7 @@ test("routes avoid unverified claims and leave chrome to the root layout", () =>
 
   assert.doesNotMatch(
     source,
-    /AggregateRating|rating:|reviewCount|평점|낙지파전|등갈비 1인분 추가|일요일 (?:휴무|정기휴무)|예약 완료|리치 결과 보장|사진을 제공하면|이 영역에 바로 교체/,
+    /AggregateRating|rating:|reviewCount|낙지파전|등갈비 1인분 추가|일요일 (?:휴무|정기휴무)|예약 완료|리치 결과 보장|사진을 제공하면|이 영역에 바로 교체|바 형태|카운터석/,
   );
   assert.doesNotMatch(source, /SiteHeader|SiteFooter|MobileActionBar/);
 });

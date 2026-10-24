@@ -11,7 +11,7 @@ import { breadcrumbSchema, faqSchema } from "@/lib/seo/schema";
 export const metadata = createPageMetadata({
   title: "어믜뜰 FAQ | 예약·주차·단체·통대관",
   description:
-    "어믜뜰의 영업시간, 주차, 메뉴, 아이 동반과 예약 안내. 최대 52명 단체 이용과 통대관 사전 협의 질문도 확인하세요.",
+    "어믜뜰의 영업시간, 주차, 메뉴, 포장 할인과 휠체어 이용 안내. 최대 52명 단체 이용과 통대관, 무료 콜키지 질문도 확인하세요.",
   path: "/faq",
   image: "/images/eomeuittul/interior.jpg",
 });
@@ -56,9 +56,9 @@ export default function FaqPage() {
       <ProofStrip
         items={[
           "월요일 정기휴무",
-          "포장 가능",
+          "반조리 포장 할인",
           "건물 뒤 무료 지상주차장",
-          "일요일 영업",
+          "최대 52명 · 콜키지 무료",
         ]}
       />
 
@@ -78,7 +78,7 @@ export default function FaqPage() {
           <div>
             <p className="eyebrow">MENU · RESERVATION</p>
             <h2>메뉴·예약·아이 동반</h2>
-            <p>메뉴 선택부터 예약, 아이와 단체 방문 안내입니다.</p>
+            <p>메뉴 선택과 예약, 아이·휠체어 동반, 콜키지와 포장 할인 안내입니다.</p>
           </div>
           <FaqList items={FAQ_ITEMS.slice(4)} openAll />
         </div>

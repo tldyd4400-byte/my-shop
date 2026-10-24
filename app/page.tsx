@@ -8,13 +8,16 @@ import { FaqList } from "@/components/site/faq-list";
 import { HeroMedia } from "@/components/site/hero-media";
 import { GroupDiningPanel } from "@/components/site/group-dining-panel";
 import { LocationPanel } from "@/components/site/location-panel";
+import { MenuCategoryGrid } from "@/components/site/menu-category-grid";
 import { OnlineReviewCards } from "@/components/site/online-review-cards";
 import { ProofStrip } from "@/components/site/proof-strip";
 import { ReservationCta } from "@/components/site/reservation-cta";
+import { VisitFacts } from "@/components/site/visit-facts";
 import {
   FAQ_ITEMS,
   MENU_ITEMS,
   REVIEW_ITEMS,
+  REVIEW_SNAPSHOT,
   STORE,
 } from "@/lib/content/store";
 import { loadPublicOnlineReviews } from "@/lib/online-reviews/public";
@@ -35,6 +38,7 @@ export const metadata = createPageMetadata({
 export const revalidate = 3600;
 
 export default async function HomePage() {
+  const signatureSet = MENU_ITEMS.find((item) => item.slug === "spicy-set")!;
   const homeFaqs = FAQ_ITEMS.slice(0, 4);
   const onlineReviews = await loadPublicOnlineReviews(3);
 
@@ -48,12 +52,12 @@ export default async function HomePage() {
         eyebrow="BRAND FILM · 청주 봉명동"
         title={
           <>
-            처음 보는 등갈비찜,
+            <span>회식도 가족외식도,</span>
             <br />
-            함께 끓여 더 맛있는 한 상
+            함께 끓여 더 즐거운 한 상
           </>
         }
-        description="부드러운 등갈비와 30여 종의 채소를 취향대로 더해 샤브처럼 즐기는 어믜뜰만의 색다른 한 상"
+        description={`매운·간장 등갈비찜 세트 1인 ${signatureSet.price} · ${signatureSet.minimumOrder}인 이상 · 최대 ${STORE.maxGroupSize}명 단체 이용과 통대관 상담 · 무료 주차`}
         image="/images/eomeuittul/hero-poster.webp"
         imageAlt="등갈비찜과 메밀전, 채소가 함께 차려진 어믜뜰 한 상"
         video="/media/eomeuittul/hero-brand-720p.mp4"
@@ -66,19 +70,27 @@ export default async function HomePage() {
           eventName="naver_reservation_click"
           placement="home_hero"
         >
-          네이버에서 예약하기
+          네이버 예약하기
         </AnalyticsLink>
-        <Link className="button button-secondary" href="/menu">
-          메뉴 먼저 보기
+        <AnalyticsLink
+          className="button button-secondary"
+          href={STORE.phoneHref}
+          eventName="group_inquiry_click"
+          placement="home_hero"
+        >
+          {STORE.maxGroupSize}명 모임 상담
+        </AnalyticsLink>
+        <Link className="button button-tertiary" href="/menu">
+          전체 메뉴 보기
         </Link>
       </HeroMedia>
 
       <ProofStrip
         items={[
-          "청주 봉명동 본점",
-          "30여 종 채소 셀프바",
-          "등갈비찜 + 샤브의 색다른 조합",
-          "네이버 예약 가능",
+          `네이버 평점 ${REVIEW_SNAPSHOT.rating} / 5 · ${REVIEW_SNAPSHOT.checkedAt.replaceAll("-", ".")} 확인`,
+          `메뉴 ${MENU_ITEMS.length}개 최신 가격`,
+          `2~${STORE.maxGroupSize}명 단체석 · 통대관 협의`,
+          "매장 뒤 무료 주차",
         ]}
       />
 
@@ -109,21 +121,7 @@ export default async function HomePage() {
       <section className="menu-preview section-pad">
         <div className="shell">
           <h2>한 상에 빠짐없이 담았습니다</h2>
-          <div className="menu-grid">
-            {MENU_ITEMS.map((item) => (
-              <article key={item.slug}>
-                <Image
-                  src={item.image}
-                  alt={item.imageAlt}
-                  width={640}
-                  height={360}
-                />
-                <h3>{item.name}</h3>
-                <strong>{item.price}</strong>
-                <p>{item.description}</p>
-              </article>
-            ))}
-          </div>
+          <MenuCategoryGrid compact />
         </div>
       </section>
 
@@ -163,6 +161,7 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <VisitFacts />
       <LocationPanel />
     </main>
   );

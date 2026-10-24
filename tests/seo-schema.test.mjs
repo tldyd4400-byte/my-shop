@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { FAQ_ITEMS, MENU_ITEMS, STORE } from "../lib/content/store.ts";
+import { FAQ_ITEMS, GROUP_FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, STORE } from "../lib/content/store.ts";
 import { STORIES } from "../lib/content/stories.ts";
 import { createPageMetadata } from "../lib/seo/metadata.ts";
 import {
@@ -16,6 +16,18 @@ import {
 
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+
+test("FAQ route publishes its complete visible question set exactly once in schema", () => {
+  const page = read("app/faq/page.tsx");
+  assert.match(page, /const allFaqs = \[\.\.\.FAQ_ITEMS, \.\.\.GROUP_FAQ_ITEMS\]/);
+  assert.match(page, /items=\{FAQ_ITEMS\.slice\(0, 4\)\}/);
+  assert.match(page, /items=\{FAQ_ITEMS\.slice\(4\)\}/);
+  assert.match(page, /items=\{GROUP_FAQ_ITEMS\}/);
+  assert.match(page, /faqSchema\(allFaqs\)/);
+  const questions = faqSchema([...FAQ_ITEMS, ...GROUP_FAQ_ITEMS]).mainEntity.map((item) => item.name);
+  assert.equal(new Set(questions).size, questions.length, "duplicate questions in /faq schema");
+  assert.equal(questions.filter((question) => question === "한 팀 몇 명까지 이용할 수 있나요?").length, 1);
+});
 
 test("createPageMetadata returns canonical Korean Open Graph metadata", () => {
   const metadata = createPageMetadata({
@@ -38,7 +50,7 @@ test("createPageMetadata returns canonical Korean Open Graph metadata", () => {
   });
 });
 
-test("schema factories use central facts and avoid unverified ratings", () => {
+test("schema factories use central facts without publishing the display-only rating snapshot", () => {
   const website = websiteSchema();
   const restaurant = restaurantSchema();
 
@@ -50,10 +62,52 @@ test("schema factories use central facts and avoid unverified ratings", () => {
   assert.deepEqual(restaurant.sameAs, [STORE.placeUrl]);
   assert.equal(restaurant.maximumAttendeeCapacity, 52);
   assert.deepEqual(restaurant.servesCuisine, ["한식", "갈비찜", "등갈비찜"]);
-  assert.deepEqual(restaurant.amenityFeature.map((item) => item.name), ["단체 이용", "통대관", "무료주차"]);
-  assert.equal(restaurant.hasMenu.hasMenuSection.hasMenuItem.length, MENU_ITEMS.length);
-  assert.equal(restaurant.hasMenu.hasMenuSection.hasMenuItem[0].offers.price, "19900");
+  assert.deepEqual(
+    restaurant.amenityFeature.map((item) => item.name),
+    ["단체 이용", "통대관", "무료주차", "유아의자", "휠체어 이용 가능"],
+  );
+  assert.equal(restaurant.hasMenu.hasMenuSection.length, MENU_CATEGORIES.length);
+  assert.equal(
+    restaurant.hasMenu.hasMenuSection.flatMap((section) => section.hasMenuItem).length,
+    MENU_ITEMS.length,
+  );
+  assert.equal(restaurant.hasMenu.hasMenuSection[0].hasMenuItem[0].offers.price, "19900");
   assert.equal(JSON.stringify(restaurant).includes("AggregateRating"), false);
+  assert.doesNotMatch(JSON.stringify(restaurant), /aggregateRating|ratingValue|reviewCount/);
+});
+
+test("restaurant menu sections preserve category content and numeric KRW prices", () => {
+  const restaurant = restaurantSchema();
+
+  assert.deepEqual(
+    restaurant.hasMenu.hasMenuSection,
+    MENU_CATEGORIES.map((category) => ({
+      "@type": "MenuSection",
+      name: category.label,
+      description: category.description,
+      hasMenuItem: MENU_ITEMS.filter((item) => item.category === category.id).map((item) => ({
+        "@type": "MenuItem",
+        name: item.name,
+        description: item.description,
+        offers: {
+          "@type": "Offer",
+          price: String(item.priceAmount),
+          priceCurrency: "KRW",
+        },
+      })),
+    })),
+  );
+});
+
+test("restaurant amenities publish central private-hire and accessibility facts", () => {
+  const { amenityFeature } = restaurantSchema();
+
+  assert.equal(amenityFeature.find((item) => item.name === "통대관").description, STORE.privateHire);
+  assert.equal(
+    amenityFeature.find((item) => item.name === "휠체어 이용 가능")?.description,
+    STORE.accessibility.join(" · "),
+  );
+  assert.ok(amenityFeature.every((item) => item["@type"] === "LocationFeatureSpecification" && item.value === true));
 });
 
 test("breadcrumb, FAQ, and article schemas serialize supplied central content", () => {
@@ -116,6 +170,6 @@ test("SEO helpers contain only approved schema types and JsonLd escapes HTML del
   ]) {
     assert.match(schema, new RegExp(type));
   }
-  assert.doesNotMatch(schema, /AggregateRating/);
+  assert.doesNotMatch(schema, /AggregateRating|aggregateRating|ratingValue|reviewCount|REVIEW_SNAPSHOT/);
   assert.match(jsonLd, /JSON\.stringify\(data\)\.replace\(\/<\/g, "\\\\u003c"\)/);
 });

@@ -6,6 +6,7 @@ import { FaqList } from "@/components/site/faq-list";
 import { HeroMedia } from "@/components/site/hero-media";
 import { LocationPanel } from "@/components/site/location-panel";
 import { ProofStrip } from "@/components/site/proof-strip";
+import { VisitFacts } from "@/components/site/visit-facts";
 import { FAQ_ITEMS, STORE } from "@/lib/content/store";
 import type { FaqItem } from "@/lib/content/types";
 import { createPageMetadata } from "@/lib/seo/metadata";
@@ -16,7 +17,7 @@ const VISIT_FAQS: readonly FaqItem[] = FAQ_ITEMS.slice(0, 4);
 export const metadata = createPageMetadata({
   title: "어믜뜰 오시는 길·주차 | 청주 봉명동 맛집",
   description:
-    "어믜뜰 청주봉명동본점 주소, 영업시간, 월요일 휴무, 주차와 네이버 길찾기 정보를 확인하세요.",
+    "어믜뜰 청주봉명동본점 주소, 영업시간, 월요일·설·추석 당일 휴무, 주차와 휠체어 접근성, 네이버 길찾기 정보를 확인하세요.",
   path: "/location",
   image: "/images/eomeuittul/naver-map-location.png",
 });
@@ -69,13 +70,14 @@ export default function LocationPage() {
 
       <ProofStrip
         items={[
-          "청주 봉명동 본점",
-          "백봉로 213-1",
+          "화~금 11:00~22:00",
+          "평일 15:30~16:30 브레이크타임",
+          "월요일 · 설/추석 당일 휴무",
           "건물 뒤 무료 지상주차장",
-          "월요일 정기휴무 · 일요일 영업",
         ]}
       />
 
+      <VisitFacts />
       <LocationPanel />
 
       <section className="section-pad surface-hanji">
@@ -84,6 +86,8 @@ export default function LocationPage() {
             <p className="eyebrow">PARKING &amp; ENTRANCE</p>
             <h2>건물 뒤 무료 지상주차장</h2>
             <p>{STORE.parking}</p>
+            <h3>휠체어 이용 안내</h3>
+            <p>{STORE.accessibility.join(" · ")}</p>
             <AnalyticsLink
               className="button button-secondary"
               href={STORE.placeUrl}

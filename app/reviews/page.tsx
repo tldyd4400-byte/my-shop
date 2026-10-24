@@ -6,7 +6,7 @@ import { LocationPanel } from "@/components/site/location-panel";
 import { OnlineReviewCards } from "@/components/site/online-review-cards";
 import { ProofStrip } from "@/components/site/proof-strip";
 import { ReservationCta } from "@/components/site/reservation-cta";
-import { REVIEW_ITEMS, STORE } from "@/lib/content/store";
+import { REVIEW_ITEMS, REVIEW_SNAPSHOT, STORE } from "@/lib/content/store";
 import { loadPublicOnlineReviews } from "@/lib/online-reviews/public";
 import { createPageMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema } from "@/lib/seo/schema";
@@ -60,22 +60,32 @@ export default async function ReviewsPage() {
 
       <ProofStrip
         items={[
+          `네이버 평점 ${REVIEW_SNAPSHOT.rating} / 5`,
+          `${REVIEW_SNAPSHOT.participants}명 참여`,
+          `${REVIEW_SNAPSHOT.checkedAt.replaceAll("-", ".")} 확인`,
           "네이버 원문 링크",
-          "2026.07.19 확인",
-          "후기 일부만 발췌",
-          "반복 반응 중심 요약",
         ]}
       />
 
       <section className={`${styles.reviewsSection} section-pad surface-paper`}>
         <div className="shell">
           <div className={styles.evidenceHeader}>
-            <p className="eyebrow">NAVER VISITOR REVIEWS · 2026.07.19</p>
+            <p className="eyebrow">NAVER VISITOR REVIEWS</p>
             <h2>손님이 먼저 알아본 어믜뜰</h2>
             <p>
-              전체 실시간 후기 데이터가 아닌, 확인일 기준 네이버 방문자 후기
-              일부에서 반복된 반응을 요약했습니다.
+              아래 평점은 전체 실시간 후기 데이터가 아닌 확인일 기준 관리자 화면 스냅샷입니다.
+              후기 카드는 네이버 방문자 후기 일부에서 반복된 반응을 요약했습니다.
             </p>
+            <aside className={styles.ratingSnapshot} aria-label="확인일 기준 네이버 평점">
+              <strong>{REVIEW_SNAPSHOT.rating} / 5</strong>
+              <span>{REVIEW_SNAPSHOT.participants}명 참여</span>
+              <time dateTime={REVIEW_SNAPSHOT.checkedAt}>
+                {REVIEW_SNAPSHOT.checkedAt.replaceAll("-", ".")} 확인
+              </time>
+              <a href={REVIEW_SNAPSHOT.sourceUrl} target="_blank" rel="noreferrer">
+                네이버에서 최신 정보 보기
+              </a>
+            </aside>
           </div>
 
           <div className={styles.reviewGrid}>

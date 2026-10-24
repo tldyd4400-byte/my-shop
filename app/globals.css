@@ -126,6 +126,12 @@ a {
   color: var(--white);
 }
 
+.button-tertiary {
+  background: var(--hanji);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+
 .button-small {
   min-height: 48px;
   padding: 0 20px;
@@ -524,6 +530,70 @@ a {
   color: var(--white);
 }
 
+.menu-category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.menu-category {
+  background: var(--hanji);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 28px;
+}
+
+.menu-category ul {
+  display: grid;
+  gap: 0;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu-category li {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  border-top: 1px solid var(--line);
+  padding: 18px 0;
+}
+
+.menu-category li p,
+.menu-category li small {
+  color: var(--muted);
+  margin: 4px 0 0;
+}
+
+.menu-category li small {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.menu-category li > span {
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.visit-facts {
+  background: var(--paper);
+}
+
+.visit-facts-grid {
+  display: grid;
+  grid-template-columns: 1.2fr .8fr;
+  gap: 48px;
+}
+
+.visit-facts dl div {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 16px;
+  border-top: 1px solid var(--line);
+  padding: 14px 0;
+}
+
 .menu-grid,
 .review-grid {
   display: grid;
@@ -568,6 +638,25 @@ a {
 }
 
 @media (max-width: 767px) {
+  .menu-category-grid,
+  .visit-facts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-category {
+    padding: 22px;
+  }
+
+  .menu-category li {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .visit-facts dl div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+
   .split-section,
   .menu-grid,
   .review-grid {

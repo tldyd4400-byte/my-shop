@@ -1,4 +1,4 @@
-import { FAQ_ITEMS, MENU_ITEMS, STORE } from "../content/store.ts";
+import { FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, STORE } from "../content/store.ts";
 import type { FaqItem, Story } from "../content/types.ts";
 
 export function websiteSchema() {
@@ -28,8 +28,10 @@ export function restaurantSchema() {
     maximumAttendeeCapacity: STORE.maxGroupSize,
     amenityFeature: [
       { "@type": "LocationFeatureSpecification", name: "단체 이용", value: true },
-      { "@type": "LocationFeatureSpecification", name: "통대관", value: true, description: "날짜·시간·인원 사전 협의" },
+      { "@type": "LocationFeatureSpecification", name: "통대관", value: true, description: STORE.privateHire },
       { "@type": "LocationFeatureSpecification", name: "무료주차", value: true },
+      { "@type": "LocationFeatureSpecification", name: "유아의자", value: true },
+      { "@type": "LocationFeatureSpecification", name: "휠체어 이용 가능", value: true, description: STORE.accessibility.join(" · ") },
     ],
     acceptsReservations: true,
     address: {
@@ -46,20 +48,21 @@ export function restaurantSchema() {
     menu: `${STORE.url}/menu`,
     hasMenu: {
       "@type": "Menu",
-      hasMenuSection: {
+      hasMenuSection: MENU_CATEGORIES.map((category) => ({
         "@type": "MenuSection",
-        name: "Menu",
-        hasMenuItem: MENU_ITEMS.map((item) => ({
+        name: category.label,
+        description: category.description,
+        hasMenuItem: MENU_ITEMS.filter((item) => item.category === category.id).map((item) => ({
           "@type": "MenuItem",
           name: item.name,
           description: item.description,
           offers: {
             "@type": "Offer",
-            price: item.price.replace(/[^0-9]/g, ""),
+            price: String(item.priceAmount),
             priceCurrency: "KRW",
           },
         })),
-      },
+      })),
     },
   };
 }

@@ -4,24 +4,7 @@ import { STORE } from "@/lib/content/store";
 
 import { AnalyticsLink } from "./analytics-link";
 
-const DAY_LABELS = {
-  Monday: "월요일",
-  Tuesday: "화요일",
-  Wednesday: "수요일",
-  Thursday: "목요일",
-  Friday: "금요일",
-  Saturday: "토요일",
-  Sunday: "일요일",
-} as const;
-
 export function LocationPanel() {
-  const openDays = new Set(
-    STORE.openingPeriods.flatMap((period) => period.days),
-  );
-  const closedDays = Object.entries(DAY_LABELS)
-    .filter(([day]) => !openDays.has(day))
-    .map(([, label]) => label);
-
   return (
     <section className="location-panel section-pad">
       <div className="shell location-grid">
@@ -45,7 +28,9 @@ export function LocationPanel() {
               </div>
             ))}
           </dl>
-          <p>정기휴무: {closedDays.join(", ")}</p>
+          <p>토·일·공휴일은 브레이크타임 없음</p>
+          <p>라스트오더: {STORE.lastOrder}</p>
+          <p>정기휴무: {STORE.regularClosure} · 공휴일 휴무: {STORE.holidayClosure}</p>
           <p>{STORE.parking}</p>
           <AnalyticsLink
             className="button button-secondary"
