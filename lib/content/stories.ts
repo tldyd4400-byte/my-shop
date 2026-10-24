@@ -71,7 +71,7 @@ export const STORIES: readonly Story[] = [
     category: "단체 방문 가이드",
     readingTime: "4분",
     publishedAt: "2026-09-13",
-    modifiedAt: "2026-10-23",
+    modifiedAt: "2026-10-24",
     image: "/images/eomeuittul/interior.jpg",
     imageAlt: "한 팀 최대 52명이 이용할 수 있는 어믜뜰 매장 내부",
     sections: [
@@ -88,7 +88,7 @@ export const STORIES: readonly Story[] = [
     category: "청주갈비찜 가이드",
     readingTime: "4분",
     publishedAt: "2026-09-16",
-    modifiedAt: "2026-09-16",
+    modifiedAt: "2026-10-24",
     image: "/images/eomeuittul/spicy-ribs.jpg",
     imageAlt: "어믜뜰 매운 등갈비찜 한 상",
     sections: [

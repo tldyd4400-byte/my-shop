@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { FAQ_ITEMS, GROUP_FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, STORE } from "../lib/content/store.ts";
+import { FAQ_ITEMS, GROUP_FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, REVIEW_FAQ_ITEMS, STORE } from "../lib/content/store.ts";
 import { STORIES } from "../lib/content/stories.ts";
 import { createPageMetadata } from "../lib/seo/metadata.ts";
 import {
@@ -16,6 +16,13 @@ import {
 
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+
+test("reviews route renders and serializes the same central FAQ set", () => {
+  const page = read("app/reviews/page.tsx");
+  assert.match(page, /<FaqList items=\{REVIEW_FAQ_ITEMS\} openAll \/>/);
+  assert.match(page, /faqSchema\(REVIEW_FAQ_ITEMS\)/);
+  assert.equal(faqSchema(REVIEW_FAQ_ITEMS).mainEntity.length, REVIEW_FAQ_ITEMS.length);
+});
 
 test("FAQ route publishes its complete visible question set exactly once in schema", () => {
   const page = read("app/faq/page.tsx");
@@ -57,9 +64,18 @@ test("schema factories use central facts without publishing the display-only rat
   assert.equal(website["@type"], "WebSite");
   assert.equal(website.url, STORE.url);
   assert.equal(restaurant["@type"], "Restaurant");
+  assert.equal(restaurant["@id"], `${STORE.url}/#restaurant`);
+  assert.equal(website.publisher["@id"], restaurant["@id"]);
   assert.equal(restaurant.name, STORE.fullName);
   assert.equal(restaurant.telephone, STORE.phoneDisplay);
   assert.deepEqual(restaurant.sameAs, [STORE.placeUrl]);
+  assert.deepEqual(restaurant.address, {
+    "@type": "PostalAddress",
+    ...STORE.postalAddress,
+  });
+  assert.equal(restaurant.mainEntityOfPage, STORE.url);
+  assert.equal("geo" in restaurant, false);
+  assert.equal("postalCode" in restaurant.address, false);
   assert.equal(restaurant.maximumAttendeeCapacity, 52);
   assert.deepEqual(restaurant.servesCuisine, ["한식", "갈비찜", "등갈비찜"]);
   assert.deepEqual(

@@ -29,9 +29,9 @@ import {
 } from "@/lib/seo/schema";
 
 export const metadata = createPageMetadata({
-  title: "청주 봉명동 맛집 어믜뜰 | 색다른 등갈비찜",
+  title: "청주갈비찜·회식·가족외식 | 어믜뜰 청주봉명동본점",
   description:
-    "청주 봉명동에서 등갈비찜과 30여 종 셀프바를 샤브처럼 즐기는 어믜뜰입니다.",
+    "청주 봉명동에서 매운·간장 등갈비찜과 셀프바를 샤브처럼 즐겨보세요. 청주 회식과 가족외식, 최대 52명 통대관 상담, 무료 주차와 네이버 예약이 가능합니다.",
   path: "/",
 });
 
@@ -131,6 +131,9 @@ export default async function HomePage() {
       <section className="review-preview section-pad surface-paper">
         <div className="shell">
           <h2>손님이 먼저 알아본 어믜뜰</h2>
+          <Link className="button button-tertiary" href="/reviews">
+            최신 후기 전체 보기
+          </Link>
           {onlineReviews.length > 0 ? (
             <OnlineReviewCards reviews={onlineReviews} />
           ) : (

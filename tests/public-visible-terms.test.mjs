@@ -312,7 +312,7 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
         assert.ok(text.includes("주류 주문은 필수가 아닙니다"));
         assert.ok(text.includes("네이버에서 예약하기"));
         assert.ok(text.includes("설·추석 당일"));
-        assert.ok(text.includes("2026-10-23 수정"));
+        assert.ok(text.includes("2026-10-24 수정"));
         const heroActions = html.match(/<div class="hero-actions">([\s\S]*?)<\/div>/u)?.[1];
         assert.ok(heroActions, "group story needs visible hero actions");
         assert.ok(heroActions.includes(`href="${STORE.phoneHref}"`));

@@ -34,10 +34,10 @@ export function restaurantSchema() {
       { "@type": "LocationFeatureSpecification", name: "휠체어 이용 가능", value: true, description: STORE.accessibility.join(" · ") },
     ],
     acceptsReservations: true,
+    mainEntityOfPage: STORE.url,
     address: {
       "@type": "PostalAddress",
-      streetAddress: STORE.address,
-      addressCountry: "KR",
+      ...STORE.postalAddress,
     },
     openingHoursSpecification: STORE.openingPeriods.map((period) => ({
       "@type": "OpeningHoursSpecification",
