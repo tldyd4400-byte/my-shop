@@ -64,9 +64,18 @@ test("schema factories use central facts without publishing the display-only rat
   assert.equal(website["@type"], "WebSite");
   assert.equal(website.url, STORE.url);
   assert.equal(restaurant["@type"], "Restaurant");
+  assert.equal(restaurant["@id"], `${STORE.url}/#restaurant`);
+  assert.equal(website.publisher["@id"], restaurant["@id"]);
   assert.equal(restaurant.name, STORE.fullName);
   assert.equal(restaurant.telephone, STORE.phoneDisplay);
   assert.deepEqual(restaurant.sameAs, [STORE.placeUrl]);
+  assert.deepEqual(restaurant.address, {
+    "@type": "PostalAddress",
+    ...STORE.postalAddress,
+  });
+  assert.equal(restaurant.mainEntityOfPage, STORE.url);
+  assert.equal("geo" in restaurant, false);
+  assert.equal("postalCode" in restaurant.address, false);
   assert.equal(restaurant.maximumAttendeeCapacity, 52);
   assert.deepEqual(restaurant.servesCuisine, ["한식", "갈비찜", "등갈비찜"]);
   assert.deepEqual(

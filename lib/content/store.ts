@@ -7,6 +7,12 @@ export const STORE: StoreInfo = {
   phoneDisplay: "0507-1449-0004",
   phoneHref: "tel:050714490004",
   address: "충북 청주시 흥덕구 백봉로 213-1 1층",
+  postalAddress: {
+    streetAddress: "백봉로 213-1 1층",
+    addressLocality: "청주시 흥덕구",
+    addressRegion: "충청북도",
+    addressCountry: "KR",
+  },
   parking: "건물 뒤 무료 지상주차장 · 점심시간 및 17시 이후 도로 주차 가능",
   seats: "12테이블 · 52석 · 6인 단체석 2테이블",
   maxGroupSize: 52,

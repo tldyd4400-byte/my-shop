@@ -12,6 +12,12 @@ export type StoreInfo = {
   phoneDisplay: string;
   phoneHref: string;
   address: string;
+  postalAddress: {
+    streetAddress: string;
+    addressLocality: string;
+    addressRegion: string;
+    addressCountry: "KR";
+  };
   parking: string;
   seats: string;
   maxGroupSize: number;

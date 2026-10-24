@@ -58,6 +58,15 @@ test("central content exports approved store facts", () => {
   ]);
 });
 
+test("central store exposes verified postal address components", () => {
+  assert.deepEqual(STORE.postalAddress, {
+    streetAddress: "백봉로 213-1 1층",
+    addressLocality: "청주시 흥덕구",
+    addressRegion: "충청북도",
+    addressCountry: "KR",
+  });
+});
+
 test("reservation CTA links directly to the Naver booking item", () => {
   const bookingUrl = new URL(STORE.bookingUrl);
 
