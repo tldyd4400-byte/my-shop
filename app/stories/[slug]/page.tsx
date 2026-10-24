@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { JsonLd } from "@/components/seo/json-ld";
@@ -172,6 +173,13 @@ export default async function StoryPage({ params }: StoryPageProps) {
             <p className="eyebrow">{isGroupStory ? "GROUP · PRIVATE HIRE" : "FAQ"}</p>
             <h2>{isGroupStory ? "모임과 회식, 이렇게 준비합니다" : "함께 확인하면 좋은 질문"}</h2>
             <p>메뉴 선택과 방문 전에 필요한 내용을 확인하세요.</p>
+            {hasDirectAnswerFaq ? (
+              <p>
+                <Link className="button button-secondary" href="/reviews">
+                  최신 방문자 반응 확인하기
+                </Link>
+              </p>
+            ) : null}
           </div>
           <FaqList items={faqs} openAll />
         </div>

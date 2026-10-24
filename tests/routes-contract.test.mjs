@@ -154,6 +154,16 @@ test("story routes use central content, static generation, and approved SEO", ()
   );
 });
 
+test("priority guides link contextually to the current review page", () => {
+  const detail = read("app/stories/[slug]/page.tsx");
+  assert.match(detail, /import Link from "next\/link"/);
+  assert.match(detail, /const isGroupStory = story\.slug === "cheongju-group-dining"/);
+  assert.match(detail, /const isGalbijjimStory = story\.slug === "cheongju-galbijjim-guide"/);
+  assert.match(detail, /const hasDirectAnswerFaq = isGroupStory \|\| isGalbijjimStory/);
+  const faqSection = detail.match(/<section className="story-faq[\s\S]*?<\/section>/)?.[0] ?? "";
+  assert.match(faqSection, /메뉴 선택과 방문 전에 필요한 내용을 확인하세요\.<\/p>\s*\{hasDirectAnswerFaq \? \(\s*<p>\s*<Link className="button button-secondary" href="\/reviews">\s*최신 방문자 반응 확인하기\s*<\/Link>\s*<\/p>\s*\) : null\}/);
+});
+
 test("group story limits menu cards to sets and keeps tracked booking and phone actions", () => {
   const detail = read("app/stories/[slug]/page.tsx");
 

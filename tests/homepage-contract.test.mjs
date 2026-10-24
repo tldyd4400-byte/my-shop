@@ -31,7 +31,7 @@ test("home V4 exposes approved media, proof, trust, and conversion sections", ()
     page,
     /<HeroMedia[\s\S]*?image="\/images\/eomeuittul\/hero-poster\.webp"/,
   );
-  assert.match(page, /청주 봉명동 맛집 어믜뜰/);
+  assert.match(page, /청주갈비찜·회식·가족외식/);
 
   const resolvedCopy = page
     .replace("${MENU_ITEMS.length}", String(MENU_ITEMS.length))
@@ -47,6 +47,16 @@ test("home V4 exposes approved media, proof, trust, and conversion sections", ()
   assert.match(page, /placement="home_group"/);
   assert.match(page, /STORE\.bookingUrl/);
   assert.match(page, /STORE\.phoneHref/);
+});
+
+test("home metadata and review section support the priority search intents", () => {
+  const page = read("app/page.tsx");
+  assert.match(page, /title: "청주갈비찜·회식·가족외식 \| 어믜뜰 청주봉명동본점"/);
+  assert.match(page, /청주갈비찜/);
+  assert.match(page, /청주 회식과 가족외식/);
+  const reviewSection = page.match(/<section className="review-preview[\s\S]*?<\/section>/)?.[0] ?? "";
+  assert.match(reviewSection, /<h2>손님이 먼저 알아본 어믜뜰<\/h2>\s*<Link className="button button-tertiary" href="\/reviews">\s*최신 후기 전체 보기\s*<\/Link>/);
+  assert.match(page, /await loadPublicOnlineReviews\(3\)/);
 });
 
 test("home V4 keeps the approved section order", () => {
