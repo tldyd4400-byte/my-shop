@@ -160,3 +160,11 @@ test("read trackers mount only on their intended detail routes", () => {
   assert.match(storyPage, /<StoryReadTracker \/>/);
   assert.doesNotMatch(storyIndex, /StoryReadTracker/);
 });
+
+test("V5 group actions keep inquiry and reservation analytics distinct", () => {
+  const source = read("components/site/group-dining-actions.tsx");
+  assert.match(source, /eventName="group_inquiry_click"/);
+  assert.match(source, /eventName="naver_reservation_click"/);
+  assert.match(source, /placement=\{`\$\{placement\}_inquiry`\}/);
+  assert.match(source, /placement=\{`\$\{placement\}_reservation`\}/);
+});

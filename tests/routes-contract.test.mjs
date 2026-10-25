@@ -575,3 +575,26 @@ test("route layouts stack at 390px and keep actions at least 48px", () => {
   );
   assert.match(styles, /\.button\s*\{[\s\S]*?min-height:\s*54px/);
 });
+
+test("V5 group conversion components expose the approved choices and facts", () => {
+  const actions = read("components/site/group-dining-actions.tsx");
+  const guide = read("components/site/group-booking-guide.tsx");
+
+  assert.match(actions, /단체·통대관 전화 상담/);
+  assert.match(actions, /일반 식사 네이버 예약/);
+  assert.match(actions, /STORE\.phoneDisplay/);
+  assert.match(actions, /STORE\.phoneHref/);
+  assert.match(actions, /STORE\.bookingUrl/);
+  assert.match(guide, /STORE\.maxGroupSize/);
+  assert.match(guide, /STORE\.seats/);
+  assert.match(guide, /STORE\.privateHire\b/);
+  assert.match(guide, /STORE\.privateHireMinimum/);
+  assert.match(guide, /STORE\.groupParking/);
+  assert.match(guide, /STORE\.groupConsultation\.map/);
+});
+
+test("V5 action sizing outranks the later generic button minimum", () => {
+  const styles = read("app/globals.css");
+  assert.match(styles, /\.button\.group-v5-action\s*\{[^}]*min-height:\s*88px/);
+  assert.match(styles, /@media \(max-width:\s*767px\)\s*\{[\s\S]*?\.button\.group-v5-action\s*\{[^}]*min-height:\s*62px/);
+});
