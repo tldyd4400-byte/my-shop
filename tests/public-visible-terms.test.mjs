@@ -324,6 +324,8 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
         assert.ok(text.includes("2026-10-25 수정"));
         for (const fact of [
           "청주 모임·회식, 2명부터 한 팀 최대 52명까지",
+          "12테이블 · 총 52석 · 최대 인원 이용 시 통대관 협의",
+          "날짜·시간·인원을 알려주시면 모임에 맞춰 안내해 드립니다.",
           "단체·통대관 전화 상담",
           "일반 식사 네이버 예약",
           "전화 전에 세 가지만 준비하세요",

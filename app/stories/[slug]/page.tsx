@@ -90,7 +90,9 @@ export default async function StoryPage({ params }: StoryPageProps) {
       <HeroMedia
         eyebrow={isGroupStory ? "GROUP DINING · 청주 모임·회식" : `${story.category} · ${story.readingTime} 읽기`}
         title={isGroupStory ? "청주 모임·회식, 2명부터 한 팀 최대 52명까지" : story.title}
-        description={story.description}
+        description={isGroupStory
+          ? "12테이블 · 총 52석 · 최대 인원 이용 시 통대관 협의\n날짜·시간·인원을 알려주시면 모임에 맞춰 안내해 드립니다."
+          : story.description}
         image={story.image}
         imageAlt={story.imageAlt}
       >
