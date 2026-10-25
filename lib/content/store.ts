@@ -1,5 +1,11 @@
 import type { DiningStep, FaqItem, MenuCategory, MenuItem, ReviewItem, ReviewSnapshot, StoreInfo } from "./types";
 
+export const GROUP_PARKING_FACTS = {
+  location: "건물 뒤 무료 지상주차장",
+  vehicleCount: "단체 차량 수",
+  consultationTiming: "예약 전에",
+} as const;
+
 export const STORE: StoreInfo = {
   name: "어믜뜰",
   fullName: "어믜뜰 등갈비찜 청주봉명동본점",
@@ -19,7 +25,7 @@ export const STORE: StoreInfo = {
   groupBooking: "한 팀 최대 52명 · 통대관 가능 · 날짜·시간·인원 사전 협의",
   privateHire: "최대 인원 이용 시 통대관 협의",
   privateHireMinimum: "정해진 최소 인원이나 최소 금액 없음",
-  groupParking: "건물 뒤 무료 지상주차장이 있으며 단체 차량 수는 예약 전에 상담해 주세요.",
+  groupParking: `${GROUP_PARKING_FACTS.location}이 있으며 ${GROUP_PARKING_FACTS.vehicleCount}는 ${GROUP_PARKING_FACTS.consultationTiming} 상담해 주세요.`,
   groupConsultation: ["희망 날짜", "희망 시간", "예상 인원"],
   corkage: "외부 주류 반입 가능 · 콜키지 무료",
   lastOrder: "21:00",

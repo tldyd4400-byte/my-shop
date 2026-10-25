@@ -85,6 +85,16 @@ test("V5 group story carries the actual 2026-10-25 modification date", () => {
   assert.match(story?.description ?? "", /2명부터 한 팀 최대 52명/);
 });
 
+test("V5 group story preserves the original parking evidence wording", () => {
+  const story = getStory("cheongju-group-dining");
+  const parkingSection = story?.sections.find(({ heading }) => heading === "차량이 많은 모임도 미리 동선을 확인하세요");
+
+  assert.equal(
+    parkingSection?.body,
+    "건물 뒤 무료 지상주차장을 이용할 수 있습니다. 단체 차량 수는 예약 전에 매장과 상담해 주세요. 매주 월요일과 설·추석 당일은 휴무이므로 모임 날짜를 정할 때 확인해 주세요.",
+  );
+});
+
 test("central store exposes verified postal address components", () => {
   assert.deepEqual(STORE.postalAddress, {
     streetAddress: "백봉로 213-1 1층",
