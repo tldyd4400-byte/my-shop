@@ -313,6 +313,13 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
         }
       }
       if (route === "/stories/cheongju-group-dining") {
+        const heroContent = html.match(/<div class="shell hero-content">([\s\S]*?)<div class="hero-actions">/u)?.[1];
+        assert.ok(heroContent, "group story needs rendered hero content");
+        assert.match(
+          heroContent,
+          /<p>12테이블 · 총 52석 · 최대 인원 이용 시 통대관 협의<br\/>날짜·시간·인원을 알려주시면 모임에 맞춰 안내해 드립니다\.<\/p>/u,
+          "group story hero guidance must preserve the approved line break",
+        );
         assert.ok(html.includes(`href="${STORE.phoneHref}"`));
         assert.ok(text.includes("한 팀 최대 52명"));
         assert.ok(text.includes("최종 확정"));

@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 type HeroMediaProps = {
   title: ReactNode;
   eyebrow: string;
-  description: string;
+  description: ReactNode;
   image: string;
   imageAlt: string;
   video?: string;
