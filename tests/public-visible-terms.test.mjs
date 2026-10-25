@@ -255,9 +255,15 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
     assert.ok(existsSync(appOutput), `fresh build must produce app artifacts:\n${buildOutput}`);
 
     const sitemapPath = locateSitemap(appOutput);
-    const sitemapPaths = parseSitemapPaths(readFileSync(sitemapPath, "utf8"));
+    const sitemapXml = readFileSync(sitemapPath, "utf8");
+    const sitemapPaths = parseSitemapPaths(sitemapXml);
     assert.ok(sitemapPaths.length > 0, "generated sitemap must contain public routes");
     assert.ok(sitemapPaths.includes("/stories/cheongju-group-dining"));
+    assert.match(
+      sitemapXml,
+      /<loc>https:\/\/eomeutteull\.com\/stories\/cheongju-group-dining<\/loc>\s*<lastmod>2026-10-25<\/lastmod>/u,
+      "group story sitemap lastmod must preserve its date-only modifiedAt value",
+    );
     assert.equal(new Set(sitemapPaths).size, sitemapPaths.length, "generated sitemap routes must be unique");
     assert.equal(sitemapPaths.some((path) => path === "/admin" || path.startsWith("/admin/")), false, "sitemap must not contain admin routes");
     for (const route of requiredPublicRoutes) {

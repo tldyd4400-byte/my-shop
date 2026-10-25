@@ -17,11 +17,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...STATIC_PAGES.map((page) => ({
       url: `${STORE.url}${page.path}`,
-      lastModified: new Date(`${page.modifiedAt}T00:00:00+09:00`),
+      lastModified: page.modifiedAt,
     })),
     ...STORIES.map((story) => ({
       url: `${STORE.url}/stories/${story.slug}`,
-      lastModified: new Date(`${story.modifiedAt}T00:00:00+09:00`),
+      lastModified: story.modifiedAt,
     })),
   ];
 }

@@ -31,9 +31,9 @@ test("sitemap publishes per-page static dates and story modification dates", () 
     ["/stories", "2026-10-23"],
   ]);
   assert.equal(new Set(entries.map(([path]) => path)).size, entries.length, "static paths are unique");
-  assert.match(sitemap, /new Date\(`\$\{page\.modifiedAt\}T00:00:00\+09:00`\)/);
+  assert.match(sitemap, /lastModified:\s*page\.modifiedAt/);
   assert.match(sitemap, /STORIES\.map/);
-  assert.match(sitemap, /story\.modifiedAt/);
+  assert.match(sitemap, /lastModified:\s*story\.modifiedAt/);
   assert.doesNotMatch(sitemap, /LAST_SIGNIFICANT_UPDATE/);
 });
 
