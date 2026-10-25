@@ -18,6 +18,9 @@ export const STORE: StoreInfo = {
   maxGroupSize: 52,
   groupBooking: "한 팀 최대 52명 · 통대관 가능 · 날짜·시간·인원 사전 협의",
   privateHire: "최대 인원 이용 시 통대관 협의",
+  privateHireMinimum: "정해진 최소 인원이나 최소 금액 없음",
+  groupParking: "건물 뒤 무료 지상주차장이 있으며 단체 차량 수는 예약 전에 상담해 주세요.",
+  groupConsultation: ["희망 날짜", "희망 시간", "예상 인원"],
   corkage: "외부 주류 반입 가능 · 콜키지 무료",
   lastOrder: "21:00",
   regularClosure: "매주 월요일",
@@ -126,6 +129,21 @@ export const GROUP_FAQ_ITEMS: readonly FaqItem[] = [
   { question: "최소 인원이나 최소 금액이 있나요?", answer: "정해진 최소 조건은 없으며 날짜·시간·인원을 사전에 협의합니다." },
   { question: "회식 메뉴는 어떻게 선택하나요?", answer: "매운맛과 간장맛 중 취향에 맞게 선택할 수 있습니다. 자세한 구성은 예약 전에 매장과 확인해 주세요." },
   { question: "단체 차량도 주차할 수 있나요?", answer: "건물 뒤 무료 지상주차장이 있으며 차량 수는 미리 상담해 주세요." },
+];
+
+export const GROUP_STORY_FAQ_ITEMS: readonly FaqItem[] = [
+  {
+    question: "청주에서 50명 안팎의 회식이 가능한가요?",
+    answer: `어믜뜰은 한 팀 최대 ${STORE.maxGroupSize}명까지 이용할 수 있으며 최대 인원 이용 시 통대관으로 협의합니다.`,
+  },
+  {
+    question: "단체 예약은 어떻게 하나요?",
+    answer: "날짜·시간·예상 인원을 전화로 알려주시면 좌석과 준비 사항을 안내합니다. 일반 식사는 네이버 예약에서 가능한 시간을 확인할 수 있습니다.",
+  },
+  {
+    question: "단체 차량을 주차할 수 있나요?",
+    answer: STORE.groupParking,
+  },
 ];
 
 export const GALBIJJIM_FAQ_ITEMS: readonly FaqItem[] = [

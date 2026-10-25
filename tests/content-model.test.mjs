@@ -9,6 +9,7 @@ import {
   FAQ_ITEMS,
   GALBIJJIM_FAQ_ITEMS,
   GROUP_FAQ_ITEMS,
+  GROUP_STORY_FAQ_ITEMS,
   MENU_CATEGORIES,
   MENU_ITEMS,
   REVIEW_FAQ_ITEMS,
@@ -56,6 +57,32 @@ test("central content exports approved store facts", () => {
       closes: "22:00",
     },
   ]);
+});
+
+test("V5 group conversion facts and direct answers stay centralized", () => {
+  assert.equal(STORE.privateHireMinimum, "정해진 최소 인원이나 최소 금액 없음");
+  assert.equal(STORE.groupParking, "건물 뒤 무료 지상주차장이 있으며 단체 차량 수는 예약 전에 상담해 주세요.");
+  assert.deepEqual(STORE.groupConsultation, ["희망 날짜", "희망 시간", "예상 인원"]);
+  assert.deepEqual(GROUP_STORY_FAQ_ITEMS, [
+    {
+      question: "청주에서 50명 안팎의 회식이 가능한가요?",
+      answer: "어믜뜰은 한 팀 최대 52명까지 이용할 수 있으며 최대 인원 이용 시 통대관으로 협의합니다.",
+    },
+    {
+      question: "단체 예약은 어떻게 하나요?",
+      answer: "날짜·시간·예상 인원을 전화로 알려주시면 좌석과 준비 사항을 안내합니다. 일반 식사는 네이버 예약에서 가능한 시간을 확인할 수 있습니다.",
+    },
+    {
+      question: "단체 차량을 주차할 수 있나요?",
+      answer: "건물 뒤 무료 지상주차장이 있으며 단체 차량 수는 예약 전에 상담해 주세요.",
+    },
+  ]);
+});
+
+test("V5 group story carries the actual 2026-10-25 modification date", () => {
+  const story = getStory("cheongju-group-dining");
+  assert.equal(story?.modifiedAt, "2026-10-25");
+  assert.match(story?.description ?? "", /2명부터 한 팀 최대 52명/);
 });
 
 test("central store exposes verified postal address components", () => {
@@ -286,7 +313,7 @@ test("stories export six records and getStory finds a story or returns undefined
       { title: "청주 봉명동 가족 외식 가이드", description: "좌석, 주차, 아이 동반과 예약 정보를 가족 외식 관점에서 정리합니다." },
       { title: "30여 종 셀프바를 즐기는 법", description: "채소와 버섯, 떡과 당면으로 나만의 한 상을 만드는 법을 소개합니다." },
       { title: "매운맛과 간장맛, 무엇을 고를까", description: "첫 방문자가 취향에 맞는 등갈비찜을 고를 수 있도록 비교합니다." },
-      { title: "청주 모임·회식 장소 가이드", description: "한 팀 최대 52명, 통대관까지 가능한 어믜뜰. 날짜·시간·인원 사전 협의부터 메뉴 선택과 무료주차까지 단체 이용 정보를 확인하세요." },
+      { title: "청주 모임·회식 장소 가이드", description: "청주 봉명동에서 2명부터 한 팀 최대 52명까지 이용할 수 있는 어믜뜰. 12테이블·총 52석, 통대관 사전 협의, 매운맛·간장맛, 무료주차와 예약 방법을 확인하세요." },
       { title: "청주갈비찜 맛집을 찾는다면", description: "청주갈비찜을 찾는 분들을 위해 봉명동 매운 등갈비찜과 간장 등갈비찜, 셀프바와 무료주차를 한 번에 정리했습니다." },
     ],
   );
@@ -314,7 +341,7 @@ test("stories export six records and getStory finds a story or returns undefined
 
 test("group and family guides include the verified 2026-10-23 visit facts", () => {
   const groupStory = getStory("cheongju-group-dining");
-  assert.equal(groupStory?.modifiedAt, "2026-10-24");
+  assert.equal(groupStory?.modifiedAt, "2026-10-25");
   const groupContent = JSON.stringify(groupStory);
   for (const fact of ["2명부터 한 팀 최대 52명", STORE.privateHire, STORE.corkage, "주류 주문은 필수가 아닙니다", STORE.holidayClosure]) {
     assert.ok(groupContent.includes(fact), fact);
@@ -329,7 +356,7 @@ test("group and family guides include the verified 2026-10-23 visit facts", () =
 });
 
 test("priority local-search guides carry the current content modification date", () => {
-  assert.equal(getStory("cheongju-group-dining")?.modifiedAt, "2026-10-24");
+  assert.equal(getStory("cheongju-group-dining")?.modifiedAt, "2026-10-25");
   assert.equal(getStory("cheongju-galbijjim-guide")?.modifiedAt, "2026-10-24");
 });
 

@@ -23,6 +23,9 @@ export type StoreInfo = {
   maxGroupSize: number;
   groupBooking: string;
   privateHire: string;
+  privateHireMinimum: string;
+  groupParking: string;
+  groupConsultation: readonly string[];
   corkage: string;
   lastOrder: string;
   regularClosure: string;
