@@ -13,7 +13,7 @@ import { tmpdir } from "node:os";
 import { basename, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
-import { FAQ_ITEMS, GROUP_FAQ_ITEMS, MENU_ITEMS, STORE } from "../lib/content/store.ts";
+import { FAQ_ITEMS, GROUP_FAQ_ITEMS, GROUP_STORY_FAQ_ITEMS, MENU_ITEMS, STORE } from "../lib/content/store.ts";
 
 const rootPath = fileURLToPath(new URL("../", import.meta.url));
 const requiredPublicRoutes = ["/", "/menu", "/store", "/location", "/faq", "/reviews", "/stories"];
@@ -297,7 +297,10 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
             .map((match) => visibleText(match[1]));
           assert.deepEqual(renderedQuestions, questions, "/faq UI and schema must publish the same questions once");
         }
-        for (const item of GROUP_FAQ_ITEMS) {
+        const expectedFaqItems = route === "/stories/cheongju-group-dining"
+          ? GROUP_STORY_FAQ_ITEMS
+          : GROUP_FAQ_ITEMS;
+        for (const item of expectedFaqItems) {
           assert.ok(text.includes(item.question));
           assert.ok(text.includes(item.answer));
           assert.ok(faq.mainEntity.some((entry) => entry.name === item.question && entry.acceptedAnswer.text === item.answer));
@@ -310,9 +313,22 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
         assert.ok(text.includes("사전 협의"));
         assert.ok(text.includes("콜키지 무료"));
         assert.ok(text.includes("주류 주문은 필수가 아닙니다"));
-        assert.ok(text.includes("네이버에서 예약하기"));
+        assert.ok(text.includes("일반 식사 네이버 예약"));
         assert.ok(text.includes("설·추석 당일"));
-        assert.ok(text.includes("2026-10-24 수정"));
+        assert.ok(text.includes("2026-10-25 수정"));
+        for (const fact of [
+          "청주 모임·회식, 2명부터 한 팀 최대 52명까지",
+          "단체·통대관 전화 상담",
+          "일반 식사 네이버 예약",
+          "전화 전에 세 가지만 준비하세요",
+          "청주에서 50명 안팎의 회식이 가능한가요?",
+          "단체 예약은 어떻게 하나요?",
+        ]) {
+          assert.ok(text.includes(fact), fact);
+        }
+        for (const href of ["/menu", "/store", "/location", "/faq", "/reviews"]) {
+          assert.ok(html.includes(`href="${href}"`), href);
+        }
         const heroActions = html.match(/<div class="hero-actions">([\s\S]*?)<\/div>/u)?.[1];
         assert.ok(heroActions, "group story needs visible hero actions");
         assert.ok(heroActions.includes(`href="${STORE.phoneHref}"`));

@@ -171,9 +171,15 @@ test("group story limits menu cards to sets and keeps tracked booking and phone 
   assert.doesNotMatch(detail, /MENU_ITEMS\.map/);
   assert.match(detail, /item\.image \? <Image/);
   assert.match(detail, /item\.minimumOrder \? <p>\{item\.minimumOrder\}인 이상 주문<\/p>/);
-  for (const placement of ["group_story_hero", "group_story_bottom"]) {
-    assert.match(detail, new RegExp(`href=\\{STORE\\.phoneHref\\}[^>]*eventName="group_inquiry_click" placement="${placement}"`));
-    assert.match(detail, new RegExp(`href=\\{STORE\\.bookingUrl\\}[^>]*eventName="naver_reservation_click" placement="${placement}"`));
+  assert.match(detail, /import \{ GroupDiningActions \}/);
+  assert.match(detail, /import \{ GroupBookingGuide \}/);
+  assert.match(detail, /GROUP_STORY_FAQ_ITEMS/);
+  assert.match(detail, /title=\{isGroupStory \? "청주 모임·회식, 2명부터 한 팀 최대 52명까지"/);
+  assert.match(detail, /<GroupDiningActions placement="group_story_hero" \/>/);
+  assert.match(detail, /<GroupBookingGuide \/>/);
+  assert.match(detail, /<GroupDiningActions placement="group_story_bottom" \/>/);
+  for (const href of ["/menu", "/store", "/location", "/faq", "/reviews"]) {
+    assert.match(detail, new RegExp(`href="${href}"`));
   }
   assert.match(detail, /STORE\.privateHire/);
   assert.match(detail, /STORE\.corkage/);

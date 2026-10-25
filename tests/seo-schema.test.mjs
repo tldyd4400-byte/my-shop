@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { FAQ_ITEMS, GROUP_FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, REVIEW_FAQ_ITEMS, STORE } from "../lib/content/store.ts";
+import { FAQ_ITEMS, GROUP_FAQ_ITEMS, GROUP_STORY_FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, REVIEW_FAQ_ITEMS, STORE } from "../lib/content/store.ts";
 import { STORIES } from "../lib/content/stories.ts";
 import { createPageMetadata } from "../lib/seo/metadata.ts";
 import {
@@ -16,6 +16,17 @@ import {
 
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+
+test("group story schema uses the same V5 direct answers shown on screen", () => {
+  const page = read("app/stories/[slug]/page.tsx");
+  assert.match(page, /if \(slug === "cheongju-group-dining"\) return GROUP_STORY_FAQ_ITEMS/);
+  assert.match(page, /faqSchema\(faqs\)/);
+  const schema = faqSchema(GROUP_STORY_FAQ_ITEMS);
+  assert.deepEqual(
+    schema.mainEntity.map((item) => [item.name, item.acceptedAnswer.text]),
+    GROUP_STORY_FAQ_ITEMS.map((item) => [item.question, item.answer]),
+  );
+});
 
 test("reviews route renders and serializes the same central FAQ set", () => {
   const page = read("app/reviews/page.tsx");
