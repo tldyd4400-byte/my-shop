@@ -16,6 +16,7 @@ import { VisitFacts } from "@/components/site/visit-facts";
 import { VisitIntentGrid } from "@/components/site/visit-intent-grid";
 import {
   getSignatureSetTerms,
+  GROUP_PARKING_FACTS,
   HOME_FAQ_ITEMS,
   MENU_ITEMS,
   REVIEW_ITEMS,
@@ -31,8 +32,7 @@ import {
 
 export const metadata = createPageMetadata({
   title: "청주갈비찜·회식·가족외식 | 어믜뜰 청주봉명동본점",
-  description:
-    "청주 봉명동에서 매운·간장 등갈비찜과 셀프바를 샤브처럼 즐겨보세요. 청주 회식과 가족외식, 최대 52명 통대관 상담, 무료 주차와 네이버 예약이 가능합니다.",
+  description: `청주 봉명동에서 매운·간장 등갈비찜과 셀프바를 샤브처럼 즐겨보세요. 청주 회식과 가족외식, 최대 ${STORE.maxGroupSize}명 통대관 상담, ${GROUP_PARKING_FACTS.summary}와 네이버 예약이 가능합니다.`,
   path: "/",
 });
 
@@ -52,7 +52,7 @@ export default async function HomePage() {
   const heroDescription = [
     setDescription,
     `최대 ${STORE.maxGroupSize}명 단체 이용과 통대관 상담`,
-    "무료 주차",
+    GROUP_PARKING_FACTS.summary,
   ].filter(Boolean).join(" · ");
   const homeFaqs = HOME_FAQ_ITEMS;
   const onlineReviews = await loadPublicOnlineReviews(3);

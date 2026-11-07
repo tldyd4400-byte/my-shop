@@ -1,7 +1,10 @@
 import type { DiningStep, FaqItem, MenuCategory, MenuItem, ReviewItem, ReviewSnapshot, StoreInfo, VisitIntentItem } from "./types";
 
+const parkingFee = "무료";
+
 export const GROUP_PARKING_FACTS = {
-  location: "건물 뒤 무료 지상주차장",
+  location: `건물 뒤 ${parkingFee} 지상주차장`,
+  summary: `${parkingFee} 주차`,
   vehicleCount: "단체 차량 수",
   consultationTiming: "예약 전에",
 } as const;
@@ -19,11 +22,13 @@ export const STORE: StoreInfo = {
     addressRegion: "충청북도",
     addressCountry: "KR",
   },
-  parking: "건물 뒤 무료 지상주차장 · 점심시간 및 17시 이후 도로 주차 가능",
+  parking: `${GROUP_PARKING_FACTS.location} · 점심시간 및 17시 이후 도로 주차 가능`,
   seats: "12테이블 · 52석 · 6인 단체석 2테이블",
   minGroupSize: 2,
   maxGroupSize: 52,
-  groupBooking: "한 팀 최대 52명 · 통대관 가능 · 날짜·시간·인원 사전 협의",
+  get groupBooking() {
+    return `한 팀 최대 ${this.maxGroupSize}명 · 통대관 가능 · 날짜·시간·인원 사전 협의`;
+  },
   privateHire: "최대 인원 이용 시 통대관 협의",
   privateHireMinimum: "정해진 최소 인원이나 최소 금액 없음",
   groupParking: `${GROUP_PARKING_FACTS.location}이 있으며 ${GROUP_PARKING_FACTS.vehicleCount}는 ${GROUP_PARKING_FACTS.consultationTiming} 상담해 주세요.`,
@@ -49,13 +54,6 @@ export const STORE: StoreInfo = {
   verifiedAt: "2026-11-07",
   verificationSource: "네이버 스마트플레이스·공개 플레이스",
 };
-
-export const MENU_CATEGORIES: readonly MenuCategory[] = [
-  { id: "set", label: "대표 세트", description: "매운맛과 간장맛 중 선택 · 2인 이상 주문" },
-  { id: "side", label: "곁들임", description: "등갈비찜과 함께 즐기는 식사와 사이드" },
-  { id: "extra", label: "추가 메뉴", description: "더 푸짐하게 즐기는 등갈비와 우삼겹" },
-  { id: "takeout", label: "포장 할인", description: "집과 캠핑에서도 끓여 먹는 반조리 메뉴" },
-];
 
 const menuItem = (
   item: Omit<MenuItem, "includes" | "image" | "imageAlt"> &
@@ -123,11 +121,44 @@ function setOrderSentence(price: string, minimumOrder?: number) {
 }
 
 const { sets: signatureSets, sharedTerms } = getSignatureSetTerms(MENU_ITEMS);
+const [firstSet, secondSet] = signatureSets;
+const setCategoryDescription = firstSet && secondSet && firstSet.minimumOrder === secondSet.minimumOrder
+  ? [
+      "매운맛과 간장맛 중 선택",
+      firstSet.minimumOrder === undefined ? "" : `${firstSet.minimumOrder}인 이상 주문`,
+    ].filter(Boolean).join(" · ")
+  : signatureSets
+      .map(({ name, minimumOrder }) => minimumOrder === undefined ? name : `${name} ${minimumOrder}인 이상 주문`)
+      .join(" · ");
+
+export const MENU_CATEGORIES: readonly MenuCategory[] = [
+  { id: "set", label: "대표 세트", description: setCategoryDescription },
+  { id: "side", label: "곁들임", description: "등갈비찜과 함께 즐기는 식사와 사이드" },
+  { id: "extra", label: "추가 메뉴", description: "더 푸짐하게 즐기는 등갈비와 우삼겹" },
+  { id: "takeout", label: "포장 할인", description: "집과 캠핑에서도 끓여 먹는 반조리 메뉴" },
+];
+
 const firstVisitOrder = sharedTerms
   ? `매운 등갈비찜 또는 간장 등갈비찜 세트는 1인 ${setOrderSentence(sharedTerms.price, sharedTerms.minimumOrder)}`
   : signatureSets
       .map(({ name, price, minimumOrder }) => `${name}: ${setOrderSentence(price, minimumOrder)}`)
       .join(" ");
+
+const childMeal = STORE.familyFacilities.find((facility) => facility === "어린이밥");
+const highChair = STORE.familyFacilities.find((facility) => facility === "유아의자");
+const familyVisitFacilities = childMeal
+  ? [childMeal, ...STORE.familyFacilities.filter((facility) => facility !== childMeal)]
+  : STORE.familyFacilities;
+const wheelchairPrefix = "휠체어 이용 가능 ";
+const accessibilitySummary = STORE.accessibility.length > 0 && STORE.accessibility.every((item) => item.startsWith(wheelchairPrefix))
+  ? wheelchairPrefix + STORE.accessibility.map((item) => item.slice(wheelchairPrefix.length)).join("·")
+  : STORE.accessibility.join("·");
+const familyFaqMenu = childMeal && highChair && STORE.familyFacilities.length === 2
+  ? `맵지 않은 간장 등갈비찜과 ${childMeal}이 있고 ${highChair}를 이용할 수 있습니다.`
+  : [
+      "맵지 않은 간장 등갈비찜을 선택할 수 있습니다.",
+      familyVisitFacilities.length ? `가족 편의시설: ${familyVisitFacilities.join("·")}.` : "",
+    ].filter(Boolean).join(" ");
 
 export const HOME_FAQ_ITEMS: readonly FaqItem[] = [
   {
@@ -138,8 +169,10 @@ export const HOME_FAQ_ITEMS: readonly FaqItem[] = [
   },
   {
     question: "아이와 함께 먹을 수 있나요?",
-    answer:
-      "맵지 않은 간장 등갈비찜과 어린이밥이 있고 유아의자를 이용할 수 있습니다. 휠체어 이용 가능 출입구·좌석·화장실도 등록되어 있습니다.",
+    answer: [
+      familyFaqMenu,
+      accessibilitySummary ? `${accessibilitySummary}도 등록되어 있습니다.` : "",
+    ].filter(Boolean).join(" "),
   },
   {
     question: "회식은 몇 명까지 가능한가요?",
@@ -147,8 +180,7 @@ export const HOME_FAQ_ITEMS: readonly FaqItem[] = [
   },
   {
     question: "주차와 예약은 어떻게 하나요?",
-    answer:
-      "건물 뒤 무료 지상주차장을 이용할 수 있습니다. 일반 식사는 네이버 예약, 단체·통대관은 전화 상담을 이용합니다.",
+    answer: `${GROUP_PARKING_FACTS.location}을 이용할 수 있습니다. 일반 식사는 네이버 예약, 단체·통대관은 전화 상담을 이용합니다.`,
   },
 ];
 
@@ -169,8 +201,7 @@ export const VISIT_INTENT_ITEMS: readonly VisitIntentItem[] = [
     number: "02",
     label: "가족외식",
     title: "아이부터 부모님까지 함께 고르기 좋은 메뉴",
-    summary:
-      "맵지 않은 간장맛 · 어린이밥 · 유아의자 · 휠체어 이용 가능 출입구·좌석·화장실",
+    summary: ["맵지 않은 간장맛", ...familyVisitFacilities, accessibilitySummary].filter(Boolean).join(" · "),
     href: "/stories/family-dining-guide",
     ctaLabel: "가족 방문 정보 보기",
     placement: "home_intent_family_dining",
@@ -180,7 +211,7 @@ export const VISIT_INTENT_ITEMS: readonly VisitIntentItem[] = [
     number: "03",
     label: "모임·회식",
     title: `${STORE.minGroupSize}명부터 한 팀 최대 ${STORE.maxGroupSize}명까지`,
-    summary: `${STORE.seats} · ${STORE.privateHire} · 건물 뒤 무료 지상주차장 · 날짜·시간·예상 인원 상담`,
+    summary: `${STORE.seats} · ${STORE.privateHire} · ${GROUP_PARKING_FACTS.location} · 날짜·시간·예상 인원 상담`,
     href: "/stories/cheongju-group-dining",
     ctaLabel: "단체 이용 자세히 보기",
     placement: "home_intent_group_dining",

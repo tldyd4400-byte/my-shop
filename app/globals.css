@@ -329,7 +329,7 @@ a {
 }
 
 .latest-store-facts-grid dt {
-  color: var(--straw);
+  color: var(--hanji);
   font-weight: 700;
 }
 
@@ -382,7 +382,7 @@ a {
 }
 
 .visit-intent-card--featured .visit-intent-label {
-  color: var(--straw);
+  color: var(--hanji);
 }
 
 .visit-intent-card h3 {

@@ -93,6 +93,7 @@ test("home V6 keeps the approved section order", () => {
   for (const section of sections) {
     assert.equal(page.split(section).length - 1, 1, section);
   }
+  assert.doesNotMatch(page, /<ProofStrip\b/);
 });
 
 test("home V6 uses central content and matches visible FAQ items to JSON-LD", () => {
@@ -175,11 +176,34 @@ test("home V6 prioritizes tracked reservation and group inquiry before menu brow
   assert.match(actions[2], /placement="home_hero_menu"/);
 });
 
-test("home V6 gives the latest-facts eyebrow the light accent on its dark surface", () => {
-  const styles = read("app/globals.css");
-  assert.match(styles, /\.latest-store-facts\s*\{[^}]*background:\s*var\(--red-dark\)/);
-  assert.match(styles, /\.latest-store-facts \.eyebrow\s*\{[^}]*color:\s*var\(--hanji\)/);
-});
+function luminanceForRule(styles, selector, property) {
+  const declarations = styles.split(`${selector} {`)[1]?.split("}")[0] ?? "";
+  const token = declarations.match(new RegExp(`(?:^|\\s)${property}:\\s*var\\((--[\\w-]+)\\)`))?.[1];
+  assert.ok(token, `${selector} must define a ${property} color token`);
+  const hex = styles.match(new RegExp(`${token}:\\s*#([0-9a-f]{6})\\s*;`, "i"))?.[1];
+  const white = styles.match(new RegExp(`${token}:\\s*#([0-9a-f]{3})\\s*;`, "i"))?.[1];
+  const channels = hex?.match(/../g) ?? white?.split("").map((digit) => digit.repeat(2));
+  assert.ok(channels, `missing hex color for ${token}`);
+  const [r, g, b] = channels.map((channel) => {
+    const value = Number.parseInt(channel, 16) / 255;
+    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+for (const [label, surface] of [
+  [".latest-store-facts .eyebrow", ".latest-store-facts"],
+  [".latest-store-facts-grid dt", ".latest-store-facts-grid > div"],
+  [".visit-intent-card--featured .visit-intent-label", ".visit-intent-card--featured"],
+]) {
+  test(`home V6 label ${label} meets 4.5:1 contrast`, () => {
+    const styles = read("app/globals.css");
+    const fg = luminanceForRule(styles, label, "color");
+    const bg = luminanceForRule(styles, surface, "background");
+    const ratio = (Math.max(fg, bg) + 0.05) / (Math.min(fg, bg) + 0.05);
+    assert.ok(ratio >= 4.5, `${label} contrast is ${ratio.toFixed(3)}:1`);
+  });
+}
 
 test("home V6 menu preview groups central categories with optional four-item summaries", () => {
   assert.equal(existsSync(new URL("../components/site/menu-category-grid.tsx", import.meta.url)), true);
@@ -330,7 +354,7 @@ function evaluateTypeScript(path, source, imports = require) {
   return exports;
 }
 
-async function homeHeroDescription(content = storeContent) {
+function evaluateHomePage(content = storeContent) {
   const path = "app/page.tsx";
   const heroPath = "components/site/hero-media.tsx";
   const heroModule = evaluateTypeScript(heroPath, read(heroPath));
@@ -342,9 +366,13 @@ async function homeHeroDescription(content = storeContent) {
     "@/components/site/hero-media": heroModule,
   };
   // Unrendered sibling components are irrelevant to the props HomePage gives its hero.
-  const { default: HomePage } = evaluateTypeScript(path, read(path), (id) =>
+  return { heroModule, ...evaluateTypeScript(path, read(path), (id) =>
     imports[id] ?? (id.startsWith("@/components/") ? {} : require(id)),
-  );
+  ) };
+}
+
+async function homeHeroDescription(content = storeContent) {
+  const { default: HomePage, heroModule } = evaluateHomePage(content);
   const main = await HomePage();
   return main.props.children.find(({ type }) => type === heroModule.HeroMedia).props.description;
 }
@@ -362,6 +390,49 @@ test("home V6 hero description follows central capacity", async () => {
     STORE: { ...STORE, maxGroupSize: 48 },
   });
   assert.match(description, /최대 48명 단체 이용/);
+});
+
+test("home V6 metadata description follows central capacity", () => {
+  const home = evaluateHomePage({
+    ...storeContent,
+    STORE: { ...STORE, maxGroupSize: 48 },
+  });
+  assert.match(home.metadata.description, /최대 48명 통대관 상담/);
+  assert.equal(home.metadata.openGraph.description, home.metadata.description);
+  assert.doesNotMatch(home.metadata.description, /최대 52명/);
+});
+
+test("home V6 hero and metadata do not retain a stale free-parking claim", async () => {
+  const content = {
+    ...storeContent,
+    GROUP_PARKING_FACTS: { ...storeContent.GROUP_PARKING_FACTS, summary: "유료 주차" },
+  };
+  for (const description of [
+    await homeHeroDescription(content),
+    evaluateHomePage(content).metadata.description,
+  ]) {
+    assert.match(description, /유료 주차/);
+    assert.doesNotMatch(description, /무료 주차/);
+  }
+});
+
+test("home V6 group panel follows the central parking location", () => {
+  const path = "components/site/group-dining-panel.tsx";
+  const linkPath = "components/site/analytics-link.tsx";
+  const { GroupDiningPanel } = evaluateTypeScript(path, read(path), (id) => {
+    if (id === "@/lib/content/store") {
+      const location = "건물 옆 유료 지상주차장";
+      return {
+        ...storeContent,
+        GROUP_PARKING_FACTS: { ...storeContent.GROUP_PARKING_FACTS, location },
+      };
+    }
+    if (id === "@/components/site/analytics-link") return evaluateTypeScript(linkPath, read(linkPath));
+    return require(id);
+  });
+  const html = renderToStaticMarkup(GroupDiningPanel({ placement: "home_group" }));
+  assert.match(html, /건물 옆 유료 지상주차장/);
+  assert.doesNotMatch(html, /건물 뒤 무료 지상주차장/);
 });
 
 for (const [field, change] of [

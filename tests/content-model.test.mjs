@@ -203,22 +203,32 @@ test("V6 store facts carry the 2026-11-07 verification source", () => {
   assert.equal(STORE.privateHire, "최대 인원 이용 시 통대관 협의");
 });
 
+async function contentWithStoreChange(update) {
+  const path = "lib/content/store.ts";
+  const original = read(path);
+  const source = update(original);
+  assert.notEqual(source, original, "fixture changes central content");
+  const { outputText } = ts.transpileModule(source, {
+    fileName: path,
+    compilerOptions: { module: ts.ModuleKind.ESNext },
+  });
+  return import(`data:text/javascript,${encodeURIComponent(outputText)}`);
+}
+
+function changeSoySet(source, before, after) {
+  return source.replace(/^.*menuItem\(\{ slug: "soy-set".*$/m,
+    (line) => line.replace(before, after),
+  );
+}
+
 for (const [field, before, after] of [
   ["price", 'price: "19,900원", priceAmount: 19900', 'price: "21,900원", priceAmount: 21900'],
   ["minimum order", "minimumOrder: 2", "minimumOrder: 3"],
 ]) {
   test(`V6 first-visit FAQ lists both sets when only the soy ${field} changes`, async () => {
-    const path = "lib/content/store.ts";
-    const original = read(path);
-    const source = original.replace(/^.*menuItem\(\{ slug: "soy-set".*$/m,
-      (line) => line.replace(before, after),
+    const content = await contentWithStoreChange((source) =>
+      changeSoySet(source, before, after),
     );
-    assert.notEqual(source, original, "fixture changes the soy-set field");
-    const { outputText } = ts.transpileModule(source, {
-      fileName: path,
-      compilerOptions: { module: ts.ModuleKind.ESNext },
-    });
-    const content = await import(`data:text/javascript,${encodeURIComponent(outputText)}`);
     const { answer } = content.HOME_FAQ_ITEMS[0];
     for (const slug of ["spicy-set", "soy-set"]) {
       const { name, price, minimumOrder } = content.MENU_ITEMS.find((item) => item.slug === slug);
@@ -227,6 +237,64 @@ for (const [field, before, after] of [
     assert.doesNotMatch(answer, /매운 등갈비찜 또는 간장 등갈비찜/);
   });
 }
+
+test("V6 set-category keeps the approved minimum label when both sets match", () => {
+  assert.equal(
+    MENU_CATEGORIES.find(({ id }) => id === "set").description,
+    "매운맛과 간장맛 중 선택 · 2인 이상 주문",
+  );
+});
+
+test("V6 set-category lists both minimums when only the soy minimum changes", async () => {
+  const content = await contentWithStoreChange((source) =>
+    changeSoySet(source, "minimumOrder: 2", "minimumOrder: 3"),
+  );
+  const { description } = content.MENU_CATEGORIES.find(({ id }) => id === "set");
+  assert.match(description, /매운[^·]*2인 이상 주문/);
+  assert.match(description, /간장[^·]*3인 이상 주문/);
+  assert.doesNotMatch(description, /중 선택 · 2인 이상 주문/);
+});
+
+test("V6 home group booking summary follows central capacity", async () => {
+  const { STORE: alternate } = await contentWithStoreChange((source) =>
+    source.replace(/\bmaxGroupSize:\s*52,/, "maxGroupSize: 48,"),
+  );
+  assert.equal(alternate.maxGroupSize, 48);
+  assert.match(alternate.groupBooking, /한 팀 최대 48명/);
+  assert.doesNotMatch(alternate.groupBooking, /최대 52명/);
+});
+
+test("V6 home parking copy follows the central parking location", async () => {
+  const location = "건물 옆 유료 지상주차장";
+  const content = await contentWithStoreChange((source) =>
+    source.replace(/^  location: .*,$/m, `  location: "${location}",`),
+  );
+  assert.equal(content.GROUP_PARKING_FACTS.location, location);
+  const parking = [
+    content.STORE.parking,
+    content.HOME_FAQ_ITEMS.find(({ question }) => question.startsWith("주차와 예약")).answer,
+    content.VISIT_INTENT_ITEMS.find(({ id }) => id === "group-dining").summary,
+  ];
+  assert.deepEqual(parking.map((copy) => copy.includes(location)), [true, true, true], parking.join("\n"));
+  assert.doesNotMatch(parking.join(" "), /건물 뒤 무료 지상주차장/);
+});
+
+test("V6 home family answers and cards follow central facility availability", async () => {
+  const content = await contentWithStoreChange((source) =>
+    source
+      .replace(/^  familyFacilities: .*,$/m, '  familyFacilities: ["어린이 식기"],')
+      .replace(/^  accessibility: .*,$/m, '  accessibility: ["경사로 출입구"],'),
+  );
+  const family = [
+    content.HOME_FAQ_ITEMS.find(({ question }) => question.startsWith("아이와 함께")).answer,
+    content.VISIT_INTENT_ITEMS.find(({ id }) => id === "family-dining").summary,
+  ];
+  for (const copy of family) {
+    assert.match(copy, /어린이 식기/);
+    assert.match(copy, /경사로 출입구/);
+    assert.doesNotMatch(copy, /어린이밥|유아의자|좌석·화장실/);
+  }
+});
 
 test("V6 home direct answers are centralized and numeric", () => {
   assert.deepEqual(HOME_FAQ_ITEMS, [
@@ -283,6 +351,14 @@ test("V6 visit intents expose three crawlable next steps", () => {
         featured: true,
       },
     ],
+  );
+  assert.equal(
+    VISIT_INTENT_ITEMS.find(({ id }) => id === "family-dining").summary,
+    "맵지 않은 간장맛 · 어린이밥 · 유아의자 · 휠체어 이용 가능 출입구·좌석·화장실",
+  );
+  assert.equal(
+    VISIT_INTENT_ITEMS.find(({ id }) => id === "group-dining").summary,
+    "12테이블 · 52석 · 6인 단체석 2테이블 · 최대 인원 이용 시 통대관 협의 · 건물 뒤 무료 지상주차장 · 날짜·시간·예상 인원 상담",
   );
 });
 
