@@ -1,21 +1,37 @@
 import { MENU_ITEMS, STORE } from "@/lib/content/store";
 
+function priceAndMinimum(price: string, minimumOrder?: number) {
+  return minimumOrder === undefined ? price : `${price} · ${minimumOrder}인 이상`;
+}
+
 export function LatestStoreFacts() {
-  const signatureSet = MENU_ITEMS.find((item) => item.slug === "spicy-set")!;
+  const spicySet = MENU_ITEMS.find((item) => item.slug === "spicy-set")!;
+  const soySet = MENU_ITEMS.find((item) => item.slug === "soy-set")!;
+  const setPrices =
+    spicySet.price === soySet.price && spicySet.minimumOrder === soySet.minimumOrder
+      ? `매운·간장 ${priceAndMinimum(spicySet.price, spicySet.minimumOrder)}`
+      : [spicySet, soySet]
+          .map(({ name, price, minimumOrder }) => `${name} ${priceAndMinimum(price, minimumOrder)}`)
+          .join(" / ");
+
   const [weekdayLunch, weekdayDinner, weekend] = STORE.openingPeriods;
+  const weekdayLabel = weekdayLunch.label.replace(/ 점심$/, "");
+  const weekdayHours = weekdayLabel === weekdayDinner.label.replace(/ 저녁$/, "")
+    ? `${weekdayLabel} ${weekdayLunch.opens}~${weekdayDinner.closes} · ${weekdayLunch.closes}~${weekdayDinner.opens} 브레이크`
+    : `${weekdayLunch.label} ${weekdayLunch.opens}~${weekdayLunch.closes} · ${weekdayDinner.label} ${weekdayDinner.opens}~${weekdayDinner.closes}`;
   const facts = [
     {
       label: "영업",
-      value: `화~금 ${weekdayLunch.opens}~${weekdayDinner.closes} · ${weekdayLunch.closes}~${weekdayDinner.opens} 브레이크 · 토~일 ${weekend.opens}~${weekend.closes} · ${STORE.regularClosure}`,
+      value: `${weekdayHours} · ${weekend.label} ${weekend.opens}~${weekend.closes} · ${STORE.regularClosure}`,
     },
     {
       label: "대표 세트",
-      value: `매운·간장 ${signatureSet.price} · ${signatureSet.minimumOrder}인 이상`,
+      value: setPrices,
     },
     { label: "주차", value: STORE.parking },
     {
       label: "단체",
-      value: `2~${STORE.maxGroupSize}명 · ${STORE.privateHire}`,
+      value: `${STORE.minGroupSize}~${STORE.maxGroupSize}명 · ${STORE.privateHire}`,
     },
   ] as const;
 

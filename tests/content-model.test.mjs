@@ -197,6 +197,7 @@ test("V6 store facts carry the 2026-11-07 verification source", () => {
   assert.equal(STORE.lastOrder, "21:00");
   assert.equal(STORE.regularClosure, "매주 월요일");
   assert.equal(STORE.holidayClosure, "설·추석 당일");
+  assert.equal(STORE.minGroupSize, 2);
   assert.equal(STORE.maxGroupSize, 52);
   assert.equal(STORE.privateHire, "최대 인원 이용 시 통대관 협의");
 });

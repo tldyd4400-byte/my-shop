@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import test from "node:test";
+import { renderToStaticMarkup } from "react-dom/server";
+import ts from "typescript";
 import { MENU_ITEMS, STORE } from "../lib/content/store.ts";
 
 const read = (path) =>
@@ -307,23 +310,116 @@ test("public body copy stays at least 16px", () => {
   assert.doesNotMatch(styles, /font-size:\s*0\.[0-9]+rem/);
 });
 
-test("V6 latest facts derive all changing values from central content", () => {
-  const facts = read("components/site/latest-store-facts.tsx");
-  for (const field of [
-    "verifiedAt",
-    "verificationSource",
-    "openingPeriods",
-    "regularClosure",
-    "parking",
-    "maxGroupSize",
-    "privateHire",
-  ]) {
-    assert.ok(facts.includes(`STORE.${field}`), field);
-  }
-  assert.match(facts, /MENU_ITEMS\.find/);
-  assert.match(facts, /<time dateTime=\{STORE\.verifiedAt\}>/);
-  assert.doesNotMatch(facts, /19,900원|52명|2026-11-07/);
+const require = createRequire(import.meta.url);
+
+function evaluateTypeScript(path, source, imports = require) {
+  const { outputText } = ts.transpileModule(source, {
+    fileName: path,
+    compilerOptions: {
+      module: ts.ModuleKind.CommonJS,
+      jsx: ts.JsxEmit.ReactJSX,
+    },
+  });
+  const exports = {};
+  new Function("require", "exports", outputText)(imports, exports);
+  return exports;
+}
+
+function renderLatestFacts(content = { STORE, MENU_ITEMS }) {
+  const path = "components/site/latest-store-facts.tsx";
+  const { LatestStoreFacts } = evaluateTypeScript(path, read(path), (id) =>
+    id === "@/lib/content/store" ? content : require(id),
+  );
+  return renderToStaticMarkup(LatestStoreFacts());
+}
+
+function displayedFacts(html) {
+  return Object.fromEntries(
+    Array.from(html.matchAll(/<dt\b[^>]*>(.*?)<\/dt>\s*<dd\b[^>]*>(.*?)<\/dd>/gs),
+      ([, label, value]) => [label, value.replace(/<[^>]*>/g, "")]),
+  );
+}
+
+test("V6 latest facts preserve the approved current display", () => {
+  const html = renderLatestFacts();
+  assert.deepEqual(displayedFacts(html), {
+    영업: "화~금 11:00~22:00 · 15:30~16:30 브레이크 · 토~일 11:00~22:00 · 매주 월요일",
+    "대표 세트": "매운·간장 19,900원 · 2인 이상",
+    주차: STORE.parking,
+    단체: `2~52명 · ${STORE.privateHire}`,
+  });
+  assert.ok(html.includes(STORE.verificationSource));
+  assert.ok(html.includes(`<time dateTime="${STORE.verifiedAt}">${STORE.verifiedAt.replaceAll("-", ".")} 확인</time>`));
 });
+
+test("V6 latest facts follow alternate opening-period labels", () => {
+  const openingPeriods = STORE.openingPeriods.map((period, index) => ({
+    ...period,
+    label: ["수~금 점심", "수~금 저녁", "일~월"][index],
+  }));
+  const facts = displayedFacts(renderLatestFacts({
+    STORE: { ...STORE, openingPeriods }, MENU_ITEMS,
+  }));
+  assert.match(facts.영업, /수~금 11:00~22:00/);
+  assert.match(facts.영업, /일~월 11:00~22:00/);
+  assert.doesNotMatch(facts.영업, /화~금|토~일/);
+});
+
+test("V6 latest facts do not merge opening periods with different day labels", () => {
+  const openingPeriods = STORE.openingPeriods.map((period, index) =>
+    index === 1 ? { ...period, label: "목~금 저녁" } : period,
+  );
+  const facts = displayedFacts(renderLatestFacts({
+    STORE: { ...STORE, openingPeriods }, MENU_ITEMS,
+  }));
+  assert.match(facts.영업, /화~금 점심 11:00~15:30/);
+  assert.match(facts.영업, /목~금 저녁 16:30~22:00/);
+  assert.doesNotMatch(facts.영업, /화~금 11:00~22:00|브레이크/);
+});
+
+function contentWithAlternateGroupMinimum() {
+  const path = "lib/content/store.ts";
+  // Change only the central fixture's numeric data, then evaluate the real exports.
+  const source = read(path)
+    .replace(/^[ \t]*minGroupSize\s*:\s*\d+,\r?$/m, "")
+    .replace(/\bmaxGroupSize\s*:/, "minGroupSize: 4,\n  maxGroupSize:");
+  const content = evaluateTypeScript(path, source);
+  assert.equal(content.STORE.minGroupSize, 4, "fixture group minimum");
+  return content;
+}
+
+test("V6 store facts follow the central group minimum", () => {
+  const content = contentWithAlternateGroupMinimum();
+  assert.equal(
+    displayedFacts(renderLatestFacts(content)).단체,
+    `4~${content.STORE.maxGroupSize}명 · ${content.STORE.privateHire}`,
+  );
+});
+
+test("V6 group-visit title follows the central group minimum", () => {
+  const content = contentWithAlternateGroupMinimum();
+  assert.equal(
+    content.VISIT_INTENT_ITEMS.find(({ id }) => id === "group-dining").title,
+    `4명부터 한 팀 최대 ${content.STORE.maxGroupSize}명까지`,
+  );
+});
+
+for (const [field, change] of [
+  ["price", { price: "21,900원", priceAmount: 21900 }],
+  ["minimum order", { minimumOrder: 3 }],
+]) {
+  test(`V6 latest facts list both sets when only the soy ${field} changes`, () => {
+    const items = MENU_ITEMS.map((item) =>
+      item.slug === "soy-set" ? { ...item, ...change } : item,
+    );
+    const value = displayedFacts(renderLatestFacts({ STORE, MENU_ITEMS: items }))["대표 세트"];
+    for (const slug of ["spicy-set", "soy-set"]) {
+      const { name, price, minimumOrder } = items.find((item) => item.slug === slug);
+      assert.ok(value.includes(`${name} ${price} · ${minimumOrder}인 이상`), value);
+    }
+    assert.doesNotMatch(value, /매운·간장/);
+  });
+}
 
 test("V6 visit cards use central content and tracked crawlable links", () => {
   const grid = read("components/site/visit-intent-grid.tsx");

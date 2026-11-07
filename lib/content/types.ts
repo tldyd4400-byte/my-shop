@@ -20,6 +20,7 @@ export type StoreInfo = {
   };
   parking: string;
   seats: string;
+  minGroupSize: number;
   maxGroupSize: number;
   groupBooking: string;
   privateHire: string;
