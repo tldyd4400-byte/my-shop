@@ -19,6 +19,8 @@ export type StoreInfo = {
     addressCountry: "KR";
   };
   parking: string;
+  tableCount: number;
+  totalSeatCount: number;
   seats: string;
   minGroupSize: number;
   maxGroupSize: number;

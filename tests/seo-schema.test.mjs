@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
+import ts from "typescript";
 
 import { FAQ_ITEMS, GROUP_FAQ_ITEMS, GROUP_STORY_FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, REVIEW_FAQ_ITEMS, STORE } from "../lib/content/store.ts";
 import { STORIES } from "../lib/content/stories.ts";
@@ -100,6 +101,7 @@ test("schema factories use central facts without publishing the display-only rat
   );
   assert.equal(restaurant.hasMenu.hasMenuSection[0].hasMenuItem[0].offers.price, "19900");
   assert.equal(JSON.stringify(restaurant).includes("AggregateRating"), false);
+  assert.doesNotMatch(JSON.stringify(restaurant), /"@type":"Review"/);
   assert.doesNotMatch(JSON.stringify(restaurant), /aggregateRating|ratingValue|reviewCount/);
 });
 
@@ -135,6 +137,75 @@ test("restaurant amenities publish central private-hire and accessibility facts"
     STORE.accessibility.join(" · "),
   );
   assert.ok(amenityFeature.every((item) => item["@type"] === "LocationFeatureSpecification" && item.value === true));
+});
+
+function restaurantWithStoreChange(change) {
+  function evaluate(path, source, imports) {
+    const { outputText } = ts.transpileModule(source, {
+      fileName: path,
+      compilerOptions: { module: ts.ModuleKind.CommonJS },
+    });
+    const exports = {};
+    new Function("require", "exports", outputText)(imports, exports);
+    return exports;
+  }
+  const path = "lib/content/store.ts";
+  const original = read(path);
+  const changed = change(original);
+  assert.notEqual(changed, original, "fixture must change central data");
+  const content = evaluate(path, changed, (id) => assert.fail(`unexpected dependency ${id}`));
+  const schemaPath = "lib/seo/schema.ts";
+  const schema = evaluate(schemaPath, read(schemaPath), (id) => {
+    assert.equal(id, "../content/store.ts");
+    return content;
+  });
+  const { amenityFeature } = JSON.parse(JSON.stringify(schema.restaurantSchema()));
+  return { content, amenities: amenityFeature };
+}
+
+test("restaurant JSON-LD omits free parking when the visible central fee is paid", () => {
+  const { content, amenities } = restaurantWithStoreChange((source) =>
+    source.replace(/^const parkingFee[^=]*= "무료";/m, 'const parkingFee = "유료";'),
+  );
+  assert.equal(content.GROUP_PARKING_FACTS.summary, "유료 주차");
+  assert.match(content.STORE.parking, /유료 지상주차장/);
+  assert.match(content.HOME_FAQ_ITEMS.find(({ question }) => question.startsWith("주차와 예약")).answer, /유료 지상주차장/);
+  assert.ok(!amenities.some(({ name }) => name === "무료주차"), "paid parking must not publish a free-parking claim");
+});
+
+test("restaurant JSON-LD omits high chair when central family facilities no longer list it", () => {
+  const { content, amenities } = restaurantWithStoreChange((source) =>
+    source.replace(/^  familyFacilities: .*,$/m, '  familyFacilities: ["어린이밥"],'),
+  );
+  const family = content.VISIT_INTENT_ITEMS.find(({ id }) => id === "family-dining").summary;
+  assert.match(family, /어린이밥/);
+  assert.doesNotMatch(family, /유아의자/);
+  assert.ok(!amenities.some(({ name }) => name === "유아의자"), "removed high chair must not appear as an amenity");
+});
+
+test("restaurant JSON-LD omits wheelchair amenity when only unrelated access is listed", () => {
+  const { content, amenities } = restaurantWithStoreChange((source) =>
+    source.replace(/^  accessibility: .*,$/m, '  accessibility: ["점자 안내판"],'),
+  );
+  const family = content.VISIT_INTENT_ITEMS.find(({ id }) => id === "family-dining").summary;
+  assert.match(family, /점자 안내판/);
+  assert.doesNotMatch(family, /휠체어 이용 가능/);
+  assert.ok(!amenities.some(({ name }) => name === "휠체어 이용 가능"), "unrelated access must not imply wheelchair access");
+});
+
+test("restaurant JSON-LD names only the verified wheelchair features in mixed access data", () => {
+  const { content, amenities } = restaurantWithStoreChange((source) =>
+    source.replace(/^  accessibility: .*,$/m, '  accessibility: ["휠체어 이용 가능 출입구", "점자 안내판"],'),
+  );
+  assert.deepEqual(
+    amenities.find(({ name }) => name === "휠체어 이용 가능"),
+    {
+      "@type": "LocationFeatureSpecification",
+      name: "휠체어 이용 가능",
+      value: true,
+      description: content.STORE.accessibility[0],
+    },
+  );
 });
 
 test("breadcrumb, FAQ, and article schemas serialize supplied central content", () => {

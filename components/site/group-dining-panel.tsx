@@ -13,7 +13,7 @@ export function GroupDiningPanel({ placement }: { placement: string }) {
           <p className="eyebrow">SPACE FOR TOGETHER</p>
           <h2>청주 모임과 회식,<br />최대 {STORE.maxGroupSize}명까지 한자리에서</h2>
           <p>{STORE.groupBooking}</p>
-          <p>12테이블 · 총 52석 · {GROUP_PARKING_FACTS.location}</p>
+          <p>{`${STORE.tableCount}테이블 · 총 ${STORE.totalSeatCount}석 · ${GROUP_PARKING_FACTS.location}`}</p>
           <p>{STORE.privateHire} · {STORE.corkage} · 주류 주문 필수 아님</p>
           <div className="group-dining-actions">
             <AnalyticsLink className="button button-primary" href={STORE.bookingUrl} target="_blank" rel="noreferrer" eventName="naver_reservation_click" placement={placement}>네이버 예약하기</AnalyticsLink>

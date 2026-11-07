@@ -1,8 +1,9 @@
 import type { DiningStep, FaqItem, MenuCategory, MenuItem, ReviewItem, ReviewSnapshot, StoreInfo, VisitIntentItem } from "./types";
 
-const parkingFee = "무료";
+const parkingFee: string = "무료";
 
 export const GROUP_PARKING_FACTS = {
+  fee: parkingFee,
   location: `건물 뒤 ${parkingFee} 지상주차장`,
   summary: `${parkingFee} 주차`,
   vehicleCount: "단체 차량 수",
@@ -23,7 +24,11 @@ export const STORE: StoreInfo = {
     addressCountry: "KR",
   },
   parking: `${GROUP_PARKING_FACTS.location} · 점심시간 및 17시 이후 도로 주차 가능`,
-  seats: "12테이블 · 52석 · 6인 단체석 2테이블",
+  tableCount: 12,
+  totalSeatCount: 52,
+  get seats() {
+    return `${this.tableCount}테이블 · ${this.totalSeatCount}석 · 6인 단체석 2테이블`;
+  },
   minGroupSize: 2,
   maxGroupSize: 52,
   get groupBooking() {

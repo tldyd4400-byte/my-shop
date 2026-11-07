@@ -416,23 +416,48 @@ test("home V6 hero and metadata do not retain a stale free-parking claim", async
   }
 });
 
-test("home V6 group panel follows the central parking location", () => {
+function renderGroupDiningPanel(content = storeContent) {
   const path = "components/site/group-dining-panel.tsx";
   const linkPath = "components/site/analytics-link.tsx";
   const { GroupDiningPanel } = evaluateTypeScript(path, read(path), (id) => {
-    if (id === "@/lib/content/store") {
-      const location = "건물 옆 유료 지상주차장";
-      return {
-        ...storeContent,
-        GROUP_PARKING_FACTS: { ...storeContent.GROUP_PARKING_FACTS, location },
-      };
-    }
+    if (id === "@/lib/content/store") return content;
     if (id === "@/components/site/analytics-link") return evaluateTypeScript(linkPath, read(linkPath));
     return require(id);
   });
-  const html = renderToStaticMarkup(GroupDiningPanel({ placement: "home_group" }));
+  return renderToStaticMarkup(GroupDiningPanel({ placement: "home_group" }));
+}
+
+test("home V6 group panel follows the central parking location", () => {
+  const html = renderGroupDiningPanel({
+    ...storeContent,
+    GROUP_PARKING_FACTS: { ...storeContent.GROUP_PARKING_FACTS, location: "건물 옆 유료 지상주차장" },
+  });
   assert.match(html, /건물 옆 유료 지상주차장/);
   assert.doesNotMatch(html, /건물 뒤 무료 지상주차장/);
+});
+
+test("home V6 group panel preserves the approved seating display", () => {
+  assert.match(renderGroupDiningPanel(), /12테이블 · 총 52석 · 건물 뒤 무료 지상주차장/);
+});
+
+test("home V6 seating labels follow table and seat counts independently of the group max", () => {
+  const path = "lib/content/store.ts";
+  const source = read(path)
+    .replace(/^  (?:tableCount|totalSeatCount): .*,$/gm, "")
+    .replace(/^(  maxGroupSize:)/m, "  tableCount: 14,\n  totalSeatCount: 58,\n$1");
+  const content = evaluateTypeScript(path, source);
+  assert.equal(content.STORE.tableCount, 14);
+  assert.equal(content.STORE.totalSeatCount, 58);
+  assert.equal(content.STORE.maxGroupSize, 52);
+  const html = renderGroupDiningPanel(content);
+  assert.match(html, /14테이블 · 총 58석/);
+  assert.match(html, /최대 52명까지 한자리에서/);
+  assert.doesNotMatch(html, /12테이블 · 총 52석/);
+  assert.match(content.STORE.seats, /^14테이블 · 58석 · /);
+  assert.match(
+    content.VISIT_INTENT_ITEMS.find(({ id }) => id === "group-dining").summary,
+    /^14테이블 · 58석 · /,
+  );
 });
 
 for (const [field, change] of [

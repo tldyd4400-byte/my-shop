@@ -1,4 +1,4 @@
-import { FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, STORE } from "../content/store.ts";
+import { FAQ_ITEMS, GROUP_PARKING_FACTS, MENU_CATEGORIES, MENU_ITEMS, STORE } from "../content/store.ts";
 import type { FaqItem, Story } from "../content/types.ts";
 
 export function websiteSchema() {
@@ -14,6 +14,12 @@ export function websiteSchema() {
 }
 
 export function restaurantSchema() {
+  const wheelchairLabel = "휠체어 이용 가능";
+  const wheelchairFeatures = STORE.accessibility.filter(
+    (feature) => feature === wheelchairLabel || feature.startsWith(`${wheelchairLabel} `),
+  );
+  const highChair = STORE.familyFacilities.find((facility) => facility === "유아의자");
+
   return {
     "@context": "https://schema.org",
     "@type": "Restaurant",
@@ -29,9 +35,20 @@ export function restaurantSchema() {
     amenityFeature: [
       { "@type": "LocationFeatureSpecification", name: "단체 이용", value: true },
       { "@type": "LocationFeatureSpecification", name: "통대관", value: true, description: STORE.privateHire },
-      { "@type": "LocationFeatureSpecification", name: "무료주차", value: true },
-      { "@type": "LocationFeatureSpecification", name: "유아의자", value: true },
-      { "@type": "LocationFeatureSpecification", name: "휠체어 이용 가능", value: true, description: STORE.accessibility.join(" · ") },
+      ...(GROUP_PARKING_FACTS.fee === "무료"
+        ? [{ "@type": "LocationFeatureSpecification", name: "무료주차", value: true }]
+        : []),
+      ...(highChair
+        ? [{ "@type": "LocationFeatureSpecification", name: highChair, value: true }]
+        : []),
+      ...(wheelchairFeatures.length > 0
+        ? [{
+            "@type": "LocationFeatureSpecification",
+            name: wheelchairLabel,
+            value: true,
+            description: wheelchairFeatures.join(" · "),
+          }]
+        : []),
     ],
     acceptsReservations: true,
     mainEntityOfPage: STORE.url,
