@@ -281,7 +281,8 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
         for (const fact of [
           "매운·간장 등갈비찜 세트 1인 19,900원 · 2인 이상 · 최대 52명 단체 이용과 통대관 상담 · 무료 주차",
           "52명 모임 상담",
-          "메뉴 17개 최신 가격",
+          "한눈에 보는 최신 매장 정보",
+          "어떤 자리로 오시나요?",
           "11:00~22:00 · 15:30~16:30 브레이크타임",
           "11:00~22:00 · 브레이크타임 없음",
         ]) assert.ok(text.includes(fact), `home preserves approved copy: ${fact}`);

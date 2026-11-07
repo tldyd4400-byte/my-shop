@@ -3,6 +3,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import test from "node:test";
+import ts from "typescript";
 
 import {
   DINING_STEPS,
@@ -201,6 +202,31 @@ test("V6 store facts carry the 2026-11-07 verification source", () => {
   assert.equal(STORE.maxGroupSize, 52);
   assert.equal(STORE.privateHire, "최대 인원 이용 시 통대관 협의");
 });
+
+for (const [field, before, after] of [
+  ["price", 'price: "19,900원", priceAmount: 19900', 'price: "21,900원", priceAmount: 21900'],
+  ["minimum order", "minimumOrder: 2", "minimumOrder: 3"],
+]) {
+  test(`V6 first-visit FAQ lists both sets when only the soy ${field} changes`, async () => {
+    const path = "lib/content/store.ts";
+    const original = read(path);
+    const source = original.replace(/^.*menuItem\(\{ slug: "soy-set".*$/m,
+      (line) => line.replace(before, after),
+    );
+    assert.notEqual(source, original, "fixture changes the soy-set field");
+    const { outputText } = ts.transpileModule(source, {
+      fileName: path,
+      compilerOptions: { module: ts.ModuleKind.ESNext },
+    });
+    const content = await import(`data:text/javascript,${encodeURIComponent(outputText)}`);
+    const { answer } = content.HOME_FAQ_ITEMS[0];
+    for (const slug of ["spicy-set", "soy-set"]) {
+      const { name, price, minimumOrder } = content.MENU_ITEMS.find((item) => item.slug === slug);
+      assert.ok(answer.includes(`${name}: ${price}이며 ${minimumOrder}인 이상 주문합니다.`), answer);
+    }
+    assert.doesNotMatch(answer, /매운 등갈비찜 또는 간장 등갈비찜/);
+  });
+}
 
 test("V6 home direct answers are centralized and numeric", () => {
   assert.deepEqual(HOME_FAQ_ITEMS, [

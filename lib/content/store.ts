@@ -99,12 +99,42 @@ export const REVIEW_SNAPSHOT: ReviewSnapshot = {
   sourceUrl: STORE.reviewUrl,
 };
 
-const signatureSet = MENU_ITEMS.find((item) => item.slug === "spicy-set")!;
+export function getSignatureSetTerms(items: readonly MenuItem[]) {
+  const spicySet = items.find((item) => item.slug === "spicy-set");
+  const soySet = items.find((item) => item.slug === "soy-set");
+  const sharedTerms =
+    spicySet &&
+    soySet &&
+    spicySet.price === soySet.price &&
+    spicySet.minimumOrder === soySet.minimumOrder
+      ? { price: spicySet.price, minimumOrder: spicySet.minimumOrder }
+      : undefined;
+
+  return {
+    sets: [spicySet, soySet].filter((item) => item !== undefined),
+    sharedTerms,
+  };
+}
+
+function setOrderSentence(price: string, minimumOrder?: number) {
+  return minimumOrder === undefined
+    ? `${price}입니다.`
+    : `${price}이며 ${minimumOrder}인 이상 주문합니다.`;
+}
+
+const { sets: signatureSets, sharedTerms } = getSignatureSetTerms(MENU_ITEMS);
+const firstVisitOrder = sharedTerms
+  ? `매운 등갈비찜 또는 간장 등갈비찜 세트는 1인 ${setOrderSentence(sharedTerms.price, sharedTerms.minimumOrder)}`
+  : signatureSets
+      .map(({ name, price, minimumOrder }) => `${name}: ${setOrderSentence(price, minimumOrder)}`)
+      .join(" ");
 
 export const HOME_FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: "처음 방문하면 무엇을 주문하나요?",
-    answer: `매운 등갈비찜 또는 간장 등갈비찜 세트는 1인 ${signatureSet.price}이며 ${signatureSet.minimumOrder}인 이상 주문합니다. 셀프바에서 고른 재료를 함께 끓여 먹습니다.`,
+    answer: [firstVisitOrder, "셀프바에서 고른 재료를 함께 끓여 먹습니다."]
+      .filter(Boolean)
+      .join(" "),
   },
   {
     question: "아이와 함께 먹을 수 있나요?",
