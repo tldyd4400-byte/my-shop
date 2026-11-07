@@ -306,3 +306,31 @@ test("public body copy stays at least 16px", () => {
 
   assert.doesNotMatch(styles, /font-size:\s*0\.[0-9]+rem/);
 });
+
+test("V6 latest facts derive all changing values from central content", () => {
+  const facts = read("components/site/latest-store-facts.tsx");
+  for (const field of [
+    "verifiedAt",
+    "verificationSource",
+    "openingPeriods",
+    "regularClosure",
+    "parking",
+    "maxGroupSize",
+    "privateHire",
+  ]) {
+    assert.ok(facts.includes(`STORE.${field}`), field);
+  }
+  assert.match(facts, /MENU_ITEMS\.find/);
+  assert.match(facts, /<time dateTime=\{STORE\.verifiedAt\}>/);
+  assert.doesNotMatch(facts, /19,900원|52명|2026-11-07/);
+});
+
+test("V6 visit cards use central content and tracked crawlable links", () => {
+  const grid = read("components/site/visit-intent-grid.tsx");
+  assert.match(grid, /VISIT_INTENT_ITEMS\.map/);
+  assert.match(grid, /eventName="visit_intent_click"/);
+  assert.match(grid, /placement=\{item\.placement\}/);
+  assert.match(grid, /href=\{item\.href\}/);
+  assert.match(grid, /item\.ctaLabel/);
+  assert.doesNotMatch(grid, /preventDefault/);
+});
