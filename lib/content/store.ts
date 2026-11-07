@@ -1,4 +1,4 @@
-import type { DiningStep, FaqItem, MenuCategory, MenuItem, ReviewItem, ReviewSnapshot, StoreInfo } from "./types";
+import type { DiningStep, FaqItem, MenuCategory, MenuItem, ReviewItem, ReviewSnapshot, StoreInfo, VisitIntentItem } from "./types";
 
 export const GROUP_PARKING_FACTS = {
   location: "건물 뒤 무료 지상주차장",
@@ -45,6 +45,8 @@ export const STORE: StoreInfo = {
     { label: "화~금 저녁", days: ["Tuesday", "Wednesday", "Thursday", "Friday"], opens: "16:30", closes: "22:00" },
     { label: "토~일", days: ["Saturday", "Sunday"], opens: "11:00", closes: "22:00" },
   ],
+  verifiedAt: "2026-11-07",
+  verificationSource: "네이버 스마트플레이스·공개 플레이스",
 };
 
 export const MENU_CATEGORIES: readonly MenuCategory[] = [
@@ -86,20 +88,80 @@ export const MENU_ITEMS: readonly MenuItem[] = [
 
 export const REVIEW_SNAPSHOT: ReviewSnapshot = {
   rating: 4.94,
-  ratingCount: 401,
-  participants: 367,
-  visitorReviewCount: 423,
-  blogReviewCount: 203,
-  totalDisplayedReviewCount: 631,
-  checkedAt: "2026-10-24",
+  ratingCount: 425,
+  participants: 389,
+  visitorReviewCount: 446,
+  blogReviewCount: 213,
+  totalDisplayedReviewCount: 666,
+  checkedAt: "2026-11-07",
   sourceLabel: "네이버 플레이스 공개 리뷰 화면",
   sourceUrl: STORE.reviewUrl,
 };
 
+const signatureSet = MENU_ITEMS.find((item) => item.slug === "spicy-set")!;
+
+export const HOME_FAQ_ITEMS: readonly FaqItem[] = [
+  {
+    question: "처음 방문하면 무엇을 주문하나요?",
+    answer: `매운 등갈비찜 또는 간장 등갈비찜 세트는 1인 ${signatureSet.price}이며 ${signatureSet.minimumOrder}인 이상 주문합니다. 셀프바에서 고른 재료를 함께 끓여 먹습니다.`,
+  },
+  {
+    question: "아이와 함께 먹을 수 있나요?",
+    answer:
+      "맵지 않은 간장 등갈비찜과 어린이밥이 있고 유아의자를 이용할 수 있습니다. 휠체어 이용 가능 출입구·좌석·화장실도 등록되어 있습니다.",
+  },
+  {
+    question: "회식은 몇 명까지 가능한가요?",
+    answer: `한 팀 최대 ${STORE.maxGroupSize}명까지 이용할 수 있으며 최대 인원 이용 시 통대관으로 협의합니다. 날짜·시간·예상 인원을 전화로 알려주세요.`,
+  },
+  {
+    question: "주차와 예약은 어떻게 하나요?",
+    answer:
+      "건물 뒤 무료 지상주차장을 이용할 수 있습니다. 일반 식사는 네이버 예약, 단체·통대관은 전화 상담을 이용합니다.",
+  },
+];
+
+export const VISIT_INTENT_ITEMS: readonly VisitIntentItem[] = [
+  {
+    id: "first-visit",
+    number: "01",
+    label: "처음 방문",
+    title: "메뉴를 고르고 셀프바와 함께 끓여요",
+    summary:
+      "매운맛·간장맛 선택 → 채소와 사리 담기 → 샤브처럼 끓이기 → 수제우유빙수",
+    href: "/menu",
+    ctaLabel: "메뉴와 이용 방법 보기",
+    placement: "home_intent_first_visit",
+  },
+  {
+    id: "family-dining",
+    number: "02",
+    label: "가족외식",
+    title: "아이부터 부모님까지 함께 고르기 좋은 메뉴",
+    summary:
+      "맵지 않은 간장맛 · 어린이밥 · 유아의자 · 휠체어 이용 가능 출입구·좌석·화장실",
+    href: "/stories/family-dining-guide",
+    ctaLabel: "가족 방문 정보 보기",
+    placement: "home_intent_family_dining",
+  },
+  {
+    id: "group-dining",
+    number: "03",
+    label: "모임·회식",
+    title: `2명부터 한 팀 최대 ${STORE.maxGroupSize}명까지`,
+    summary: `${STORE.seats} · ${STORE.privateHire} · 건물 뒤 무료 지상주차장 · 날짜·시간·예상 인원 상담`,
+    href: "/stories/cheongju-group-dining",
+    ctaLabel: "단체 이용 자세히 보기",
+    placement: "home_intent_group_dining",
+    featured: true,
+  },
+];
+
 export const REVIEW_FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: "어믜뜰 후기에서 가장 많이 언급되는 장점은 무엇인가요?",
-    answer: "2026년 10월 24일 확인한 네이버 방문자 반응에서는 음식의 맛과 고기 품질이 가장 많이 언급됐고, 친절한 응대와 넉넉한 양, 넓은 매장도 반복적으로 언급됐습니다.",
+    answer:
+      "2026년 11월 7일 확인한 네이버 방문자 반응에서는 음식의 맛과 고기 품질이 가장 많이 언급됐고, 친절한 응대와 넉넉한 양, 넓은 매장도 반복적으로 언급됐습니다.",
   },
   {
     question: "가족외식이나 회식에 적합한가요?",
@@ -172,21 +234,21 @@ export const REVIEW_ITEMS: readonly ReviewItem[] = [
     summary: "최근 확인한 방문자 후기와 반응 집계에서 음식의 맛과 고기 품질이 반복적으로 언급됩니다.",
     sourceLabel: "네이버 방문자 반응 요약",
     sourceUrl: STORE.reviewUrl,
-    checkedAt: "2026-10-24",
+    checkedAt: "2026-11-07",
   },
   {
     title: "샤브식 등갈비와 다양한 셀프바",
     summary: "채소와 사리를 취향대로 더해 끓이고 메밀전, 임궁밥, 수제우유빙수까지 이어지는 식사 경험이 언급됩니다.",
     sourceLabel: "네이버 방문자 반응 요약",
     sourceUrl: STORE.reviewUrl,
-    checkedAt: "2026-10-24",
+    checkedAt: "2026-11-07",
   },
   {
     title: "가족외식과 회식에 편한 공간",
     summary: "넓고 깔끔한 공간, 단체 이용과 가족 방문, 친절한 응대가 반복적으로 언급됩니다.",
     sourceLabel: "네이버 방문자 반응 요약",
     sourceUrl: STORE.reviewUrl,
-    checkedAt: "2026-10-24",
+    checkedAt: "2026-11-07",
   },
 ];
 

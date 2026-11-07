@@ -10,12 +10,14 @@ import {
   GALBIJJIM_FAQ_ITEMS,
   GROUP_FAQ_ITEMS,
   GROUP_STORY_FAQ_ITEMS,
+  HOME_FAQ_ITEMS,
   MENU_CATEGORIES,
   MENU_ITEMS,
   REVIEW_FAQ_ITEMS,
   REVIEW_ITEMS,
   REVIEW_SNAPSHOT,
   STORE,
+  VISIT_INTENT_ITEMS,
 } from "../lib/content/store.ts";
 import { getStory, STORIES } from "../lib/content/stories.ts";
 
@@ -186,16 +188,87 @@ test("menu items retain required display fields and fallback media", () => {
   assert.equal(MENU_ITEMS[0].includes, "등갈비찜 · 셀프바 · 수제우유빙수");
 });
 
+test("V6 store facts carry the 2026-11-07 verification source", () => {
+  assert.equal(STORE.verifiedAt, "2026-11-07");
+  assert.equal(
+    STORE.verificationSource,
+    "네이버 스마트플레이스·공개 플레이스",
+  );
+  assert.equal(STORE.lastOrder, "21:00");
+  assert.equal(STORE.regularClosure, "매주 월요일");
+  assert.equal(STORE.holidayClosure, "설·추석 당일");
+  assert.equal(STORE.maxGroupSize, 52);
+  assert.equal(STORE.privateHire, "최대 인원 이용 시 통대관 협의");
+});
+
+test("V6 home direct answers are centralized and numeric", () => {
+  assert.deepEqual(HOME_FAQ_ITEMS, [
+    {
+      question: "처음 방문하면 무엇을 주문하나요?",
+      answer:
+        "매운 등갈비찜 또는 간장 등갈비찜 세트는 1인 19,900원이며 2인 이상 주문합니다. 셀프바에서 고른 재료를 함께 끓여 먹습니다.",
+    },
+    {
+      question: "아이와 함께 먹을 수 있나요?",
+      answer:
+        "맵지 않은 간장 등갈비찜과 어린이밥이 있고 유아의자를 이용할 수 있습니다. 휠체어 이용 가능 출입구·좌석·화장실도 등록되어 있습니다.",
+    },
+    {
+      question: "회식은 몇 명까지 가능한가요?",
+      answer:
+        "한 팀 최대 52명까지 이용할 수 있으며 최대 인원 이용 시 통대관으로 협의합니다. 날짜·시간·예상 인원을 전화로 알려주세요.",
+    },
+    {
+      question: "주차와 예약은 어떻게 하나요?",
+      answer:
+        "건물 뒤 무료 지상주차장을 이용할 수 있습니다. 일반 식사는 네이버 예약, 단체·통대관은 전화 상담을 이용합니다.",
+    },
+  ]);
+});
+
+test("V6 visit intents expose three crawlable next steps", () => {
+  assert.deepEqual(
+    VISIT_INTENT_ITEMS.map(
+      ({ id, href, placement, featured }) => ({
+        id,
+        href,
+        placement,
+        featured: Boolean(featured),
+      }),
+    ),
+    [
+      {
+        id: "first-visit",
+        href: "/menu",
+        placement: "home_intent_first_visit",
+        featured: false,
+      },
+      {
+        id: "family-dining",
+        href: "/stories/family-dining-guide",
+        placement: "home_intent_family_dining",
+        featured: false,
+      },
+      {
+        id: "group-dining",
+        href: "/stories/cheongju-group-dining",
+        placement: "home_intent_group_dining",
+        featured: true,
+      },
+    ],
+  );
+});
+
 test("review snapshot records the verified public Naver counts without deriving totals", () => {
   assert.equal(STORE.reviewUrl, "https://pcmap.place.naver.com/restaurant/2021816208/review/visitor");
   assert.deepEqual(REVIEW_SNAPSHOT, {
     rating: 4.94,
-    ratingCount: 401,
-    participants: 367,
-    visitorReviewCount: 423,
-    blogReviewCount: 203,
-    totalDisplayedReviewCount: 631,
-    checkedAt: "2026-10-24",
+    ratingCount: 425,
+    participants: 389,
+    visitorReviewCount: 446,
+    blogReviewCount: 213,
+    totalDisplayedReviewCount: 666,
+    checkedAt: "2026-11-07",
     sourceLabel: "네이버 플레이스 공개 리뷰 화면",
     sourceUrl: STORE.reviewUrl,
   });
@@ -227,7 +300,7 @@ test("central review summaries are current, sourced, and safe", () => {
 
   for (const review of REVIEW_ITEMS) {
     assert.equal(review.sourceUrl, STORE.reviewUrl);
-    assert.equal(review.checkedAt, "2026-10-24");
+    assert.equal(review.checkedAt, "2026-11-07");
     assert.equal(review.sourceLabel, "네이버 방문자 반응 요약");
     assert.doesNotMatch(`${review.title} ${review.summary}`, /[“”]|1위|최고|무조건/);
   }
@@ -237,7 +310,8 @@ test("review FAQ answers visit-intent questions from central verified facts", ()
   assert.deepEqual(REVIEW_FAQ_ITEMS, [
     {
       question: "어믜뜰 후기에서 가장 많이 언급되는 장점은 무엇인가요?",
-      answer: "2026년 10월 24일 확인한 네이버 방문자 반응에서는 음식의 맛과 고기 품질이 가장 많이 언급됐고, 친절한 응대와 넉넉한 양, 넓은 매장도 반복적으로 언급됐습니다.",
+      answer:
+        "2026년 11월 7일 확인한 네이버 방문자 반응에서는 음식의 맛과 고기 품질이 가장 많이 언급됐고, 친절한 응대와 넉넉한 양, 넓은 매장도 반복적으로 언급됐습니다.",
     },
     {
       question: "가족외식이나 회식에 적합한가요?",

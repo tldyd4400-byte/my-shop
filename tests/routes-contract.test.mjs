@@ -285,6 +285,15 @@ test("reviews route shows current evidence, direct answers, and contextual links
   assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.relatedLinks/);
 });
 
+test("reviews metadata derives its evidence date from the central snapshot", () => {
+  const page = read("app/reviews/page.tsx");
+
+  assert.match(
+    page,
+    /description:\s*`\$\{REVIEW_SNAPSHOT\.checkedAt\.replaceAll\("-", "\."\)\} 네이버 플레이스에서 확인한 어믜뜰 평점과 방문자 반응을 바탕으로 청주갈비찜, 가족외식, 회식 이용 정보를 안내합니다\.`/,
+  );
+});
+
 test("reviews route shows the verified dated rating snapshot without rating schema", () => {
   const page = read("app/reviews/page.tsx");
   const styles = read("app/reviews/reviews.module.css");
@@ -366,7 +375,7 @@ test("central review evidence has three safe, current source records", () => {
   for (const review of REVIEW_ITEMS) {
     assert.equal(review.sourceUrl, STORE.reviewUrl);
     assert.equal(new URL(review.sourceUrl).protocol, "https:");
-    assert.equal(review.checkedAt, "2026-10-24");
+    assert.equal(review.checkedAt, "2026-11-07");
     assert.equal(review.sourceLabel, "네이버 방문자 반응 요약");
     assert.doesNotMatch(
       `${review.title} ${review.summary}`,
