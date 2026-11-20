@@ -1,20 +1,14 @@
-import Image from "next/image";
-
 import { STORE } from "@/lib/content/store";
 
 import { AnalyticsLink } from "./analytics-link";
+import { LocationMap } from "./location-map";
 
 export function LocationPanel() {
+  const [, , weekend] = STORE.openingPeriods;
+
   return (
     <section className="location-panel section-pad">
       <div className="shell location-grid">
-        <Image
-          className="location-map"
-          src="/images/eomeuittul/naver-map-location.png"
-          alt={`${STORE.name} 청주봉명동본점의 네이버 지도 위치`}
-          width={650}
-          height={424}
-        />
         <div className="location-details">
           <h2>{STORE.fullName}</h2>
           <p>{STORE.address}</p>
@@ -28,9 +22,9 @@ export function LocationPanel() {
               </div>
             ))}
           </dl>
-          <p>토·일·공휴일은 브레이크타임 없음</p>
+          <p>{weekend.label}은 브레이크타임 없음</p>
           <p>라스트오더: {STORE.lastOrder}</p>
-          <p>정기휴무: {STORE.regularClosure} · 공휴일 휴무: {STORE.holidayClosure}</p>
+          <p>정기휴무: {STORE.regularClosure} · 명절 휴무: {STORE.holidayClosure}</p>
           <p>{STORE.parking}</p>
           <AnalyticsLink
             className="button button-secondary"
@@ -43,6 +37,10 @@ export function LocationPanel() {
             네이버 지도에서 보기
           </AnalyticsLink>
         </div>
+        <LocationMap
+          className="location-map"
+          sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1344px) calc(50vw - 48px), 624px"
+        />
       </div>
     </section>
   );

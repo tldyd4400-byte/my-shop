@@ -1,7 +1,14 @@
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import test from "node:test";
-import { MENU_ITEMS, STORE } from "../lib/content/store.ts";
+import { renderToStaticMarkup } from "react-dom/server";
+import ts from "typescript";
+import * as storeContent from "../lib/content/store.ts";
+import * as metadata from "../lib/seo/metadata.ts";
+import * as schema from "../lib/seo/schema.ts";
+
+const { MENU_ITEMS, STORE } = storeContent;
 
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -9,12 +16,13 @@ const read = (path) =>
 const readBinary = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url));
 
-test("home V4 exposes approved media, proof, trust, and conversion sections", () => {
+test("home V6 exposes approved media, trust, and conversion sections", () => {
   const page = read("app/page.tsx");
 
   for (const component of [
     "HeroMedia",
-    "ProofStrip",
+    "LatestStoreFacts",
+    "VisitIntentGrid",
     "ExperienceSteps",
     "ReservationCta",
     "LocationPanel",
@@ -33,16 +41,12 @@ test("home V4 exposes approved media, proof, trust, and conversion sections", ()
   );
   assert.match(page, /청주갈비찜·회식·가족외식/);
 
-  const resolvedCopy = page
-    .replace("${MENU_ITEMS.length}", String(MENU_ITEMS.length))
-    .replaceAll("{STORE.maxGroupSize}", String(STORE.maxGroupSize));
+  const resolvedCopy = page.replaceAll("{STORE.maxGroupSize}", String(STORE.maxGroupSize));
   for (const phrase of [
     "회식도 가족외식도",
     "함께 끓여 더 즐거운 한 상",
     "52명 모임 상담",
     "전체 메뉴 보기",
-    "메뉴 17개 최신 가격",
-    "매장 뒤 무료 주차",
   ]) assert.match(resolvedCopy, new RegExp(phrase));
   assert.match(page, /placement="home_group"/);
   assert.match(page, /STORE\.bookingUrl/);
@@ -59,12 +63,13 @@ test("home metadata and review section support the priority search intents", () 
   assert.match(page, /await loadPublicOnlineReviews\(3\)/);
 });
 
-test("home V4 keeps the approved section order", () => {
+test("home V6 keeps the approved section order", () => {
   const page = read("app/page.tsx");
 
   const sections = [
     "<HeroMedia",
-    "<ProofStrip",
+    "<LatestStoreFacts",
+    "<VisitIntentGrid",
     'className="brand-story',
     "<ExperienceSteps",
     'className="menu-preview',
@@ -82,22 +87,23 @@ test("home V4 keeps the approved section order", () => {
 
   const visualBlocks =
     page.match(
-      /<(?:HeroMedia|ProofStrip|ExperienceSteps|GroupDiningPanel|ReservationCta|VisitFacts|LocationPanel)\b|<section\b/g,
+      /<(?:HeroMedia|LatestStoreFacts|VisitIntentGrid|ExperienceSteps|GroupDiningPanel|ReservationCta|VisitFacts|LocationPanel)\b|<section\b/g,
     ) ?? [];
-  assert.equal(visualBlocks.length, 11);
+  assert.equal(visualBlocks.length, 12);
   for (const section of sections) {
     assert.equal(page.split(section).length - 1, 1, section);
   }
+  assert.doesNotMatch(page, /<ProofStrip\b/);
 });
 
-test("home V4 uses central content and matches visible FAQ items to JSON-LD", () => {
+test("home V6 uses central content and matches visible FAQ items to JSON-LD", () => {
   const page = read("app/page.tsx");
 
-  for (const source of ["FAQ_ITEMS", "MENU_ITEMS", "REVIEW_ITEMS", "REVIEW_SNAPSHOT", "STORE"]) {
+  for (const source of ["HOME_FAQ_ITEMS", "MENU_ITEMS", "REVIEW_ITEMS", "STORE"]) {
     assert.match(page, new RegExp(source));
   }
 
-  assert.match(page, /const homeFaqs = FAQ_ITEMS\.slice\(0, 4\)/);
+  assert.match(page, /const homeFaqs = HOME_FAQ_ITEMS/);
   assert.match(page, /faqSchema\(homeFaqs\)/);
   assert.match(page, /<FaqList items=\{homeFaqs\}/);
   assert.doesNotMatch(
@@ -110,11 +116,11 @@ test("home V4 uses central content and matches visible FAQ items to JSON-LD", ()
   );
 });
 
-test("home V4 uses Next Link internally and leaves shared chrome to the root", () => {
+test("home V6 uses Next Link for reviews and leaves shared chrome to the root", () => {
   const page = read("app/page.tsx");
 
   assert.match(page, /import Link from "next\/link"/);
-  assert.match(page, /<Link[\s\S]*?href="\/menu"/);
+  assert.match(page, /<Link[\s\S]*?href="\/reviews"/);
   const reviewLinks = (page.match(/<a[\s\S]*?<\/a>/g) ?? []).filter((link) =>
     link.includes("review.sourceUrl"),
   );
@@ -127,7 +133,7 @@ test("home V4 uses Next Link internally and leaves shared chrome to the root", (
   assert.doesNotMatch(page, /SiteHeader|SiteFooter|MobileActionBar/);
 });
 
-test("home V4 preserves the 390px stack and 48px interactive targets", () => {
+test("home V6 preserves the 390px stack and 48px interactive targets", () => {
   const styles = read("app/globals.css");
 
   assert.match(styles, /@media \(max-width: 767px\)/);
@@ -141,9 +147,19 @@ test("home V4 preserves the 390px stack and 48px interactive targets", () => {
   assert.match(styles, /\.menu-category-grid\s*{[^}]*grid-template-columns:\s*repeat\(2, minmax\(0, 1fr\)\)/);
   assert.match(styles, /@media \(max-width: 767px\)\s*{[^}]*\.menu-category-grid,[\s\S]*?\.visit-facts-grid\s*{\s*grid-template-columns:\s*1fr/);
   assert.match(styles, /\.button-tertiary\s*{[^}]*color:\s*var\(--ink\)/);
+  assert.match(
+    styles,
+    /\.visit-intent-grid\s*\{[^}]*grid-template-columns:\s*repeat\(3, minmax\(0, 1fr\)\)/,
+  );
+  assert.match(
+    styles,
+    /@media \(max-width: 767px\)[\s\S]*?\.visit-intent-grid,[\s\S]*?\.latest-store-facts-grid\s*\{[^}]*grid-template-columns:\s*1fr/,
+  );
+  assert.match(styles, /\.visit-intent-link\s*\{[^}]*min-height:\s*48px/);
+  assert.match(styles, /@media \(max-width: 360px\)/);
 });
 
-test("home V4 prioritizes tracked reservation and group inquiry before menu browsing", () => {
+test("home V6 prioritizes tracked reservation and group inquiry before menu browsing", () => {
   const page = read("app/page.tsx");
   const hero = page.match(/<HeroMedia[\s\S]*?<\/HeroMedia>/)?.[0] ?? "";
   const actions = hero.match(/<(?:AnalyticsLink|Link)\b[\s\S]*?<\/(?:AnalyticsLink|Link)>/g) ?? [];
@@ -154,18 +170,42 @@ test("home V4 prioritizes tracked reservation and group inquiry before menu brow
   assert.match(actions[1], /href=\{STORE\.phoneHref\}/);
   assert.match(actions[1], /eventName="group_inquiry_click"/);
   for (const action of actions.slice(0, 2)) assert.match(action, /placement="home_hero"/);
-  assert.match(actions[2], /className="button button-tertiary" href="\/menu"/);
+  assert.match(actions[2], /className="button button-tertiary"/);
+  assert.match(actions[2], /href="\/menu"/);
+  assert.match(actions[2], /eventName="visit_intent_click"/);
+  assert.match(actions[2], /placement="home_hero_menu"/);
 });
 
-test("home V4 labels its verified rating with source and checked date", () => {
-  const page = read("app/page.tsx");
-  assert.match(page, /네이버 평점 \$\{REVIEW_SNAPSHOT\.rating\} \/ 5/);
-  assert.match(page, /REVIEW_SNAPSHOT\.checkedAt\.replaceAll\("-", "\."\)\} 확인/);
-  assert.match(page, /메뉴 \$\{MENU_ITEMS\.length\}개 최신 가격/);
-  assert.match(page, /2~\$\{STORE\.maxGroupSize\}명 단체석 · 통대관 협의/);
-});
+function luminanceForRule(styles, selector, property) {
+  const declarations = styles.split(`${selector} {`)[1]?.split("}")[0] ?? "";
+  const token = declarations.match(new RegExp(`(?:^|\\s)${property}:\\s*var\\((--[\\w-]+)\\)`))?.[1];
+  assert.ok(token, `${selector} must define a ${property} color token`);
+  const hex = styles.match(new RegExp(`${token}:\\s*#([0-9a-f]{6})\\s*;`, "i"))?.[1];
+  const white = styles.match(new RegExp(`${token}:\\s*#([0-9a-f]{3})\\s*;`, "i"))?.[1];
+  const channels = hex?.match(/../g) ?? white?.split("").map((digit) => digit.repeat(2));
+  assert.ok(channels, `missing hex color for ${token}`);
+  const [r, g, b] = channels.map((channel) => {
+    const value = Number.parseInt(channel, 16) / 255;
+    return value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
 
-test("home V4 menu preview groups central categories with optional four-item summaries", () => {
+for (const [label, surface] of [
+  [".latest-store-facts .eyebrow", ".latest-store-facts"],
+  [".latest-store-facts-grid dt", ".latest-store-facts-grid > div"],
+  [".visit-intent-card--featured .visit-intent-label", ".visit-intent-card--featured"],
+]) {
+  test(`home V6 label ${label} meets 4.5:1 contrast`, () => {
+    const styles = read("app/globals.css");
+    const fg = luminanceForRule(styles, label, "color");
+    const bg = luminanceForRule(styles, surface, "background");
+    const ratio = (Math.max(fg, bg) + 0.05) / (Math.min(fg, bg) + 0.05);
+    assert.ok(ratio >= 4.5, `${label} contrast is ${ratio.toFixed(3)}:1`);
+  });
+}
+
+test("home V6 menu preview groups central categories with optional four-item summaries", () => {
   assert.equal(existsSync(new URL("../components/site/menu-category-grid.tsx", import.meta.url)), true);
   const grid = read("components/site/menu-category-grid.tsx");
   assert.match(read("app/page.tsx"), /<MenuCategoryGrid compact \/>/);
@@ -179,32 +219,23 @@ test("home V4 menu preview groups central categories with optional four-item sum
   assert.match(grid, /인 이상 주문/);
 });
 
-test("home V4 visit facts expose hours, closures, parking, and accessible family facilities", () => {
+test("home V6 visit facts expose hours, closures, parking, and accessible family facilities", () => {
   assert.equal(existsSync(new URL("../components/site/visit-facts.tsx", import.meta.url)), true);
   const facts = read("components/site/visit-facts.tsx");
   assert.match(facts, /aria-labelledby="visit-facts-title"/);
   assert.match(facts, /id="visit-facts-title"/);
-  assert.match(facts, /화~금/);
   assert.match(facts, /const \[weekdayLunch, weekdayDinner, weekend\] = STORE\.openingPeriods/);
   assert.match(facts, /\$\{weekdayLunch\.opens\}~\$\{weekdayDinner\.closes\} · \$\{weekdayLunch\.closes\}~\$\{weekdayDinner\.opens\} 브레이크타임/);
   assert.match(facts, /\$\{weekend\.opens\}~\$\{weekend\.closes\} · 브레이크타임 없음/);
+  assert.match(facts, /\{weekend\.label\}/);
   assert.doesNotMatch(facts, /11:00|22:00|15:30|16:30/);
-  assert.match(facts, /토·일·공휴일/);
-  assert.match(facts, /브레이크타임 없음/);
+  assert.doesNotMatch(facts, /공휴일/);
   for (const field of ["lastOrder", "regularClosure", "holidayClosure", "parking", "familyFacilities", "accessibility"]) {
     assert.ok(facts.includes(`STORE.${field}`), field);
   }
 });
 
-test("home hero derives price, minimum order, and capacity from the central model", () => {
-  const page = read("app/page.tsx");
-  assert.match(page, /const signatureSet = MENU_ITEMS\.find\(\(item\) => item\.slug === "spicy-set"\)!/);
-  assert.match(page, /description=\{`매운·간장 등갈비찜 세트 1인 \$\{signatureSet\.price\} · \$\{signatureSet\.minimumOrder\}인 이상 · 최대 \$\{STORE\.maxGroupSize\}명 단체 이용과 통대관 상담 · 무료 주차`\}/);
-  assert.match(page, /\{STORE\.maxGroupSize\}명 모임 상담/);
-  assert.doesNotMatch(page, /19,900원|2인 이상|52명 모임 상담/);
-});
-
-test("home V4 group panel includes private hire, corkage, and both tracked contact choices", () => {
+test("home V6 group panel includes private hire, corkage, and both tracked contact choices", () => {
   const panel = read("components/site/group-dining-panel.tsx");
   for (const field of ["privateHire", "corkage", "bookingUrl", "phoneHref"]) {
     assert.ok(panel.includes(`STORE.${field}`), field);
@@ -214,7 +245,7 @@ test("home V4 group panel includes private hire, corkage, and both tracked conta
   assert.match(panel, /eventName="group_inquiry_click" placement=\{placement\}/);
 });
 
-test("home V4 preserves approved online-review loading and static fallback", () => {
+test("home V6 preserves approved online-review loading and static fallback", () => {
   const page = read("app/page.tsx");
   assert.match(page, /await loadPublicOnlineReviews\(3\)/);
   assert.match(page, /onlineReviews\.length > 0 \? \([\s\S]*?<OnlineReviewCards reviews=\{onlineReviews\} \/>[\s\S]*?\) : \([\s\S]*?REVIEW_ITEMS\.map/);
@@ -305,4 +336,300 @@ test("public body copy stays at least 16px", () => {
   const styles = read("app/globals.css");
 
   assert.doesNotMatch(styles, /font-size:\s*0\.[0-9]+rem/);
+});
+
+const require = createRequire(import.meta.url);
+
+function evaluateTypeScript(path, source, imports = require) {
+  const { outputText } = ts.transpileModule(source, {
+    fileName: path,
+    compilerOptions: {
+      module: ts.ModuleKind.CommonJS,
+      jsx: ts.JsxEmit.ReactJSX,
+    },
+  });
+  const exports = {};
+  new Function("require", "exports", outputText)(imports, exports);
+  return exports;
+}
+
+function evaluateHomePage(content = storeContent) {
+  const path = "app/page.tsx";
+  const heroPath = "components/site/hero-media.tsx";
+  const heroModule = evaluateTypeScript(heroPath, read(heroPath));
+  const imports = {
+    "@/lib/content/store": content,
+    "@/lib/seo/metadata": metadata,
+    "@/lib/seo/schema": schema,
+    "@/lib/online-reviews/public": { loadPublicOnlineReviews: async () => [] },
+    "@/components/site/hero-media": heroModule,
+  };
+  // Unrendered sibling components are irrelevant to the props HomePage gives its hero.
+  return { heroModule, ...evaluateTypeScript(path, read(path), (id) =>
+    imports[id] ?? (id.startsWith("@/components/") ? {} : require(id)),
+  ) };
+}
+
+async function homeHeroDescription(content = storeContent) {
+  const { default: HomePage, heroModule } = evaluateHomePage(content);
+  const main = await HomePage();
+  return main.props.children.find(({ type }) => type === heroModule.HeroMedia).props.description;
+}
+
+test("home V6 hero preserves the approved combined price and minimum copy", async () => {
+  assert.equal(
+    await homeHeroDescription(),
+    "매운·간장 등갈비찜 세트 1인 19,900원 · 2인 이상 · 최대 52명 단체 이용과 통대관 상담 · 무료 주차",
+  );
+});
+
+test("home V6 hero description follows central capacity", async () => {
+  const description = await homeHeroDescription({
+    ...storeContent,
+    STORE: { ...STORE, maxGroupSize: 48 },
+  });
+  assert.match(description, /최대 48명 단체 이용/);
+});
+
+test("home V6 metadata description follows central capacity", () => {
+  const home = evaluateHomePage({
+    ...storeContent,
+    STORE: { ...STORE, maxGroupSize: 48 },
+  });
+  assert.match(home.metadata.description, /최대 48명 통대관 상담/);
+  assert.equal(home.metadata.openGraph.description, home.metadata.description);
+  assert.doesNotMatch(home.metadata.description, /최대 52명/);
+});
+
+test("home V6 hero and metadata do not retain a stale free-parking claim", async () => {
+  const content = {
+    ...storeContent,
+    GROUP_PARKING_FACTS: { ...storeContent.GROUP_PARKING_FACTS, summary: "유료 주차" },
+  };
+  for (const description of [
+    await homeHeroDescription(content),
+    evaluateHomePage(content).metadata.description,
+  ]) {
+    assert.match(description, /유료 주차/);
+    assert.doesNotMatch(description, /무료 주차/);
+  }
+});
+
+function renderGroupDiningPanel(content = storeContent) {
+  const path = "components/site/group-dining-panel.tsx";
+  const linkPath = "components/site/analytics-link.tsx";
+  const { GroupDiningPanel } = evaluateTypeScript(path, read(path), (id) => {
+    if (id === "@/lib/content/store") return content;
+    if (id === "@/components/site/analytics-link") return evaluateTypeScript(linkPath, read(linkPath));
+    return require(id);
+  });
+  return renderToStaticMarkup(GroupDiningPanel({ placement: "home_group" }));
+}
+
+test("home V6 group panel follows the central parking location", () => {
+  const html = renderGroupDiningPanel({
+    ...storeContent,
+    GROUP_PARKING_FACTS: { ...storeContent.GROUP_PARKING_FACTS, location: "건물 옆 유료 지상주차장" },
+  });
+  assert.match(html, /건물 옆 유료 지상주차장/);
+  assert.doesNotMatch(html, /건물 뒤 무료 지상주차장/);
+});
+
+test("home V6 group panel preserves the approved seating display", () => {
+  assert.match(renderGroupDiningPanel(), /12테이블 · 총 52석 · 건물 뒤 무료 지상주차장/);
+});
+
+test("home V6 seating labels follow table and seat counts independently of the group max", () => {
+  const path = "lib/content/store.ts";
+  const source = read(path)
+    .replace(/^  (?:tableCount|totalSeatCount): .*,$/gm, "")
+    .replace(/^(  maxGroupSize:)/m, "  tableCount: 14,\n  totalSeatCount: 58,\n$1");
+  const content = evaluateTypeScript(path, source);
+  assert.equal(content.STORE.tableCount, 14);
+  assert.equal(content.STORE.totalSeatCount, 58);
+  assert.equal(content.STORE.maxGroupSize, 52);
+  const html = renderGroupDiningPanel(content);
+  assert.match(html, /14테이블 · 총 58석/);
+  assert.match(html, /최대 52명까지 한자리에서/);
+  assert.doesNotMatch(html, /12테이블 · 총 52석/);
+  assert.match(content.STORE.seats, /^14테이블 · 58석 · /);
+  assert.match(
+    content.VISIT_INTENT_ITEMS.find(({ id }) => id === "group-dining").summary,
+    /^14테이블 · 58석 · /,
+  );
+});
+
+for (const [field, change] of [
+  ["price", { price: "21,900원", priceAmount: 21900 }],
+  ["minimum order", { minimumOrder: 3 }],
+]) {
+  test(`home V6 hero lists both sets when only the soy ${field} changes`, async () => {
+    const items = MENU_ITEMS.map((item) =>
+      item.slug === "soy-set" ? { ...item, ...change } : item,
+    );
+    const description = await homeHeroDescription({ ...storeContent, MENU_ITEMS: items });
+    for (const slug of ["spicy-set", "soy-set"]) {
+      const { name, price, minimumOrder } = items.find((item) => item.slug === slug);
+      assert.ok(description.includes(`${name} ${price} · ${minimumOrder}인 이상`), description);
+    }
+    assert.doesNotMatch(description, /매운·간장/);
+  });
+}
+
+function renderLatestFacts(content = { STORE, MENU_ITEMS }) {
+  const path = "components/site/latest-store-facts.tsx";
+  const { LatestStoreFacts } = evaluateTypeScript(path, read(path), (id) =>
+    id === "@/lib/content/store" ? content : require(id),
+  );
+  return renderToStaticMarkup(LatestStoreFacts());
+}
+
+function displayedFacts(html) {
+  return Object.fromEntries(
+    Array.from(html.matchAll(/<dt\b[^>]*>(.*?)<\/dt>\s*<dd\b[^>]*>(.*?)<\/dd>/gs),
+      ([, label, value]) => [label, value.replace(/<[^>]*>/g, "")]),
+  );
+}
+
+test("V6 visit facts follow central day labels and times", () => {
+  const path = "components/site/visit-facts.tsx";
+  const openingPeriods = STORE.openingPeriods.map((period, index) => ({
+    ...period,
+    label: ["수~금 점심", "수~금 저녁", "일요일"][index],
+    opens: index === 2 ? "11:30" : period.opens,
+  }));
+  const { VisitFacts } = evaluateTypeScript(path, read(path), (id) =>
+    id === "@/lib/content/store" ? { ...storeContent, STORE: { ...STORE, openingPeriods } } : require(id),
+  );
+  const facts = displayedFacts(renderToStaticMarkup(VisitFacts()));
+  assert.equal(facts["수~금"], "11:00~22:00 · 15:30~16:30 브레이크타임");
+  assert.equal(facts.일요일, "11:30~22:00 · 브레이크타임 없음");
+  assert.equal(facts.휴무, `${STORE.regularClosure} · ${STORE.holidayClosure}`);
+});
+
+function menuProofItems(items) {
+  const path = "app/menu/page.tsx";
+  const proofPath = "components/site/proof-strip.tsx";
+  const proof = evaluateTypeScript(proofPath, read(proofPath));
+  const imports = {
+    "@/lib/content/store": { ...storeContent, MENU_ITEMS: items },
+    "@/lib/seo/metadata": metadata,
+    "@/lib/seo/schema": schema,
+    "@/components/site/proof-strip": proof,
+  };
+  const { default: MenuPage } = evaluateTypeScript(path, read(path), (id) =>
+    imports[id] ?? (id.startsWith("@/components/") ? {} : require(id)),
+  );
+  return MenuPage().props.children.find(({ type }) => type === proof.ProofStrip).props.items;
+}
+
+test("menu handoff keeps the approved combined terms when both flavors agree", () => {
+  assert.deepEqual(menuProofItems(MENU_ITEMS).slice(0, 2), [
+    "매운·간장 세트 19,900원",
+    "대표 세트 2인 이상",
+  ]);
+});
+
+for (const [field, change] of [
+  ["price", { price: "21,900원", priceAmount: 21900 }],
+  ["minimum order", { minimumOrder: 3 }],
+]) {
+  test(`menu handoff lists per-flavor terms when only the soy ${field} changes`, () => {
+    const items = MENU_ITEMS.map((item) => item.slug === "soy-set" ? { ...item, ...change } : item);
+    assert.deepEqual(menuProofItems(items).slice(0, 2), ["spicy-set", "soy-set"].map((slug) => {
+      const { name, price, minimumOrder } = items.find((item) => item.slug === slug);
+      return `${name} ${price} · ${minimumOrder}인 이상`;
+    }));
+  });
+}
+
+test("V6 latest facts preserve the approved current display", () => {
+  const html = renderLatestFacts();
+  assert.deepEqual(displayedFacts(html), {
+    영업: "화~금 11:00~22:00 · 15:30~16:30 브레이크 · 토~일 11:00~22:00 · 매주 월요일",
+    "대표 세트": "매운·간장 19,900원 · 2인 이상",
+    주차: STORE.parking,
+    단체: `2~52명 · ${STORE.privateHire}`,
+  });
+  assert.ok(html.includes(STORE.verificationSource));
+  assert.ok(html.includes(`<time dateTime="${STORE.verifiedAt}">${STORE.verifiedAt.replaceAll("-", ".")} 확인</time>`));
+});
+
+test("V6 latest facts follow alternate opening-period labels", () => {
+  const openingPeriods = STORE.openingPeriods.map((period, index) => ({
+    ...period,
+    label: ["수~금 점심", "수~금 저녁", "일~월"][index],
+  }));
+  const facts = displayedFacts(renderLatestFacts({
+    STORE: { ...STORE, openingPeriods }, MENU_ITEMS,
+  }));
+  assert.match(facts.영업, /수~금 11:00~22:00/);
+  assert.match(facts.영업, /일~월 11:00~22:00/);
+  assert.doesNotMatch(facts.영업, /화~금|토~일/);
+});
+
+test("V6 latest facts do not merge opening periods with different day labels", () => {
+  const openingPeriods = STORE.openingPeriods.map((period, index) =>
+    index === 1 ? { ...period, label: "목~금 저녁" } : period,
+  );
+  const facts = displayedFacts(renderLatestFacts({
+    STORE: { ...STORE, openingPeriods }, MENU_ITEMS,
+  }));
+  assert.match(facts.영업, /화~금 점심 11:00~15:30/);
+  assert.match(facts.영업, /목~금 저녁 16:30~22:00/);
+  assert.doesNotMatch(facts.영업, /화~금 11:00~22:00|브레이크/);
+});
+
+function contentWithAlternateGroupMinimum() {
+  const path = "lib/content/store.ts";
+  // Change only the central fixture's numeric data, then evaluate the real exports.
+  const source = read(path)
+    .replace(/^[ \t]*minGroupSize\s*:\s*\d+,\r?$/m, "")
+    .replace(/\bmaxGroupSize\s*:/, "minGroupSize: 4,\n  maxGroupSize:");
+  const content = evaluateTypeScript(path, source);
+  assert.equal(content.STORE.minGroupSize, 4, "fixture group minimum");
+  return content;
+}
+
+test("V6 store facts follow the central group minimum", () => {
+  const content = contentWithAlternateGroupMinimum();
+  assert.equal(
+    displayedFacts(renderLatestFacts(content)).단체,
+    `4~${content.STORE.maxGroupSize}명 · ${content.STORE.privateHire}`,
+  );
+});
+
+test("V6 group-visit title follows the central group minimum", () => {
+  const content = contentWithAlternateGroupMinimum();
+  assert.equal(
+    content.VISIT_INTENT_ITEMS.find(({ id }) => id === "group-dining").title,
+    `4명부터 한 팀 최대 ${content.STORE.maxGroupSize}명까지`,
+  );
+});
+
+for (const [field, change] of [
+  ["price", { price: "21,900원", priceAmount: 21900 }],
+  ["minimum order", { minimumOrder: 3 }],
+]) {
+  test(`V6 latest facts list both sets when only the soy ${field} changes`, () => {
+    const items = MENU_ITEMS.map((item) =>
+      item.slug === "soy-set" ? { ...item, ...change } : item,
+    );
+    const value = displayedFacts(renderLatestFacts({ STORE, MENU_ITEMS: items }))["대표 세트"];
+    for (const slug of ["spicy-set", "soy-set"]) {
+      const { name, price, minimumOrder } = items.find((item) => item.slug === slug);
+      assert.ok(value.includes(`${name} ${price} · ${minimumOrder}인 이상`), value);
+    }
+    assert.doesNotMatch(value, /매운·간장/);
+  });
+}
+
+test("V6 visit cards use central content and tracked crawlable links", () => {
+  const grid = read("components/site/visit-intent-grid.tsx");
+  assert.match(grid, /VISIT_INTENT_ITEMS\.map/);
+  assert.match(grid, /eventName="visit_intent_click"/);
+  assert.match(grid, /placement=\{item\.placement\}/);
+  assert.match(grid, /href=\{item\.href\}/);
+  assert.match(grid, /item\.ctaLabel/);
+  assert.doesNotMatch(grid, /preventDefault/);
 });

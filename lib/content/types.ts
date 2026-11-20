@@ -19,10 +19,16 @@ export type StoreInfo = {
     addressCountry: "KR";
   };
   parking: string;
+  tableCount: number;
+  totalSeatCount: number;
   seats: string;
+  minGroupSize: number;
   maxGroupSize: number;
   groupBooking: string;
   privateHire: string;
+  privateHireMinimum: string;
+  groupParking: string;
+  groupConsultation: readonly string[];
   corkage: string;
   lastOrder: string;
   regularClosure: string;
@@ -35,6 +41,8 @@ export type StoreInfo = {
   directionsUrl: string;
   image: string;
   openingPeriods: readonly OpeningPeriod[];
+  verifiedAt: string;
+  verificationSource: string;
 };
 
 export type MenuCategoryId = "set" | "side" | "extra" | "takeout";
@@ -72,6 +80,24 @@ export type ReviewSnapshot = {
 };
 
 export type FaqItem = { question: string; answer: string };
+
+export type VisitIntentId =
+  | "first-visit"
+  | "family-dining"
+  | "group-dining";
+
+export type VisitIntentItem = {
+  id: VisitIntentId;
+  number: "01" | "02" | "03";
+  label: string;
+  title: string;
+  summary: string;
+  href: string;
+  ctaLabel: string;
+  placement: string;
+  featured?: boolean;
+};
+
 export type ReviewItem = {
   title: string;
   summary: string;

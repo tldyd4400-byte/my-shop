@@ -209,11 +209,23 @@ test("approved step and map assets exist", () => {
     "images/eomeuittul/step-1-ribs.png",
     "images/eomeuittul/step-2-selfbar.jpg",
     "images/eomeuittul/step-4-bingsu.png",
-    "images/eomeuittul/naver-map-location.png",
+    "images/eomeuittul/openstreetmap-location-pin.png",
     "media/eomeuittul/hero-brand-720p.mp4",
     "media/eomeuittul/step-3-shabu-720p.mp4",
   ]) {
     assert.equal(existsSync(asset(path)), true, path);
+  }
+});
+
+test("public location map is a web-sized landscape PNG without private metadata", () => {
+  const png = readFileSync(asset("images/eomeuittul/openstreetmap-location-pin.png"));
+  assert.equal(png.subarray(0, 8).toString("hex"), "89504e470d0a1a0a", "map needs a real PNG");
+  assert.ok(png.length <= 500 * 1024, "map must stay within 500 KiB");
+  const width = png.readUInt32BE(16);
+  const height = png.readUInt32BE(20);
+  assert.ok(width >= 650 && width > height, "map must cover its desktop display width");
+  for (let offset = 8; offset + 12 <= png.length; offset += 12 + png.readUInt32BE(offset)) {
+    assert.ok(!["eXIf", "tEXt", "zTXt", "iTXt"].includes(png.toString("ascii", offset + 4, offset + 8)), "no private metadata");
   }
 });
 
@@ -395,10 +407,35 @@ test("shared content sections consume central content and analytics exports", ()
   assert.match(reservation, /STORE\.bookingUrl/);
   assert.match(reservation, /AnalyticsLink/);
   assert.match(location, /STORE\.directionsUrl/);
-  assert.match(location, /naver-map-location\.png/);
+  assert.match(location, /<LocationMap\b/);
   assert.match(faq, /FaqItem/);
   assert.match(story, /Story/);
   assert.match(story, /story\.imageAlt/);
+});
+
+test("Naver-derived maps are no longer published", () => {
+  for (const retired of ["naver-map-location.png", "naver-location-pin.png"]) {
+    assert.equal(existsSync(asset(`images/eomeuittul/${retired}`)), false, retired);
+  }
+});
+
+test("each map consumer declares its actual narrow column size", () => {
+  for (const [path, expression] of [
+    ["components/site/location-panel.tsx", /<LocationMap[^>]+sizes="\(max-width: 767px\) calc\(100vw - 48px\), [^"]+"/],
+    ["app/location/page.tsx", /imageSizes="\(max-width: 767px\) calc\(100vw - 48px\), 100vw"/],
+    ["app/location/page.tsx", /<LocationMap[^>]+sizes="\(max-width: 767px\) calc\(100vw - 48px\), [^"]+"/],
+    ["app/stories/[slug]/page.tsx", /<LocationMap[^>]+sizes="\(max-width: 767px\) calc\(100vw - 48px\), [^"]+"/],
+  ]) assert.match(source(path), expression, path);
+  assert.match(source("components/site/location-map.tsx"), /sizes=\{sizes\}/);
+  assert.match(source("components/site/hero-media.tsx"), /sizes=\{imageSizes\}/);
+});
+
+test("static maps have adjacent linked OpenStreetMap credit", () => {
+  assert.match(source("app/location/page.tsx"), /<\/HeroMedia>\s*<div className="shell">\s*<MapAttribution \/>/);
+  const map = source("components/site/location-map.tsx");
+  assert.match(map, /© OpenStreetMap contributors/);
+  assert.match(map, /https:\/\/www\.openstreetmap\.org\/copyright/);
+  assert.match(map, /<figcaption>\s*<MapAttribution\b/);
 });
 
 test("location panel derives opening periods and closure from STORE", () => {

@@ -22,8 +22,7 @@ import styles from "./reviews.module.css";
 
 export const metadata = createPageMetadata({
   title: "청주갈비찜 후기·가족외식·회식 | 어믜뜰",
-  description:
-    "2026년 10월 24일 네이버 플레이스에서 확인한 어믜뜰 평점과 방문자 반응을 바탕으로 청주갈비찜, 가족외식, 회식 이용 정보를 안내합니다.",
+  description: `${REVIEW_SNAPSHOT.checkedAt.replaceAll("-", ".")} 네이버 플레이스에서 확인한 어믜뜰 평점과 방문자 반응을 바탕으로 청주갈비찜, 가족외식, 회식 이용 정보를 안내합니다.`,
   path: "/reviews",
   image: "/images/eomeuittul/soy-ribs.jpg",
 });

@@ -171,9 +171,15 @@ test("group story limits menu cards to sets and keeps tracked booking and phone 
   assert.doesNotMatch(detail, /MENU_ITEMS\.map/);
   assert.match(detail, /item\.image \? <Image/);
   assert.match(detail, /item\.minimumOrder \? <p>\{item\.minimumOrder\}인 이상 주문<\/p>/);
-  for (const placement of ["group_story_hero", "group_story_bottom"]) {
-    assert.match(detail, new RegExp(`href=\\{STORE\\.phoneHref\\}[^>]*eventName="group_inquiry_click" placement="${placement}"`));
-    assert.match(detail, new RegExp(`href=\\{STORE\\.bookingUrl\\}[^>]*eventName="naver_reservation_click" placement="${placement}"`));
+  assert.match(detail, /import \{ GroupDiningActions \}/);
+  assert.match(detail, /import \{ GroupBookingGuide \}/);
+  assert.match(detail, /GROUP_STORY_FAQ_ITEMS/);
+  assert.match(detail, /title=\{isGroupStory \? "청주 모임·회식, 2명부터 한 팀 최대 52명까지"/);
+  assert.match(detail, /<GroupDiningActions placement="group_story_hero" \/>/);
+  assert.match(detail, /<GroupBookingGuide \/>/);
+  assert.match(detail, /<GroupDiningActions placement="group_story_bottom" \/>/);
+  for (const href of ["/menu", "/store", "/location", "/faq", "/reviews"]) {
+    assert.match(detail, new RegExp(`href="${href}"`));
   }
   assert.match(detail, /STORE\.privateHire/);
   assert.match(detail, /STORE\.corkage/);
@@ -279,6 +285,15 @@ test("reviews route shows current evidence, direct answers, and contextual links
   assert.match(styles, /@media \(max-width: 767px\)[\s\S]*?\.relatedLinks/);
 });
 
+test("reviews metadata derives its evidence date from the central snapshot", () => {
+  const page = read("app/reviews/page.tsx");
+
+  assert.match(
+    page,
+    /description:\s*`\$\{REVIEW_SNAPSHOT\.checkedAt\.replaceAll\("-", "\."\)\} 네이버 플레이스에서 확인한 어믜뜰 평점과 방문자 반응을 바탕으로 청주갈비찜, 가족외식, 회식 이용 정보를 안내합니다\.`/,
+  );
+});
+
 test("reviews route shows the verified dated rating snapshot without rating schema", () => {
   const page = read("app/reviews/page.tsx");
   const styles = read("app/reviews/reviews.module.css");
@@ -360,7 +375,7 @@ test("central review evidence has three safe, current source records", () => {
   for (const review of REVIEW_ITEMS) {
     assert.equal(review.sourceUrl, STORE.reviewUrl);
     assert.equal(new URL(review.sourceUrl).protocol, "https:");
-    assert.equal(review.checkedAt, "2026-10-24");
+    assert.equal(review.checkedAt, "2026-11-07");
     assert.equal(review.sourceLabel, "네이버 방문자 반응 요약");
     assert.doesNotMatch(
       `${review.title} ${review.summary}`,
@@ -386,7 +401,7 @@ test("location and FAQ expose direct-answer information", () => {
   assert.match(location, /restaurantSchema\(\)/);
   assert.match(location, /breadcrumbSchema\(\[/);
   assert.doesNotMatch(location, /faqSchema/);
-  assert.match(location, /naver-map-location\.png/);
+  assert.match(location, /image: LOCATION_MAP\.src/);
   assert.match(location, /eventName="phone_click"/);
   assert.match(location, /eventName="naver_map_click"/);
   assert.match(location, /<VisitFacts \/>/);
@@ -395,10 +410,10 @@ test("location and FAQ expose direct-answer information", () => {
   assert.match(location, /STORE\.accessibility\.join\(" · "\)/);
   for (const fact of [
     "화~금 11:00~22:00",
-    "평일 15:30~16:30 브레이크타임",
-    "월요일 · 설/추석 당일 휴무",
+    "화~금 15:30~16:30 브레이크타임",
     "건물 뒤 무료 지상주차장",
   ]) assert.ok(location.includes(fact), fact);
+  assert.match(location, /\$\{STORE\.regularClosure\} · \$\{STORE\.holidayClosure\} 휴무/);
 
   for (const source of [
     "FAQ_ITEMS",
@@ -435,7 +450,9 @@ test("location panel reads current closure and last-order facts from STORE", () 
   for (const fact of ["regularClosure", "holidayClosure", "lastOrder"]) {
     assert.ok(panel.includes(`STORE.${fact}`), fact);
   }
-  assert.match(panel, /공휴일.*브레이크타임 없음/);
+  assert.match(panel, /weekend\.label\}은 브레이크타임 없음/);
+  assert.match(panel, /명절 휴무: \{STORE\.holidayClosure\}/);
+  assert.doesNotMatch(panel, /공휴일/);
 });
 
 test("FAQ list can explicitly expose every answer without changing its default", () => {
@@ -495,9 +512,9 @@ test("menu route uses approved central content and composition", () => {
 
 test("menu proof derives its set price and minimum order from central menu data", () => {
   const page = read("app/menu/page.tsx");
-  assert.match(page, /const signatureSet = MENU_ITEMS\.find\(\(item\) => item\.slug === "spicy-set"\)!/);
-  assert.match(page, /`매운·간장 세트 \$\{signatureSet\.price\}`/);
-  assert.match(page, /`대표 세트 \$\{signatureSet\.minimumOrder\}인 이상`/);
+  assert.match(page, /getSignatureSetTerms\(MENU_ITEMS\)/);
+  assert.match(page, /`매운·간장 세트 \$\{sharedTerms\.price\}`/);
+  assert.match(page, /`대표 세트 \$\{sharedTerms\.minimumOrder\}인 이상`/);
   assert.doesNotMatch(page, /19,900원|대표 세트 2인 이상/);
 });
 
@@ -574,4 +591,27 @@ test("route layouts stack at 390px and keep actions at least 48px", () => {
     /@media \(max-width: 767px\)[\s\S]*?\.route-story\s*\{[\s\S]*?grid-template-columns:\s*1fr/,
   );
   assert.match(styles, /\.button\s*\{[\s\S]*?min-height:\s*54px/);
+});
+
+test("V5 group conversion components expose the approved choices and facts", () => {
+  const actions = read("components/site/group-dining-actions.tsx");
+  const guide = read("components/site/group-booking-guide.tsx");
+
+  assert.match(actions, /단체·통대관 전화 상담/);
+  assert.match(actions, /일반 식사 네이버 예약/);
+  assert.match(actions, /STORE\.phoneDisplay/);
+  assert.match(actions, /STORE\.phoneHref/);
+  assert.match(actions, /STORE\.bookingUrl/);
+  assert.match(guide, /STORE\.maxGroupSize/);
+  assert.match(guide, /STORE\.seats/);
+  assert.match(guide, /STORE\.privateHire\b/);
+  assert.match(guide, /STORE\.privateHireMinimum/);
+  assert.match(guide, /STORE\.groupParking/);
+  assert.match(guide, /STORE\.groupConsultation\.map/);
+});
+
+test("V5 action sizing outranks the later generic button minimum", () => {
+  const styles = read("app/globals.css");
+  assert.match(styles, /\.button\.group-v5-action\s*\{[^}]*min-height:\s*88px/);
+  assert.match(styles, /@media \(max-width:\s*767px\)\s*\{[\s\S]*?\.button\.group-v5-action\s*\{[^}]*min-height:\s*62px/);
 });

@@ -1,4 +1,14 @@
-import type { DiningStep, FaqItem, MenuCategory, MenuItem, ReviewItem, ReviewSnapshot, StoreInfo } from "./types";
+import type { DiningStep, FaqItem, MenuCategory, MenuItem, ReviewItem, ReviewSnapshot, StoreInfo, VisitIntentItem } from "./types";
+
+const parkingFee: string = "무료";
+
+export const GROUP_PARKING_FACTS = {
+  fee: parkingFee,
+  location: `건물 뒤 ${parkingFee} 지상주차장`,
+  summary: `${parkingFee} 주차`,
+  vehicleCount: "단체 차량 수",
+  consultationTiming: "예약 전에",
+} as const;
 
 export const STORE: StoreInfo = {
   name: "어믜뜰",
@@ -13,11 +23,21 @@ export const STORE: StoreInfo = {
     addressRegion: "충청북도",
     addressCountry: "KR",
   },
-  parking: "건물 뒤 무료 지상주차장 · 점심시간 및 17시 이후 도로 주차 가능",
-  seats: "12테이블 · 52석 · 6인 단체석 2테이블",
+  parking: `${GROUP_PARKING_FACTS.location} · 점심시간 및 17시 이후 도로 주차 가능`,
+  tableCount: 12,
+  totalSeatCount: 52,
+  get seats() {
+    return `${this.tableCount}테이블 · ${this.totalSeatCount}석 · 6인 단체석 2테이블`;
+  },
+  minGroupSize: 2,
   maxGroupSize: 52,
-  groupBooking: "한 팀 최대 52명 · 통대관 가능 · 날짜·시간·인원 사전 협의",
+  get groupBooking() {
+    return `한 팀 최대 ${this.maxGroupSize}명 · 통대관 가능 · 날짜·시간·인원 사전 협의`;
+  },
   privateHire: "최대 인원 이용 시 통대관 협의",
+  privateHireMinimum: "정해진 최소 인원이나 최소 금액 없음",
+  groupParking: `${GROUP_PARKING_FACTS.location}이 있으며 ${GROUP_PARKING_FACTS.vehicleCount}는 ${GROUP_PARKING_FACTS.consultationTiming} 상담해 주세요.`,
+  groupConsultation: ["희망 날짜", "희망 시간", "예상 인원"],
   corkage: "외부 주류 반입 가능 · 콜키지 무료",
   lastOrder: "21:00",
   regularClosure: "매주 월요일",
@@ -36,14 +56,9 @@ export const STORE: StoreInfo = {
     { label: "화~금 저녁", days: ["Tuesday", "Wednesday", "Thursday", "Friday"], opens: "16:30", closes: "22:00" },
     { label: "토~일", days: ["Saturday", "Sunday"], opens: "11:00", closes: "22:00" },
   ],
+  verifiedAt: "2026-11-07",
+  verificationSource: "네이버 스마트플레이스·공개 플레이스",
 };
-
-export const MENU_CATEGORIES: readonly MenuCategory[] = [
-  { id: "set", label: "대표 세트", description: "매운맛과 간장맛 중 선택 · 2인 이상 주문" },
-  { id: "side", label: "곁들임", description: "등갈비찜과 함께 즐기는 식사와 사이드" },
-  { id: "extra", label: "추가 메뉴", description: "더 푸짐하게 즐기는 등갈비와 우삼겹" },
-  { id: "takeout", label: "포장 할인", description: "집과 캠핑에서도 끓여 먹는 반조리 메뉴" },
-];
 
 const menuItem = (
   item: Omit<MenuItem, "includes" | "image" | "imageAlt"> &
@@ -77,20 +92,143 @@ export const MENU_ITEMS: readonly MenuItem[] = [
 
 export const REVIEW_SNAPSHOT: ReviewSnapshot = {
   rating: 4.94,
-  ratingCount: 401,
-  participants: 367,
-  visitorReviewCount: 423,
-  blogReviewCount: 203,
-  totalDisplayedReviewCount: 631,
-  checkedAt: "2026-10-24",
+  ratingCount: 425,
+  participants: 389,
+  visitorReviewCount: 446,
+  blogReviewCount: 213,
+  totalDisplayedReviewCount: 666,
+  checkedAt: "2026-11-07",
   sourceLabel: "네이버 플레이스 공개 리뷰 화면",
   sourceUrl: STORE.reviewUrl,
 };
 
+export function getSignatureSetTerms(items: readonly MenuItem[]) {
+  const spicySet = items.find((item) => item.slug === "spicy-set");
+  const soySet = items.find((item) => item.slug === "soy-set");
+  const sharedTerms =
+    spicySet &&
+    soySet &&
+    spicySet.price === soySet.price &&
+    spicySet.minimumOrder === soySet.minimumOrder
+      ? { price: spicySet.price, minimumOrder: spicySet.minimumOrder }
+      : undefined;
+
+  return {
+    sets: [spicySet, soySet].filter((item) => item !== undefined),
+    sharedTerms,
+  };
+}
+
+function setOrderSentence(price: string, minimumOrder?: number) {
+  return minimumOrder === undefined
+    ? `${price}입니다.`
+    : `${price}이며 ${minimumOrder}인 이상 주문합니다.`;
+}
+
+const { sets: signatureSets, sharedTerms } = getSignatureSetTerms(MENU_ITEMS);
+const [firstSet, secondSet] = signatureSets;
+const setCategoryDescription = firstSet && secondSet && firstSet.minimumOrder === secondSet.minimumOrder
+  ? [
+      "매운맛과 간장맛 중 선택",
+      firstSet.minimumOrder === undefined ? "" : `${firstSet.minimumOrder}인 이상 주문`,
+    ].filter(Boolean).join(" · ")
+  : signatureSets
+      .map(({ name, minimumOrder }) => minimumOrder === undefined ? name : `${name} ${minimumOrder}인 이상 주문`)
+      .join(" · ");
+
+export const MENU_CATEGORIES: readonly MenuCategory[] = [
+  { id: "set", label: "대표 세트", description: setCategoryDescription },
+  { id: "side", label: "곁들임", description: "등갈비찜과 함께 즐기는 식사와 사이드" },
+  { id: "extra", label: "추가 메뉴", description: "더 푸짐하게 즐기는 등갈비와 우삼겹" },
+  { id: "takeout", label: "포장 할인", description: "집과 캠핑에서도 끓여 먹는 반조리 메뉴" },
+];
+
+const firstVisitOrder = sharedTerms
+  ? `매운 등갈비찜 또는 간장 등갈비찜 세트는 1인 ${setOrderSentence(sharedTerms.price, sharedTerms.minimumOrder)}`
+  : signatureSets
+      .map(({ name, price, minimumOrder }) => `${name}: ${setOrderSentence(price, minimumOrder)}`)
+      .join(" ");
+
+const childMeal = STORE.familyFacilities.find((facility) => facility === "어린이밥");
+const highChair = STORE.familyFacilities.find((facility) => facility === "유아의자");
+const familyVisitFacilities = childMeal
+  ? [childMeal, ...STORE.familyFacilities.filter((facility) => facility !== childMeal)]
+  : STORE.familyFacilities;
+const wheelchairPrefix = "휠체어 이용 가능 ";
+const accessibilitySummary = STORE.accessibility.length > 0 && STORE.accessibility.every((item) => item.startsWith(wheelchairPrefix))
+  ? wheelchairPrefix + STORE.accessibility.map((item) => item.slice(wheelchairPrefix.length)).join("·")
+  : STORE.accessibility.join("·");
+const familyFaqMenu = childMeal && highChair && STORE.familyFacilities.length === 2
+  ? `맵지 않은 간장 등갈비찜과 ${childMeal}이 있고 ${highChair}를 이용할 수 있습니다.`
+  : [
+      "맵지 않은 간장 등갈비찜을 선택할 수 있습니다.",
+      familyVisitFacilities.length ? `가족 편의시설: ${familyVisitFacilities.join("·")}.` : "",
+    ].filter(Boolean).join(" ");
+
+export const HOME_FAQ_ITEMS: readonly FaqItem[] = [
+  {
+    question: "처음 방문하면 무엇을 주문하나요?",
+    answer: [firstVisitOrder, "셀프바에서 고른 재료를 함께 끓여 먹습니다."]
+      .filter(Boolean)
+      .join(" "),
+  },
+  {
+    question: "아이와 함께 먹을 수 있나요?",
+    answer: [
+      familyFaqMenu,
+      accessibilitySummary ? `${accessibilitySummary}도 등록되어 있습니다.` : "",
+    ].filter(Boolean).join(" "),
+  },
+  {
+    question: "회식은 몇 명까지 가능한가요?",
+    answer: `한 팀 최대 ${STORE.maxGroupSize}명까지 이용할 수 있으며 최대 인원 이용 시 통대관으로 협의합니다. 날짜·시간·예상 인원을 전화로 알려주세요.`,
+  },
+  {
+    question: "주차와 예약은 어떻게 하나요?",
+    answer: `${GROUP_PARKING_FACTS.location}을 이용할 수 있습니다. 일반 식사는 네이버 예약, 단체·통대관은 전화 상담을 이용합니다.`,
+  },
+];
+
+export const VISIT_INTENT_ITEMS: readonly VisitIntentItem[] = [
+  {
+    id: "first-visit",
+    number: "01",
+    label: "처음 방문",
+    title: "메뉴를 고르고 셀프바와 함께 끓여요",
+    summary:
+      "매운맛·간장맛 선택 → 채소와 사리 담기 → 샤브처럼 끓이기 → 수제우유빙수",
+    href: "/menu",
+    ctaLabel: "메뉴와 이용 방법 보기",
+    placement: "home_intent_first_visit",
+  },
+  {
+    id: "family-dining",
+    number: "02",
+    label: "가족외식",
+    title: "아이부터 부모님까지 함께 고르기 좋은 메뉴",
+    summary: ["맵지 않은 간장맛", ...familyVisitFacilities, accessibilitySummary].filter(Boolean).join(" · "),
+    href: "/stories/family-dining-guide",
+    ctaLabel: "가족 방문 정보 보기",
+    placement: "home_intent_family_dining",
+  },
+  {
+    id: "group-dining",
+    number: "03",
+    label: "모임·회식",
+    title: `${STORE.minGroupSize}명부터 한 팀 최대 ${STORE.maxGroupSize}명까지`,
+    summary: `${STORE.seats} · ${STORE.privateHire} · ${GROUP_PARKING_FACTS.location} · 날짜·시간·예상 인원 상담`,
+    href: "/stories/cheongju-group-dining",
+    ctaLabel: "단체 이용 자세히 보기",
+    placement: "home_intent_group_dining",
+    featured: true,
+  },
+];
+
 export const REVIEW_FAQ_ITEMS: readonly FaqItem[] = [
   {
     question: "어믜뜰 후기에서 가장 많이 언급되는 장점은 무엇인가요?",
-    answer: "2026년 10월 24일 확인한 네이버 방문자 반응에서는 음식의 맛과 고기 품질이 가장 많이 언급됐고, 친절한 응대와 넉넉한 양, 넓은 매장도 반복적으로 언급됐습니다.",
+    answer:
+      "2026년 11월 7일 확인한 네이버 방문자 반응에서는 음식의 맛과 고기 품질이 가장 많이 언급됐고, 친절한 응대와 넉넉한 양, 넓은 매장도 반복적으로 언급됐습니다.",
   },
   {
     question: "가족외식이나 회식에 적합한가요?",
@@ -108,7 +246,7 @@ export const REVIEW_FAQ_ITEMS: readonly FaqItem[] = [
 
 export const FAQ_ITEMS: readonly FaqItem[] = [
   { question: "월요일에도 영업하나요?", answer: "매주 월요일은 정기휴무입니다." },
-  { question: "브레이크 타임이 있나요?", answer: "평일 15:30~16:30이며 주말·공휴일은 제외됩니다." },
+  { question: "브레이크 타임이 있나요?", answer: "화~금 15:30~16:30이며 토·일은 브레이크타임이 없습니다." },
   { question: "주차할 수 있나요?", answer: "건물 뒤 무료 지상주차장을 이용할 수 있습니다." },
   { question: "포장이나 배달이 되나요?", answer: "포장은 가능하며 배달은 운영하지 않습니다." },
   { question: "매운맛이 걱정돼요.", answer: "매운 등갈비찜과 간장 등갈비찜 중 선택할 수 있습니다." },
@@ -126,6 +264,21 @@ export const GROUP_FAQ_ITEMS: readonly FaqItem[] = [
   { question: "최소 인원이나 최소 금액이 있나요?", answer: "정해진 최소 조건은 없으며 날짜·시간·인원을 사전에 협의합니다." },
   { question: "회식 메뉴는 어떻게 선택하나요?", answer: "매운맛과 간장맛 중 취향에 맞게 선택할 수 있습니다. 자세한 구성은 예약 전에 매장과 확인해 주세요." },
   { question: "단체 차량도 주차할 수 있나요?", answer: "건물 뒤 무료 지상주차장이 있으며 차량 수는 미리 상담해 주세요." },
+];
+
+export const GROUP_STORY_FAQ_ITEMS: readonly FaqItem[] = [
+  {
+    question: "청주에서 50명 안팎의 회식이 가능한가요?",
+    answer: `어믜뜰은 한 팀 최대 ${STORE.maxGroupSize}명까지 이용할 수 있으며 최대 인원 이용 시 통대관으로 협의합니다.`,
+  },
+  {
+    question: "단체 예약은 어떻게 하나요?",
+    answer: "날짜·시간·예상 인원을 전화로 알려주시면 좌석과 준비 사항을 안내합니다. 일반 식사는 네이버 예약에서 가능한 시간을 확인할 수 있습니다.",
+  },
+  {
+    question: "단체 차량을 주차할 수 있나요?",
+    answer: STORE.groupParking,
+  },
 ];
 
 export const GALBIJJIM_FAQ_ITEMS: readonly FaqItem[] = [
@@ -148,21 +301,21 @@ export const REVIEW_ITEMS: readonly ReviewItem[] = [
     summary: "최근 확인한 방문자 후기와 반응 집계에서 음식의 맛과 고기 품질이 반복적으로 언급됩니다.",
     sourceLabel: "네이버 방문자 반응 요약",
     sourceUrl: STORE.reviewUrl,
-    checkedAt: "2026-10-24",
+    checkedAt: "2026-11-07",
   },
   {
     title: "샤브식 등갈비와 다양한 셀프바",
     summary: "채소와 사리를 취향대로 더해 끓이고 메밀전, 임궁밥, 수제우유빙수까지 이어지는 식사 경험이 언급됩니다.",
     sourceLabel: "네이버 방문자 반응 요약",
     sourceUrl: STORE.reviewUrl,
-    checkedAt: "2026-10-24",
+    checkedAt: "2026-11-07",
   },
   {
     title: "가족외식과 회식에 편한 공간",
     summary: "넓고 깔끔한 공간, 단체 이용과 가족 방문, 친절한 응대가 반복적으로 언급됩니다.",
     sourceLabel: "네이버 방문자 반응 요약",
     sourceUrl: STORE.reviewUrl,
-    checkedAt: "2026-10-24",
+    checkedAt: "2026-11-07",
   },
 ];
 

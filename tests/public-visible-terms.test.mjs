@@ -13,7 +13,7 @@ import { tmpdir } from "node:os";
 import { basename, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
-import { FAQ_ITEMS, GROUP_FAQ_ITEMS, MENU_ITEMS, STORE } from "../lib/content/store.ts";
+import { FAQ_ITEMS, GROUP_FAQ_ITEMS, GROUP_STORY_FAQ_ITEMS, HOME_FAQ_ITEMS, MENU_ITEMS, STORE } from "../lib/content/store.ts";
 
 const rootPath = fileURLToPath(new URL("../", import.meta.url));
 const requiredPublicRoutes = ["/", "/menu", "/store", "/location", "/faq", "/reviews", "/stories"];
@@ -255,9 +255,15 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
     assert.ok(existsSync(appOutput), `fresh build must produce app artifacts:\n${buildOutput}`);
 
     const sitemapPath = locateSitemap(appOutput);
-    const sitemapPaths = parseSitemapPaths(readFileSync(sitemapPath, "utf8"));
+    const sitemapXml = readFileSync(sitemapPath, "utf8");
+    const sitemapPaths = parseSitemapPaths(sitemapXml);
     assert.ok(sitemapPaths.length > 0, "generated sitemap must contain public routes");
     assert.ok(sitemapPaths.includes("/stories/cheongju-group-dining"));
+    assert.match(
+      sitemapXml,
+      /<loc>https:\/\/eomeutteull\.com\/stories\/cheongju-group-dining<\/loc>\s*<lastmod>2026-10-25<\/lastmod>/u,
+      "group story sitemap lastmod must preserve its date-only modifiedAt value",
+    );
     assert.equal(new Set(sitemapPaths).size, sitemapPaths.length, "generated sitemap routes must be unique");
     assert.equal(sitemapPaths.some((path) => path === "/admin" || path.startsWith("/admin/")), false, "sitemap must not contain admin routes");
     for (const route of requiredPublicRoutes) {
@@ -271,11 +277,32 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
       const html = readFileSync(htmlPath, "utf8");
       const text = visibleText(html);
       assert.equal((html.match(/<h1\b/gu) ?? []).length, 1, `${route} needs exactly one H1`);
+      assert.doesNotMatch(html, /naver-(?:location-pin|map-location)\.png/u, `${route} must not reference a Naver map image`);
+      assert.doesNotMatch(text, /공휴일/u, `${route} must not generalize holiday hours`);
+      const expectedMapCount = ({ "/": 1, "/location": 3, "/faq": 1, "/store": 1, "/reviews": 1, "/stories/cheongju-group-dining": 1 })[route] ?? 0;
+      const mapImages = [...html.matchAll(/<img\b(?=[^>]*openstreetmap-location-pin\.png)[^>]*>/gu)];
+      assert.equal(mapImages.length, expectedMapCount, `${route} static map instances`);
+      assert.equal((html.match(/<a\b[^>]*href="https:\/\/www\.openstreetmap\.org\/copyright"[^>]*>© OpenStreetMap contributors<\/a>/gu) ?? []).length, expectedMapCount, `${route} linked map credits`);
+      for (const [mapImage] of mapImages) {
+        assert.match(mapImage, /sizes="\(max-width: 767px\) calc\(100vw - 48px\), /u, `${route} narrow map size`);
+        assert.match(mapImage, /alt="[^"]*OpenStreetMap[^"]+"/u, `${route} static map description`);
+      }
       if (route === "/") {
+        const details = [...html.matchAll(/<details\b([^>]*)>\s*<summary\b[^>]*>([\s\S]*?)<\/summary>\s*<p\b[^>]*>([\s\S]*?)<\/p>\s*<\/details>/gu)];
+        assert.equal(details.length, 4, "homepage must show four FAQ entries");
+        const answers = details.map(([, attributes, question, answer]) => {
+          assert.match(attributes, /\sopen(?:\s|=|$)/u, `answer must start expanded: ${visibleText(question)}`);
+          return { question: visibleText(question), answer: visibleText(answer) };
+        });
+        assert.deepEqual(answers, HOME_FAQ_ITEMS);
+        const schemas = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gu)].flatMap((match) => JSON.parse(match[1]));
+        const faq = schemas.find((item) => item["@type"] === "FAQPage");
+        assert.deepEqual(faq?.mainEntity.map((entry) => ({ question: entry.name, answer: entry.acceptedAnswer.text })), answers);
         for (const fact of [
           "매운·간장 등갈비찜 세트 1인 19,900원 · 2인 이상 · 최대 52명 단체 이용과 통대관 상담 · 무료 주차",
           "52명 모임 상담",
-          "메뉴 17개 최신 가격",
+          "한눈에 보는 최신 매장 정보",
+          "어떤 자리로 오시나요?",
           "11:00~22:00 · 15:30~16:30 브레이크타임",
           "11:00~22:00 · 브레이크타임 없음",
         ]) assert.ok(text.includes(fact), `home preserves approved copy: ${fact}`);
@@ -297,22 +324,47 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
             .map((match) => visibleText(match[1]));
           assert.deepEqual(renderedQuestions, questions, "/faq UI and schema must publish the same questions once");
         }
-        for (const item of GROUP_FAQ_ITEMS) {
+        const expectedFaqItems = route === "/stories/cheongju-group-dining"
+          ? GROUP_STORY_FAQ_ITEMS
+          : GROUP_FAQ_ITEMS;
+        for (const item of expectedFaqItems) {
           assert.ok(text.includes(item.question));
           assert.ok(text.includes(item.answer));
           assert.ok(faq.mainEntity.some((entry) => entry.name === item.question && entry.acceptedAnswer.text === item.answer));
         }
       }
       if (route === "/stories/cheongju-group-dining") {
+        const heroContent = html.match(/<div class="shell hero-content">([\s\S]*?)<div class="hero-actions">/u)?.[1];
+        assert.ok(heroContent, "group story needs rendered hero content");
+        assert.match(
+          heroContent,
+          /<p>12테이블 · 총 52석 · 최대 인원 이용 시 통대관 협의<br\/>날짜·시간·인원을 알려주시면 모임에 맞춰 안내해 드립니다\.<\/p>/u,
+          "group story hero guidance must preserve the approved line break",
+        );
         assert.ok(html.includes(`href="${STORE.phoneHref}"`));
         assert.ok(text.includes("한 팀 최대 52명"));
         assert.ok(text.includes("최종 확정"));
         assert.ok(text.includes("사전 협의"));
         assert.ok(text.includes("콜키지 무료"));
         assert.ok(text.includes("주류 주문은 필수가 아닙니다"));
-        assert.ok(text.includes("네이버에서 예약하기"));
+        assert.ok(text.includes("일반 식사 네이버 예약"));
         assert.ok(text.includes("설·추석 당일"));
-        assert.ok(text.includes("2026-10-24 수정"));
+        assert.ok(text.includes("2026-10-25 수정"));
+        for (const fact of [
+          "청주 모임·회식, 2명부터 한 팀 최대 52명까지",
+          "12테이블 · 총 52석 · 최대 인원 이용 시 통대관 협의",
+          "날짜·시간·인원을 알려주시면 모임에 맞춰 안내해 드립니다.",
+          "단체·통대관 전화 상담",
+          "일반 식사 네이버 예약",
+          "전화 전에 세 가지만 준비하세요",
+          "청주에서 50명 안팎의 회식이 가능한가요?",
+          "단체 예약은 어떻게 하나요?",
+        ]) {
+          assert.ok(text.includes(fact), fact);
+        }
+        for (const href of ["/menu", "/store", "/location", "/faq", "/reviews"]) {
+          assert.ok(html.includes(`href="${href}"`), href);
+        }
         const heroActions = html.match(/<div class="hero-actions">([\s\S]*?)<\/div>/u)?.[1];
         assert.ok(heroActions, "group story needs visible hero actions");
         assert.ok(heroActions.includes(`href="${STORE.phoneHref}"`));

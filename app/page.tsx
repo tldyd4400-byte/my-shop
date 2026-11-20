@@ -7,17 +7,19 @@ import { ExperienceSteps } from "@/components/site/experience-steps";
 import { FaqList } from "@/components/site/faq-list";
 import { HeroMedia } from "@/components/site/hero-media";
 import { GroupDiningPanel } from "@/components/site/group-dining-panel";
+import { LatestStoreFacts } from "@/components/site/latest-store-facts";
 import { LocationPanel } from "@/components/site/location-panel";
 import { MenuCategoryGrid } from "@/components/site/menu-category-grid";
 import { OnlineReviewCards } from "@/components/site/online-review-cards";
-import { ProofStrip } from "@/components/site/proof-strip";
 import { ReservationCta } from "@/components/site/reservation-cta";
 import { VisitFacts } from "@/components/site/visit-facts";
+import { VisitIntentGrid } from "@/components/site/visit-intent-grid";
 import {
-  FAQ_ITEMS,
+  getSignatureSetTerms,
+  GROUP_PARKING_FACTS,
+  HOME_FAQ_ITEMS,
   MENU_ITEMS,
   REVIEW_ITEMS,
-  REVIEW_SNAPSHOT,
   STORE,
 } from "@/lib/content/store";
 import { loadPublicOnlineReviews } from "@/lib/online-reviews/public";
@@ -30,16 +32,29 @@ import {
 
 export const metadata = createPageMetadata({
   title: "청주갈비찜·회식·가족외식 | 어믜뜰 청주봉명동본점",
-  description:
-    "청주 봉명동에서 매운·간장 등갈비찜과 셀프바를 샤브처럼 즐겨보세요. 청주 회식과 가족외식, 최대 52명 통대관 상담, 무료 주차와 네이버 예약이 가능합니다.",
+  description: `청주 봉명동에서 매운·간장 등갈비찜과 셀프바를 샤브처럼 즐겨보세요. 청주 회식과 가족외식, 최대 ${STORE.maxGroupSize}명 통대관 상담, ${GROUP_PARKING_FACTS.summary}와 네이버 예약이 가능합니다.`,
   path: "/",
 });
 
 export const revalidate = 3600;
 
+function priceAndMinimum(price: string, minimumOrder?: number) {
+  return minimumOrder === undefined ? price : `${price} · ${minimumOrder}인 이상`;
+}
+
 export default async function HomePage() {
-  const signatureSet = MENU_ITEMS.find((item) => item.slug === "spicy-set")!;
-  const homeFaqs = FAQ_ITEMS.slice(0, 4);
+  const { sets, sharedTerms } = getSignatureSetTerms(MENU_ITEMS);
+  const setDescription = sharedTerms
+    ? `매운·간장 등갈비찜 세트 1인 ${priceAndMinimum(sharedTerms.price, sharedTerms.minimumOrder)}`
+    : sets
+        .map(({ name, price, minimumOrder }) => `${name} ${priceAndMinimum(price, minimumOrder)}`)
+        .join(" / ");
+  const heroDescription = [
+    setDescription,
+    `최대 ${STORE.maxGroupSize}명 단체 이용과 통대관 상담`,
+    GROUP_PARKING_FACTS.summary,
+  ].filter(Boolean).join(" · ");
+  const homeFaqs = HOME_FAQ_ITEMS;
   const onlineReviews = await loadPublicOnlineReviews(3);
 
   return (
@@ -57,7 +72,7 @@ export default async function HomePage() {
             함께 끓여 더 즐거운 한 상
           </>
         }
-        description={`매운·간장 등갈비찜 세트 1인 ${signatureSet.price} · ${signatureSet.minimumOrder}인 이상 · 최대 ${STORE.maxGroupSize}명 단체 이용과 통대관 상담 · 무료 주차`}
+        description={heroDescription}
         image="/images/eomeuittul/hero-poster.webp"
         imageAlt="등갈비찜과 메밀전, 채소가 함께 차려진 어믜뜰 한 상"
         video="/media/eomeuittul/hero-brand-720p.mp4"
@@ -80,19 +95,18 @@ export default async function HomePage() {
         >
           {STORE.maxGroupSize}명 모임 상담
         </AnalyticsLink>
-        <Link className="button button-tertiary" href="/menu">
+        <AnalyticsLink
+          className="button button-tertiary"
+          href="/menu"
+          eventName="visit_intent_click"
+          placement="home_hero_menu"
+        >
           전체 메뉴 보기
-        </Link>
+        </AnalyticsLink>
       </HeroMedia>
 
-      <ProofStrip
-        items={[
-          `네이버 평점 ${REVIEW_SNAPSHOT.rating} / 5 · ${REVIEW_SNAPSHOT.checkedAt.replaceAll("-", ".")} 확인`,
-          `메뉴 ${MENU_ITEMS.length}개 최신 가격`,
-          `2~${STORE.maxGroupSize}명 단체석 · 통대관 협의`,
-          "매장 뒤 무료 주차",
-        ]}
-      />
+      <LatestStoreFacts />
+      <VisitIntentGrid />
 
       <section className="brand-story section-pad">
         <div className="shell split-section">
@@ -160,7 +174,7 @@ export default async function HomePage() {
       <section className="faq-section section-pad surface-paper">
         <div className="shell">
           <h2>방문 전 궁금한 점</h2>
-          <FaqList items={homeFaqs} />
+          <FaqList items={homeFaqs} openAll />
         </div>
       </section>
 

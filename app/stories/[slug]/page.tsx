@@ -4,22 +4,25 @@ import { notFound } from "next/navigation";
 
 import { JsonLd } from "@/components/seo/json-ld";
 import { AnalyticsLink } from "@/components/site/analytics-link";
-import { ProofStrip } from "@/components/site/proof-strip";
 import { ExperienceSteps } from "@/components/site/experience-steps";
 import { FaqList } from "@/components/site/faq-list";
+import { GroupBookingGuide } from "@/components/site/group-booking-guide";
+import { GroupDiningActions } from "@/components/site/group-dining-actions";
 import { HeroMedia } from "@/components/site/hero-media";
+import { LocationMap } from "@/components/site/location-map";
 import { ReservationCta } from "@/components/site/reservation-cta";
 import { StoryCard } from "@/components/site/story-card";
 import { StoryReadTracker } from "@/components/site/story-read-tracker";
+import { LOCATION_MAP } from "@/lib/content/location-map";
 import { getStory, STORIES } from "@/lib/content/stories";
-import { FAQ_ITEMS, GALBIJJIM_FAQ_ITEMS, GROUP_FAQ_ITEMS, GROUP_BOOKING_STEPS, MENU_ITEMS, STORE } from "@/lib/content/store";
+import { FAQ_ITEMS, GALBIJJIM_FAQ_ITEMS, GROUP_STORY_FAQ_ITEMS, GROUP_BOOKING_STEPS, MENU_ITEMS, STORE } from "@/lib/content/store";
 import { createPageMetadata } from "@/lib/seo/metadata";
 import { articleSchema, breadcrumbSchema, faqSchema } from "@/lib/seo/schema";
 
 type StoryPageProps = { params: Promise<{ slug: string }> };
 
 function storyFaqItems(slug: string) {
-  if (slug === "cheongju-group-dining") return GROUP_FAQ_ITEMS;
+  if (slug === "cheongju-group-dining") return GROUP_STORY_FAQ_ITEMS;
   if (slug === "cheongju-galbijjim-guide") return GALBIJJIM_FAQ_ITEMS;
   if (slug === "family-dining-guide") {
     return [FAQ_ITEMS[2], FAQ_ITEMS[5], FAQ_ITEMS[6], FAQ_ITEMS[7]];
@@ -87,27 +90,28 @@ export default async function StoryPage({ params }: StoryPageProps) {
       <StoryReadTracker />
 
       <HeroMedia
-        eyebrow={`${story.category} · ${story.readingTime} 읽기`}
-        title={isGroupStory ? "청주 모임·회식 장소를 찾는다면" : story.title}
-        description={story.description}
+        eyebrow={isGroupStory ? "GROUP DINING · 청주 모임·회식" : `${story.category} · ${story.readingTime} 읽기`}
+        title={isGroupStory ? "청주 모임·회식, 2명부터 한 팀 최대 52명까지" : story.title}
+        description={isGroupStory ? (
+          <>
+            12테이블 · 총 52석 · 최대 인원 이용 시 통대관 협의<br />
+            날짜·시간·인원을 알려주시면 모임에 맞춰 안내해 드립니다.
+          </>
+        ) : story.description}
         image={story.image}
         imageAlt={story.imageAlt}
       >
-        <a className="button button-primary" href="#article">
-          이야기 읽기
-        </a>
         {isGroupStory ? (
-          <>
-            <AnalyticsLink className="button button-secondary" href={STORE.phoneHref} eventName="group_inquiry_click" placement="group_story_hero">전화로 일정 상담</AnalyticsLink>
-            <AnalyticsLink className="button button-primary" href={STORE.bookingUrl} target="_blank" rel="noreferrer" eventName="naver_reservation_click" placement="group_story_hero">네이버에서 예약하기</AnalyticsLink>
-          </>
-        ) : null}
+          <GroupDiningActions placement="group_story_hero" />
+        ) : (
+          <a className="button button-primary" href="#article">이야기 읽기</a>
+        )}
         {isGalbijjimStory ? (
           <AnalyticsLink className="button button-secondary" href={STORE.bookingUrl} target="_blank" rel="noreferrer" eventName="naver_reservation_click" placement="galbijjim_story_hero">네이버에서 예약하기</AnalyticsLink>
         ) : null}
       </HeroMedia>
 
-      {isGroupStory ? <ProofStrip items={[`한 팀 최대 ${STORE.maxGroupSize}명`, STORE.privateHire, "날짜·시간·인원 사전 협의", "건물 뒤 무료주차"]} /> : null}
+      {isGroupStory ? <GroupBookingGuide /> : null}
 
       <article id="article" className={`article-body section-pad${isGroupStory ? " group-article" : ""}`}>
         <div className="shell">
@@ -121,7 +125,9 @@ export default async function StoryPage({ params }: StoryPageProps) {
               className={section.image ? "story-section" : "story-section story-section--text"}
               key={section.heading}
             >
-              {section.image ? (
+              {section.image === LOCATION_MAP.src ? (
+                <LocationMap sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1344px) calc(52.38vw - 50.29px), 654px" />
+              ) : section.image ? (
                 <Image
                   src={section.image}
                   alt={section.imageAlt ?? ""}
@@ -186,6 +192,22 @@ export default async function StoryPage({ params }: StoryPageProps) {
       </section>
 
       {isGroupStory ? (
+        <nav className="group-related-links section-pad surface-hanji" aria-label="모임 준비 관련 정보">
+          <div className="shell">
+            <p className="eyebrow">PLAN WITH VERIFIED DETAILS</p>
+            <h2>메뉴와 방문 정보를 함께 확인하세요</h2>
+            <div className="group-dining-actions">
+              <Link className="button button-tertiary" href="/menu">메뉴 보기</Link>
+              <Link className="button button-tertiary" href="/store">매장·좌석 보기</Link>
+              <Link className="button button-tertiary" href="/location">오시는 길·주차</Link>
+              <Link className="button button-tertiary" href="/faq">예약 FAQ</Link>
+              <Link className="button button-tertiary" href="/reviews">최근 후기 확인</Link>
+            </div>
+          </div>
+        </nav>
+      ) : null}
+
+      {isGroupStory ? (
         <section className="group-contact section-pad">
           <div className="shell split-section">
             <div>
@@ -194,10 +216,7 @@ export default async function StoryPage({ params }: StoryPageProps) {
               <p>한 팀 최대 {STORE.maxGroupSize}명 · {STORE.privateHire}</p>
               <p>{STORE.corkage} · 주류 주문은 필수가 아닙니다.</p>
             </div>
-            <div className="group-dining-actions">
-              <AnalyticsLink className="button button-secondary" href={STORE.phoneHref} eventName="group_inquiry_click" placement="group_story_bottom">전화로 일정 상담</AnalyticsLink>
-              <AnalyticsLink className="button button-primary" href={STORE.bookingUrl} target="_blank" rel="noreferrer" eventName="naver_reservation_click" placement="group_story_bottom">네이버에서 예약하기</AnalyticsLink>
-            </div>
+            <GroupDiningActions placement="group_story_bottom" />
           </div>
         </section>
       ) : null}

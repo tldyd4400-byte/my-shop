@@ -1,5 +1,6 @@
 import type { Story } from "./types";
-import { STORE } from "./store.ts";
+import { LOCATION_MAP } from "./location-map.ts";
+import { GROUP_PARKING_FACTS, STORE } from "./store.ts";
 
 export const STORIES: readonly Story[] = [
   {
@@ -67,18 +68,18 @@ export const STORIES: readonly Story[] = [
   {
     slug: "cheongju-group-dining",
     title: "청주 모임·회식 장소 가이드",
-    description: "한 팀 최대 52명, 통대관까지 가능한 어믜뜰. 날짜·시간·인원 사전 협의부터 메뉴 선택과 무료주차까지 단체 이용 정보를 확인하세요.",
+    description: "청주 봉명동에서 2명부터 한 팀 최대 52명까지 이용할 수 있는 어믜뜰. 12테이블·총 52석, 통대관 사전 협의, 매운맛·간장맛, 무료주차와 예약 방법을 확인하세요.",
     category: "단체 방문 가이드",
     readingTime: "4분",
     publishedAt: "2026-09-13",
-    modifiedAt: "2026-10-24",
+    modifiedAt: "2026-10-25",
     image: "/images/eomeuittul/interior.jpg",
     imageAlt: "한 팀 최대 52명이 이용할 수 있는 어믜뜰 매장 내부",
     sections: [
       { heading: "회식과 단체모임을 한자리에서", body: `어믜뜰은 청주 봉명동에 위치한 등갈비찜 식당으로, 12테이블과 총 52석을 갖추고 있습니다. 2명부터 한 팀 최대 ${STORE.maxGroupSize}명까지 이용할 수 있습니다. ${STORE.privateHire}가 가능하며 날짜·시간·인원을 방문 전에 알려주세요. ${STORE.corkage}. 주류 주문은 필수가 아닙니다.`, image: "/images/eomeuittul/interior.jpg", imageAlt: "최대 52명이 이용할 수 있는 어믜뜰 내부 좌석" },
-      { heading: "통대관은 네 단계로 편하게 협의합니다", body: "최대 인원 이용 시 매장 통대관으로 협의할 수 있습니다. 정해진 최소 인원이나 최소 금액 없이 날짜·시간·인원을 매장과 사전에 협의합니다." },
+      { heading: "통대관은 네 단계로 편하게 협의합니다", body: `최대 인원 이용 시 매장 통대관으로 협의할 수 있습니다. ${STORE.privateHireMinimum.replace(" 없음", " 없이")} 날짜·시간·인원을 매장과 사전에 협의합니다.` },
       { heading: "여러 취향이 모여도 고르기 좋은 두 가지 갈비찜", body: "매운맛과 간장맛을 준비해 여러 취향이 모이는 회식 자리에서도 선택하기 좋습니다. 셀프바에서 원하는 재료를 더해 샤브처럼 함께 끓여 드세요." },
-      { heading: "차량이 많은 모임도 미리 동선을 확인하세요", body: `건물 뒤 무료 지상주차장을 이용할 수 있습니다. 단체 차량 수는 예약 전에 매장과 상담해 주세요. ${STORE.regularClosure}과 ${STORE.holidayClosure}은 휴무이므로 모임 날짜를 정할 때 확인해 주세요.`, image: "/images/eomeuittul/naver-map-location.png", imageAlt: "청주 봉명동 어믜뜰의 실제 위치 지도" },
+      { heading: "차량이 많은 모임도 미리 동선을 확인하세요", body: `${GROUP_PARKING_FACTS.location}을 이용할 수 있습니다. ${GROUP_PARKING_FACTS.vehicleCount}는 ${GROUP_PARKING_FACTS.consultationTiming} 매장과 상담해 주세요. ${STORE.regularClosure}과 ${STORE.holidayClosure}은 휴무이므로 모임 날짜를 정할 때 확인해 주세요.`, image: LOCATION_MAP.src, imageAlt: LOCATION_MAP.alt },
     ],
   },
   {

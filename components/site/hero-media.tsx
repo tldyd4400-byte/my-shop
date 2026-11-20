@@ -4,9 +4,10 @@ import type { ReactNode } from "react";
 type HeroMediaProps = {
   title: ReactNode;
   eyebrow: string;
-  description: string;
+  description: ReactNode;
   image: string;
   imageAlt: string;
+  imageSizes?: string;
   video?: string;
   children: ReactNode;
 };
@@ -17,6 +18,7 @@ export function HeroMedia({
   description,
   image,
   imageAlt,
+  imageSizes = "100vw",
   video,
   children,
 }: HeroMediaProps) {
@@ -28,7 +30,7 @@ export function HeroMedia({
           alt={imageAlt}
           fill
           priority
-          sizes="100vw"
+          sizes={imageSizes}
         />
         {video ? (
           <video
