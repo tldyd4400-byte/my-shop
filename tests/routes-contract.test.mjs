@@ -401,7 +401,7 @@ test("location and FAQ expose direct-answer information", () => {
   assert.match(location, /restaurantSchema\(\)/);
   assert.match(location, /breadcrumbSchema\(\[/);
   assert.doesNotMatch(location, /faqSchema/);
-  assert.match(location, /naver-map-location\.png/);
+  assert.match(location, /naver-location-pin\.png/);
   assert.match(location, /eventName="phone_click"/);
   assert.match(location, /eventName="naver_map_click"/);
   assert.match(location, /<VisitFacts \/>/);

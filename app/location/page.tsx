@@ -19,7 +19,7 @@ export const metadata = createPageMetadata({
   description:
     "어믜뜰 청주봉명동본점 주소, 영업시간, 월요일·설·추석 당일 휴무, 주차와 휠체어 접근성, 네이버 길찾기 정보를 확인하세요.",
   path: "/location",
-  image: "/images/eomeuittul/naver-map-location.png",
+  image: "/images/eomeuittul/naver-location-pin.png",
 });
 
 export default function LocationPage() {
@@ -45,7 +45,7 @@ export default function LocationPage() {
           </>
         }
         description={`${STORE.address} · 건물 뒤 무료 지상주차장을 이용할 수 있습니다.`}
-        image="/images/eomeuittul/naver-map-location.png"
+        image="/images/eomeuittul/naver-location-pin.png"
         imageAlt={`${STORE.name} 청주봉명동본점 네이버 지도 위치`}
       >
         <AnalyticsLink
@@ -100,10 +100,10 @@ export default function LocationPage() {
             </AnalyticsLink>
           </div>
           <Image
-            src="/images/eomeuittul/naver-map-location.png"
+            src="/images/eomeuittul/naver-location-pin.png"
             alt={`${STORE.name} 주차 안내용 네이버 지도`}
-            width={650}
-            height={424}
+            width={1187}
+            height={820}
           />
         </div>
       </section>

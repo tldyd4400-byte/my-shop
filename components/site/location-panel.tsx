@@ -10,10 +10,10 @@ export function LocationPanel() {
       <div className="shell location-grid">
         <Image
           className="location-map"
-          src="/images/eomeuittul/naver-map-location.png"
+          src="/images/eomeuittul/naver-location-pin.png"
           alt={`${STORE.name} 청주봉명동본점의 네이버 지도 위치`}
-          width={650}
-          height={424}
+          width={1187}
+          height={820}
         />
         <div className="location-details">
           <h2>{STORE.fullName}</h2>

@@ -13,7 +13,7 @@ import { tmpdir } from "node:os";
 import { basename, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
-import { FAQ_ITEMS, GROUP_FAQ_ITEMS, GROUP_STORY_FAQ_ITEMS, MENU_ITEMS, STORE } from "../lib/content/store.ts";
+import { FAQ_ITEMS, GROUP_FAQ_ITEMS, GROUP_STORY_FAQ_ITEMS, HOME_FAQ_ITEMS, MENU_ITEMS, STORE } from "../lib/content/store.ts";
 
 const rootPath = fileURLToPath(new URL("../", import.meta.url));
 const requiredPublicRoutes = ["/", "/menu", "/store", "/location", "/faq", "/reviews", "/stories"];
@@ -278,6 +278,16 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
       const text = visibleText(html);
       assert.equal((html.match(/<h1\b/gu) ?? []).length, 1, `${route} needs exactly one H1`);
       if (route === "/") {
+        const details = [...html.matchAll(/<details\b([^>]*)>\s*<summary\b[^>]*>([\s\S]*?)<\/summary>\s*<p\b[^>]*>([\s\S]*?)<\/p>\s*<\/details>/gu)];
+        assert.equal(details.length, 4, "homepage must show four FAQ entries");
+        const answers = details.map(([, attributes, question, answer]) => {
+          assert.match(attributes, /\sopen(?:\s|=|$)/u, `answer must start expanded: ${visibleText(question)}`);
+          return { question: visibleText(question), answer: visibleText(answer) };
+        });
+        assert.deepEqual(answers, HOME_FAQ_ITEMS);
+        const schemas = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gu)].flatMap((match) => JSON.parse(match[1]));
+        const faq = schemas.find((item) => item["@type"] === "FAQPage");
+        assert.deepEqual(faq?.mainEntity.map((entry) => ({ question: entry.name, answer: entry.acceptedAnswer.text })), answers);
         for (const fact of [
           "매운·간장 등갈비찜 세트 1인 19,900원 · 2인 이상 · 최대 52명 단체 이용과 통대관 상담 · 무료 주차",
           "52명 모임 상담",

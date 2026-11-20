@@ -174,7 +174,7 @@ export default async function HomePage() {
       <section className="faq-section section-pad surface-paper">
         <div className="shell">
           <h2>방문 전 궁금한 점</h2>
-          <FaqList items={homeFaqs} />
+          <FaqList items={homeFaqs} openAll />
         </div>
       </section>
 

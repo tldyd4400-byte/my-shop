@@ -209,11 +209,23 @@ test("approved step and map assets exist", () => {
     "images/eomeuittul/step-1-ribs.png",
     "images/eomeuittul/step-2-selfbar.jpg",
     "images/eomeuittul/step-4-bingsu.png",
-    "images/eomeuittul/naver-map-location.png",
+    "images/eomeuittul/naver-location-pin.png",
     "media/eomeuittul/hero-brand-720p.mp4",
     "media/eomeuittul/step-3-shabu-720p.mp4",
   ]) {
     assert.equal(existsSync(asset(path)), true, path);
+  }
+});
+
+test("public location map is a web-sized landscape PNG without private metadata", () => {
+  const png = readFileSync(asset("images/eomeuittul/naver-location-pin.png"));
+  assert.equal(png.subarray(0, 8).toString("hex"), "89504e470d0a1a0a", "map needs a real PNG");
+  assert.ok(png.length <= 500 * 1024, "map must stay within 500 KiB");
+  const width = png.readUInt32BE(16);
+  const height = png.readUInt32BE(20);
+  assert.ok(width >= 650 && width > height, "map must cover its desktop display width");
+  for (let offset = 8; offset + 12 <= png.length; offset += 12 + png.readUInt32BE(offset)) {
+    assert.ok(!["eXIf", "tEXt", "zTXt", "iTXt"].includes(png.toString("ascii", offset + 4, offset + 8)), "no private metadata");
   }
 });
 
@@ -395,7 +407,7 @@ test("shared content sections consume central content and analytics exports", ()
   assert.match(reservation, /STORE\.bookingUrl/);
   assert.match(reservation, /AnalyticsLink/);
   assert.match(location, /STORE\.directionsUrl/);
-  assert.match(location, /naver-map-location\.png/);
+  assert.match(location, /naver-location-pin\.png/);
   assert.match(faq, /FaqItem/);
   assert.match(story, /Story/);
   assert.match(story, /story\.imageAlt/);
