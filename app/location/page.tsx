@@ -1,12 +1,12 @@
-import Image from "next/image";
-
 import { JsonLd } from "@/components/seo/json-ld";
 import { AnalyticsLink } from "@/components/site/analytics-link";
 import { FaqList } from "@/components/site/faq-list";
 import { HeroMedia } from "@/components/site/hero-media";
+import { LocationMap, MapAttribution } from "@/components/site/location-map";
 import { LocationPanel } from "@/components/site/location-panel";
 import { ProofStrip } from "@/components/site/proof-strip";
 import { VisitFacts } from "@/components/site/visit-facts";
+import { LOCATION_MAP } from "@/lib/content/location-map";
 import { FAQ_ITEMS, STORE } from "@/lib/content/store";
 import type { FaqItem } from "@/lib/content/types";
 import { createPageMetadata } from "@/lib/seo/metadata";
@@ -19,7 +19,8 @@ export const metadata = createPageMetadata({
   description:
     "어믜뜰 청주봉명동본점 주소, 영업시간, 월요일·설·추석 당일 휴무, 주차와 휠체어 접근성, 네이버 길찾기 정보를 확인하세요.",
   path: "/location",
-  image: "/images/eomeuittul/naver-location-pin.png",
+  image: LOCATION_MAP.src,
+  imageAlt: LOCATION_MAP.alt,
 });
 
 export default function LocationPage() {
@@ -45,8 +46,9 @@ export default function LocationPage() {
           </>
         }
         description={`${STORE.address} · 건물 뒤 무료 지상주차장을 이용할 수 있습니다.`}
-        image="/images/eomeuittul/naver-location-pin.png"
-        imageAlt={`${STORE.name} 청주봉명동본점 네이버 지도 위치`}
+        image={LOCATION_MAP.src}
+        imageAlt={LOCATION_MAP.alt}
+        imageSizes="(max-width: 767px) calc(100vw - 48px), 100vw"
       >
         <AnalyticsLink
           className="button button-primary"
@@ -67,12 +69,15 @@ export default function LocationPage() {
           {STORE.phoneDisplay}
         </AnalyticsLink>
       </HeroMedia>
+      <div className="shell">
+        <MapAttribution />
+      </div>
 
       <ProofStrip
         items={[
           "화~금 11:00~22:00",
-          "평일 15:30~16:30 브레이크타임",
-          "월요일 · 설/추석 당일 휴무",
+          "화~금 15:30~16:30 브레이크타임",
+          `${STORE.regularClosure} · ${STORE.holidayClosure} 휴무`,
           "건물 뒤 무료 지상주차장",
         ]}
       />
@@ -99,11 +104,8 @@ export default function LocationPage() {
               네이버 지도에서 위치 보기
             </AnalyticsLink>
           </div>
-          <Image
-            src="/images/eomeuittul/naver-location-pin.png"
-            alt={`${STORE.name} 주차 안내용 네이버 지도`}
-            width={1187}
-            height={820}
+          <LocationMap
+            sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1344px) calc(52.38vw - 58.67px), 646px"
           />
         </div>
       </section>

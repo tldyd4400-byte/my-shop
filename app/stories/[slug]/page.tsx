@@ -9,9 +9,11 @@ import { FaqList } from "@/components/site/faq-list";
 import { GroupBookingGuide } from "@/components/site/group-booking-guide";
 import { GroupDiningActions } from "@/components/site/group-dining-actions";
 import { HeroMedia } from "@/components/site/hero-media";
+import { LocationMap } from "@/components/site/location-map";
 import { ReservationCta } from "@/components/site/reservation-cta";
 import { StoryCard } from "@/components/site/story-card";
 import { StoryReadTracker } from "@/components/site/story-read-tracker";
+import { LOCATION_MAP } from "@/lib/content/location-map";
 import { getStory, STORIES } from "@/lib/content/stories";
 import { FAQ_ITEMS, GALBIJJIM_FAQ_ITEMS, GROUP_STORY_FAQ_ITEMS, GROUP_BOOKING_STEPS, MENU_ITEMS, STORE } from "@/lib/content/store";
 import { createPageMetadata } from "@/lib/seo/metadata";
@@ -123,7 +125,9 @@ export default async function StoryPage({ params }: StoryPageProps) {
               className={section.image ? "story-section" : "story-section story-section--text"}
               key={section.heading}
             >
-              {section.image ? (
+              {section.image === LOCATION_MAP.src ? (
+                <LocationMap sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1344px) calc(52.38vw - 50.29px), 654px" />
+              ) : section.image ? (
                 <Image
                   src={section.image}
                   alt={section.imageAlt ?? ""}

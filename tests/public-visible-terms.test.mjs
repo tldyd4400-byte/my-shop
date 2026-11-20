@@ -277,6 +277,16 @@ test("fresh sitemap routes have rendered public HTML with no forbidden developer
       const html = readFileSync(htmlPath, "utf8");
       const text = visibleText(html);
       assert.equal((html.match(/<h1\b/gu) ?? []).length, 1, `${route} needs exactly one H1`);
+      assert.doesNotMatch(html, /naver-(?:location-pin|map-location)\.png/u, `${route} must not reference a Naver map image`);
+      assert.doesNotMatch(text, /공휴일/u, `${route} must not generalize holiday hours`);
+      const expectedMapCount = ({ "/": 1, "/location": 3, "/faq": 1, "/store": 1, "/reviews": 1, "/stories/cheongju-group-dining": 1 })[route] ?? 0;
+      const mapImages = [...html.matchAll(/<img\b(?=[^>]*openstreetmap-location-pin\.png)[^>]*>/gu)];
+      assert.equal(mapImages.length, expectedMapCount, `${route} static map instances`);
+      assert.equal((html.match(/<a\b[^>]*href="https:\/\/www\.openstreetmap\.org\/copyright"[^>]*>© OpenStreetMap contributors<\/a>/gu) ?? []).length, expectedMapCount, `${route} linked map credits`);
+      for (const [mapImage] of mapImages) {
+        assert.match(mapImage, /sizes="\(max-width: 767px\) calc\(100vw - 48px\), /u, `${route} narrow map size`);
+        assert.match(mapImage, /alt="[^"]*OpenStreetMap[^"]+"/u, `${route} static map description`);
+      }
       if (route === "/") {
         const details = [...html.matchAll(/<details\b([^>]*)>\s*<summary\b[^>]*>([\s\S]*?)<\/summary>\s*<p\b[^>]*>([\s\S]*?)<\/p>\s*<\/details>/gu)];
         assert.equal(details.length, 4, "homepage must show four FAQ entries");

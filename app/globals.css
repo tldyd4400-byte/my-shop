@@ -506,6 +506,14 @@ a {
   grid-area: map;
 }
 
+.map-attribution {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  color: var(--muted);
+  text-decoration: underline;
+}
+
 .location-details {
   grid-area: details;
 }

@@ -401,7 +401,7 @@ test("location and FAQ expose direct-answer information", () => {
   assert.match(location, /restaurantSchema\(\)/);
   assert.match(location, /breadcrumbSchema\(\[/);
   assert.doesNotMatch(location, /faqSchema/);
-  assert.match(location, /naver-location-pin\.png/);
+  assert.match(location, /image: LOCATION_MAP\.src/);
   assert.match(location, /eventName="phone_click"/);
   assert.match(location, /eventName="naver_map_click"/);
   assert.match(location, /<VisitFacts \/>/);
@@ -410,10 +410,10 @@ test("location and FAQ expose direct-answer information", () => {
   assert.match(location, /STORE\.accessibility\.join\(" · "\)/);
   for (const fact of [
     "화~금 11:00~22:00",
-    "평일 15:30~16:30 브레이크타임",
-    "월요일 · 설/추석 당일 휴무",
+    "화~금 15:30~16:30 브레이크타임",
     "건물 뒤 무료 지상주차장",
   ]) assert.ok(location.includes(fact), fact);
+  assert.match(location, /\$\{STORE\.regularClosure\} · \$\{STORE\.holidayClosure\} 휴무/);
 
   for (const source of [
     "FAQ_ITEMS",
@@ -450,7 +450,9 @@ test("location panel reads current closure and last-order facts from STORE", () 
   for (const fact of ["regularClosure", "holidayClosure", "lastOrder"]) {
     assert.ok(panel.includes(`STORE.${fact}`), fact);
   }
-  assert.match(panel, /공휴일.*브레이크타임 없음/);
+  assert.match(panel, /weekend\.label\}은 브레이크타임 없음/);
+  assert.match(panel, /명절 휴무: \{STORE\.holidayClosure\}/);
+  assert.doesNotMatch(panel, /공휴일/);
 });
 
 test("FAQ list can explicitly expose every answer without changing its default", () => {
@@ -510,9 +512,9 @@ test("menu route uses approved central content and composition", () => {
 
 test("menu proof derives its set price and minimum order from central menu data", () => {
   const page = read("app/menu/page.tsx");
-  assert.match(page, /const signatureSet = MENU_ITEMS\.find\(\(item\) => item\.slug === "spicy-set"\)!/);
-  assert.match(page, /`매운·간장 세트 \$\{signatureSet\.price\}`/);
-  assert.match(page, /`대표 세트 \$\{signatureSet\.minimumOrder\}인 이상`/);
+  assert.match(page, /getSignatureSetTerms\(MENU_ITEMS\)/);
+  assert.match(page, /`매운·간장 세트 \$\{sharedTerms\.price\}`/);
+  assert.match(page, /`대표 세트 \$\{sharedTerms\.minimumOrder\}인 이상`/);
   assert.doesNotMatch(page, /19,900원|대표 세트 2인 이상/);
 });
 

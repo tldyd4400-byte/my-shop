@@ -224,13 +224,12 @@ test("home V6 visit facts expose hours, closures, parking, and accessible family
   const facts = read("components/site/visit-facts.tsx");
   assert.match(facts, /aria-labelledby="visit-facts-title"/);
   assert.match(facts, /id="visit-facts-title"/);
-  assert.match(facts, /화~금/);
   assert.match(facts, /const \[weekdayLunch, weekdayDinner, weekend\] = STORE\.openingPeriods/);
   assert.match(facts, /\$\{weekdayLunch\.opens\}~\$\{weekdayDinner\.closes\} · \$\{weekdayLunch\.closes\}~\$\{weekdayDinner\.opens\} 브레이크타임/);
   assert.match(facts, /\$\{weekend\.opens\}~\$\{weekend\.closes\} · 브레이크타임 없음/);
+  assert.match(facts, /\{weekend\.label\}/);
   assert.doesNotMatch(facts, /11:00|22:00|15:30|16:30/);
-  assert.match(facts, /토·일·공휴일/);
-  assert.match(facts, /브레이크타임 없음/);
+  assert.doesNotMatch(facts, /공휴일/);
   for (const field of ["lastOrder", "regularClosure", "holidayClosure", "parking", "familyFacilities", "accessibility"]) {
     assert.ok(facts.includes(`STORE.${field}`), field);
   }
@@ -490,6 +489,58 @@ function displayedFacts(html) {
     Array.from(html.matchAll(/<dt\b[^>]*>(.*?)<\/dt>\s*<dd\b[^>]*>(.*?)<\/dd>/gs),
       ([, label, value]) => [label, value.replace(/<[^>]*>/g, "")]),
   );
+}
+
+test("V6 visit facts follow central day labels and times", () => {
+  const path = "components/site/visit-facts.tsx";
+  const openingPeriods = STORE.openingPeriods.map((period, index) => ({
+    ...period,
+    label: ["수~금 점심", "수~금 저녁", "일요일"][index],
+    opens: index === 2 ? "11:30" : period.opens,
+  }));
+  const { VisitFacts } = evaluateTypeScript(path, read(path), (id) =>
+    id === "@/lib/content/store" ? { ...storeContent, STORE: { ...STORE, openingPeriods } } : require(id),
+  );
+  const facts = displayedFacts(renderToStaticMarkup(VisitFacts()));
+  assert.equal(facts["수~금"], "11:00~22:00 · 15:30~16:30 브레이크타임");
+  assert.equal(facts.일요일, "11:30~22:00 · 브레이크타임 없음");
+  assert.equal(facts.휴무, `${STORE.regularClosure} · ${STORE.holidayClosure}`);
+});
+
+function menuProofItems(items) {
+  const path = "app/menu/page.tsx";
+  const proofPath = "components/site/proof-strip.tsx";
+  const proof = evaluateTypeScript(proofPath, read(proofPath));
+  const imports = {
+    "@/lib/content/store": { ...storeContent, MENU_ITEMS: items },
+    "@/lib/seo/metadata": metadata,
+    "@/lib/seo/schema": schema,
+    "@/components/site/proof-strip": proof,
+  };
+  const { default: MenuPage } = evaluateTypeScript(path, read(path), (id) =>
+    imports[id] ?? (id.startsWith("@/components/") ? {} : require(id)),
+  );
+  return MenuPage().props.children.find(({ type }) => type === proof.ProofStrip).props.items;
+}
+
+test("menu handoff keeps the approved combined terms when both flavors agree", () => {
+  assert.deepEqual(menuProofItems(MENU_ITEMS).slice(0, 2), [
+    "매운·간장 세트 19,900원",
+    "대표 세트 2인 이상",
+  ]);
+});
+
+for (const [field, change] of [
+  ["price", { price: "21,900원", priceAmount: 21900 }],
+  ["minimum order", { minimumOrder: 3 }],
+]) {
+  test(`menu handoff lists per-flavor terms when only the soy ${field} changes`, () => {
+    const items = MENU_ITEMS.map((item) => item.slug === "soy-set" ? { ...item, ...change } : item);
+    assert.deepEqual(menuProofItems(items).slice(0, 2), ["spicy-set", "soy-set"].map((slug) => {
+      const { name, price, minimumOrder } = items.find((item) => item.slug === slug);
+      return `${name} ${price} · ${minimumOrder}인 이상`;
+    }));
+  });
 }
 
 test("V6 latest facts preserve the approved current display", () => {

@@ -434,7 +434,7 @@ test("review FAQ answers visit-intent questions from central verified facts", ()
 test("central content exports approved FAQ, review, and dining data", () => {
   assert.deepEqual(FAQ_ITEMS, [
     { question: "월요일에도 영업하나요?", answer: "매주 월요일은 정기휴무입니다." },
-    { question: "브레이크 타임이 있나요?", answer: "평일 15:30~16:30이며 주말·공휴일은 제외됩니다." },
+    { question: "브레이크 타임이 있나요?", answer: "화~금 15:30~16:30이며 토·일은 브레이크타임이 없습니다." },
     { question: "주차할 수 있나요?", answer: "건물 뒤 무료 지상주차장을 이용할 수 있습니다." },
     { question: "포장이나 배달이 되나요?", answer: "포장은 가능하며 배달은 운영하지 않습니다." },
     { question: "매운맛이 걱정돼요.", answer: "매운 등갈비찜과 간장 등갈비찜 중 선택할 수 있습니다." },

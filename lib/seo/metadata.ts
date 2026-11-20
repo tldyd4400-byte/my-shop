@@ -7,6 +7,7 @@ type MetadataInput = {
   description: string;
   path: string;
   image?: string;
+  imageAlt?: string;
   type?: "website" | "article";
 };
 
@@ -25,7 +26,7 @@ export function createPageMetadata(input: MetadataInput): Metadata {
       siteName: STORE.name,
       title: input.title,
       description: input.description,
-      images: [{ url: image, alt: input.title }],
+      images: [{ url: image, alt: input.imageAlt ?? input.title }],
     },
   };
 }
