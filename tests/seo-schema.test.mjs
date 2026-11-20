@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import ts from "typescript";
 
-import { FAQ_ITEMS, GROUP_FAQ_ITEMS, GROUP_STORY_FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, REVIEW_FAQ_ITEMS, STORE } from "../lib/content/store.ts";
+import { FAQ_ITEMS, GROUP_FAQ_ITEMS, GROUP_STORY_FAQ_ITEMS, HOME_FAQ_ITEMS, MENU_CATEGORIES, MENU_ITEMS, REVIEW_FAQ_ITEMS, STORE } from "../lib/content/store.ts";
 import { STORIES } from "../lib/content/stories.ts";
 import { createPageMetadata } from "../lib/seo/metadata.ts";
 import {
@@ -17,6 +17,21 @@ import {
 
 const read = (path) =>
   readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
+
+test("homepage V6 renders and serializes the same direct-answer FAQ set", () => {
+  const page = read("app/page.tsx");
+  assert.match(page, /const homeFaqs = HOME_FAQ_ITEMS/);
+  assert.match(page, /<FaqList items=\{homeFaqs\}/);
+  assert.match(page, /faqSchema\(homeFaqs\)/);
+  assert.deepEqual(
+    faqSchema(HOME_FAQ_ITEMS).mainEntity.map((item) => [
+      item.name,
+      item.acceptedAnswer.text,
+    ]),
+    HOME_FAQ_ITEMS.map((item) => [item.question, item.answer]),
+  );
+  assert.doesNotMatch(page, /AggregateRating|ratingValue|reviewCount/);
+});
 
 test("group story schema uses the same V5 direct answers shown on screen", () => {
   const page = read("app/stories/[slug]/page.tsx");

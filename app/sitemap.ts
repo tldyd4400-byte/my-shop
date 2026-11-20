@@ -4,12 +4,12 @@ import { STORIES } from "@/lib/content/stories";
 import { STORE } from "@/lib/content/store";
 
 const STATIC_PAGES = [
-  { path: "", modifiedAt: "2026-10-24" },
+  { path: "", modifiedAt: "2026-11-07" },
   { path: "/menu", modifiedAt: "2026-10-23" },
   { path: "/store", modifiedAt: "2026-10-23" },
   { path: "/location", modifiedAt: "2026-10-23" },
   { path: "/faq", modifiedAt: "2026-10-23" },
-  { path: "/reviews", modifiedAt: "2026-10-24" },
+  { path: "/reviews", modifiedAt: "2026-11-07" },
   { path: "/stories", modifiedAt: "2026-10-23" },
 ] as const;
 

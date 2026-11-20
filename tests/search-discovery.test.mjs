@@ -22,15 +22,19 @@ test("sitemap publishes per-page static dates and story modification dates", () 
   const entries = [...staticPages.matchAll(/\{\s*path: "([^"]*)",\s*modifiedAt: "([^"]*)"\s*\}/g)]
     .map(([, path, modifiedAt]) => [path, modifiedAt]);
   assert.deepEqual(entries, [
-    ["", "2026-10-24"],
+    ["", "2026-11-07"],
     ["/menu", "2026-10-23"],
     ["/store", "2026-10-23"],
     ["/location", "2026-10-23"],
     ["/faq", "2026-10-23"],
-    ["/reviews", "2026-10-24"],
+    ["/reviews", "2026-11-07"],
     ["/stories", "2026-10-23"],
   ]);
-  assert.equal(new Set(entries.map(([path]) => path)).size, entries.length, "static paths are unique");
+  assert.equal(
+    new Set(entries.map(([path]) => path)).size,
+    entries.length,
+    "static paths are unique",
+  );
   assert.match(sitemap, /lastModified:\s*page\.modifiedAt/);
   assert.match(sitemap, /STORIES\.map/);
   assert.match(sitemap, /lastModified:\s*story\.modifiedAt/);
